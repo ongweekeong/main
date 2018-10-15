@@ -16,7 +16,7 @@
 <li><a href="#use-case-delete-person">Use case: Delete person</a></li>
 <li><a href="#use-case-edit-person">Use case: Edit person</a></li>
 <li><a href="#use-case-find-person">Use case: Find person</a></li>
-<li><a href="#use-case-undo">Use case: Undo</a></li>
+<li><a href="#use-case-autoprediction">Use case: Autoprediction</a></li>
 </ul>
 </li>
 <li><a href="#non-functional-requirements">Appendix C: Non Functional Requirements</a></li>
@@ -202,13 +202,7 @@ TD- Fire Truck Driver</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to add person to the list</p>
-</li>
-<li>
-<p>System prompts User to enter his password</p>
-</li>
-<li>
-<p>User enters his password</p>
+<p>User requests to add person to the list.</p>
 </li>
 <li>
 <p>System adds person to the list and informs User that person has been successfully added.
@@ -222,24 +216,11 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a. The given password is invalid</p>
+<p>2a. Person already exists in the list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System shows an error message</p>
-<div class="paragraph">
-<p>Use case resumes at step 2.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>4a. Person already exists in the list</p>
-<div class="ulist">
-<ul>
-<li>
-<p>4a1. System shows an error message</p>
+<p>2a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -248,11 +229,11 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>4b. Person’s details are entered with invalid formats.</p>
+<p>2b. Person’s details are entered with invalid formats.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>4b1. System shows an error message</p>
+<p>2b1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes at step 1.</p>
 </div>
@@ -264,10 +245,10 @@ Use case ends.</p>
 <p>*a. At any time, User cancels add action.</p>
 </li>
 <li>
-<p>*a1. System requests for confirmation to cancel</p>
+<p>*a1. System requests for confirmation to cancel.</p>
 </li>
 <li>
-<p>*a2. User confirms cancellation</p>
+<p>*a2. User confirms cancellation.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -283,19 +264,13 @@ Use case ends.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to list persons</p>
+<p>User requests to list persons.</p>
 </li>
 <li>
-<p>System shows a list of persons</p>
+<p>System shows a list of persons.</p>
 </li>
 <li>
-<p>User requests to delete a specific person in the list</p>
-</li>
-<li>
-<p>System prompts user to enter his password</p>
-</li>
-<li>
-<p>User enters password</p>
+<p>User requests to delete a specific person in the list.</p>
 </li>
 <li>
 <p>System deletes the person.</p>
@@ -323,20 +298,7 @@ Use case ends.</p>
 <li>
 <p>3a1. System shows an error message.</p>
 <div class="paragraph">
-<p>Use case resumes at step 2.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>5a. The entered password is invalid.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>5a1. System shows an error message.</p>
-<div class="paragraph">
-<p>Use case resumes at step 2.</p>
+<p>Use case resumes at step 3.</p>
 </div>
 </li>
 </ul>
@@ -347,7 +309,7 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>*a1. System requests confirmation to cancel</p>
+<p>*a1. System requests confirmation to cancel.</p>
 </li>
 <li>
 <p>*a2. User confirms the cancellation.</p>
@@ -369,19 +331,13 @@ Use case ends.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to edit persons</p>
+<p>User requests to edit persons.</p>
 </li>
 <li>
-<p>System prompts User to enter his password</p>
+<p>System shows a list of persons.</p>
 </li>
 <li>
-<p>User enters his password</p>
-</li>
-<li>
-<p>System shows a list of persons</p>
-</li>
-<li>
-<p>User requests to update a specific person in the list</p>
+<p>User requests to update a specific person in the list.</p>
 </li>
 <li>
 <p>System edits the person’s respective details.</p>
@@ -401,7 +357,7 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a1. System shows an error essage</p>
+<p>1a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -410,26 +366,13 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>3a. The entered password is invalid</p>
+<p>4a. The person’s details are entered with invalid format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System shows an error message</p>
+<p>4a1. System shows an error message.</p>
 <div class="paragraph">
-<p>Use case resumes in step 2.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>6a. The person’s details are entered with invalid format.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>6a1. System shows an error message.</p>
-<div class="paragraph">
-<p>Use case resumes at step 5.</p>
+<p>Use case resumes at step 3.</p>
 </div>
 </li>
 </ul>
@@ -440,12 +383,12 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>*a1. System requests confirmation to cancel</p>
+<p>*a1. System requests confirmation to cancel.</p>
 </li>
 <li>
 <p>*a2. User confirms the cancellation.</p>
 <div class="paragraph">
-<p>Use case ends</p>
+<p>Use case ends.</p>
 </div>
 </li>
 </ul>
@@ -462,19 +405,13 @@ Use case ends.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to find person</p>
+<p>User requests to find person.</p>
 </li>
 <li>
-<p>System prompts User to enter his password</p>
+<p>System prompts User to key in NRIC of person.</p>
 </li>
 <li>
-<p>User enters his password</p>
-</li>
-<li>
-<p>System prompts User to key in index of person</p>
-</li>
-<li>
-<p>User enters NRIC of person</p>
+<p>User enters NRIC of person.</p>
 </li>
 <li>
 <p>System displays details of person, if found on the list.</p>
@@ -494,7 +431,7 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a1. System shows an error essage</p>
+<p>1a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -503,37 +440,24 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>3a. The entered password is invalid</p>
+<p>3a. The person’s details are entered with invalid format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System shows an error message</p>
+<p>3a1. System shows an error message.</p>
 <div class="paragraph">
-<p>Use case resumes in step 2.</p>
+<p>Use case resumes at step 3.</p>
 </div>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>5a. The person’s details are entered with invalid format.</p>
+<p>4a. Person does not exist in the list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>5a1. System shows an error message.</p>
-<div class="paragraph">
-<p>Use case resumes at step 4.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>6a. Person does not exist in the list</p>
-<div class="ulist">
-<ul>
-<li>
-<p>6a1. System informs User that person is not in the list</p>
+<p>4a1. System informs User that person is not in the list.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -546,12 +470,12 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>*a1. System requests confirmation to cancel</p>
+<p>*a1. System requests confirmation to cancel.</p>
 </li>
 <li>
 <p>*a2. User confirms the cancellation.</p>
 <div class="paragraph">
-<p>Use case ends</p>
+<p>Use case ends.</p>
 </div>
 </li>
 </ul>
@@ -561,23 +485,20 @@ Use case ends.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="use-case-undo"><a class="link" href="#use-case-undo">Use case: Undo</a></h3>
+<h3 id="use-case-autoprediction"><a class="link" href="#use-case-autoprediction">Use case: Autoprediction</a></h3>
 <div class="paragraph">
 <p><strong>MSS</strong></p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User enters command to undo</p>
+<p>User enters invalid input</p>
 </li>
 <li>
-<p>System prompts User to enter his password</p>
+<p>System tries to predict what the user would have wanted to type</p>
 </li>
 <li>
-<p>User enters his password</p>
-</li>
-<li>
-<p>System reverts the list to before the final change made</p>
+<p>System displays the valid use of input, if found</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -590,50 +511,11 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a. The list is empty.</p>
+<p>3a. The invalid input is an invalid command.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a1. System shows an error essage</p>
-<div class="paragraph">
-<p>Use case ends.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>3a. The entered password is invalid</p>
-<div class="ulist">
-<ul>
-<li>
-<p>3a1. System shows an error message</p>
-<div class="paragraph">
-<p>Use case resumes in step 2.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>5a. The person’s details are entered with invalid format.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>5a1. System shows an error message.</p>
-<div class="paragraph">
-<p>Use case resumes at step 4.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>6a. Person does not exist in the list</p>
-<div class="ulist">
-<ul>
-<li>
-<p>6a1. System informs User that person is not in the list</p>
+<p>3a1. System also displays the valid usage of the command.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -651,7 +533,7 @@ Use case ends.</p>
 <li>
 <p>*a2. User confirms the cancellation.</p>
 <div class="paragraph">
-<p>Use case ends</p>
+<p>Use case ends.</p>
 </div>
 </li>
 </ul>
@@ -734,4 +616,4 @@ Use case ends.</p>
 </dl>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-15 08:11:51 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-15 09:00:06 UTC</div></div></div></body></html>
