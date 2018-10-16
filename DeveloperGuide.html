@@ -12,6 +12,10 @@
 <li><a href="#user-stories">Appendix A: User Stories</a></li>
 <li><a href="#use-cases">Appendix B: Use Cases</a>
 <ul class="sectlevel2">
+<li><a href="#use-case-enter-headquarter-personnel-password">Use case: Enter Headquarter Personnel password</a></li>
+<li><a href="#use-case-enter-police-officer-password">Use case: Enter Police Officer password</a></li>
+<li><a href="#use-case-lock-system">Use case: Lock System</a></li>
+<li><a href="#use-case-update-any-password">Use case: Update any password</a></li>
 <li><a href="#use-case-add-person">Use case: Add person</a></li>
 <li><a href="#use-case-delete-person">Use case: Delete person</a></li>
 <li><a href="#use-case-edit-person">Use case: Edit person</a></li>
@@ -196,6 +200,228 @@ TD- Fire Truck Driver</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>(For all use cases below, the <strong>System</strong> is the <code>AddressBook</code> and the <strong>Actor</strong> is the <code>user</code>, unless specified otherwise)</p>
+</div>
+<div class="sect2">
+<h3 id="use-case-enter-headquarter-personnel-password"><a class="link" href="#use-case-enter-headquarter-personnel-password">Use case: Enter Headquarter Personnel password</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>System prompts User to enter his password</p>
+</li>
+<li>
+<p>User enters Headquarter Personnel password</p>
+</li>
+<li>
+<p>Only Headquarter Personnel commands are set to accessible, System displays message "Welcome Headquarter Personnel" and System prompts User for a command</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+<div class="paragraph">
+<p><strong>Extensions</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>2a. User enters invalid password</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2a1. System displays an error message and allows one less attempt for User at entering a correct password, with a a maximum of 5 attempts.</p>
+<div class="paragraph">
+<p>Use case resumes at step 1.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>2a1a. The number of attempts reaches zero</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2a1b. System shuts down</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="use-case-enter-police-officer-password"><a class="link" href="#use-case-enter-police-officer-password">Use case: Enter Police Officer password</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>System prompts User to enter his password</p>
+</li>
+<li>
+<p>User enters Police Officer password</p>
+</li>
+<li>
+<p>Only Police Officer commands are set to accessible, System displays message "Welcome Police Officer" and System prompts User for a command</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+<div class="paragraph">
+<p><strong>Extensions</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>2a. User enters invalid password</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2a1. System displays an error message and allows one less attempt for User at entering a correct password, with a a maximum of 5 attempts.</p>
+<div class="paragraph">
+<p>Use case resumes at step 1.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>2a1a. The number of attempts reaches zero</p>
+<div class="ulist">
+<ul>
+<li>
+<p>2a1b. System shuts down</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="use-case-lock-system"><a class="link" href="#use-case-lock-system">Use case: Lock System</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>User locks the System at any point</p>
+</li>
+<li>
+<p>System sets all commands to inaccessible, displays System lock message and prompts User for password</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="use-case-update-any-password"><a class="link" href="#use-case-update-any-password">Use case: Update any password</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>User requests to update password</p>
+</li>
+<li>
+<p>System prompts User for current password to change</p>
+</li>
+<li>
+<p>User enters existing password</p>
+</li>
+<li>
+<p>System prompts User to enter new password</p>
+</li>
+<li>
+<p>User enters new alphanumeric password</p>
+</li>
+<li>
+<p>System prompts User to enter new password again</p>
+</li>
+<li>
+<p>User enters same new alphanumeric password</p>
+</li>
+<li>
+<p>System updates password to change to the new alphanumeric password and displays update password success message</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+<div class="paragraph">
+<p><strong>Extensions</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>3a. User enters invalid password</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3a1. System displays an error message and allows one less attempt for User at entering a correct password, with a a maximum of 5 attempts.</p>
+<div class="paragraph">
+<p>Use case resumes at step 2.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>3a1a. The number of attempts reaches zero</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3a1b. System shuts down</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>5a or 7a. User enters new password without a number</p>
+</li>
+<li>
+<p>5b or 7b. System shows error message to include at least one number and prompts User to enter new alphanumeric password again</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use case resumes at step 5.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>5a or 7a. User enters new password without a letter</p>
+</li>
+<li>
+<p>5b or 7b. System shows error message to include at least one letter and prompts User to enter new alphanumeric password again</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use case resumes at step 5.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>5a or 7a. User enters new password without a letter nor a number</p>
+</li>
+<li>
+<p>5b or 7b. System shows error message for invalid new password</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Use case resumes at step 5.</p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="use-case-add-person"><a class="link" href="#use-case-add-person">Use case: Add person</a></h3>
@@ -616,4 +842,4 @@ Use case ends.</p>
 </dl>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-16 02:11:56 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-16 02:15:51 UTC</div></div></div></body></html>
