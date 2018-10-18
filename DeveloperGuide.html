@@ -188,7 +188,7 @@ The temporary file is renamed to passwordStorage.txt and the original file conta
 - Overwriting passwordStorage.txt . This will cause errors in replacing password.</p>
 </div>
 <div class="paragraph">
-<p>2a. "find" command (edited)</p>
+<p><strong>2a. "find" command (edited)</strong></p>
 </div>
 <div class="paragraph">
 <p>The new "find" command is revised from the existing "find" command in AB3. Instead of finding a person by name, it finds a person using his NRIC.
@@ -224,7 +224,7 @@ searched, which in this case is "s1234567a" (all letter are lower cased). The "f
 <p>Step 5: The CommandResult object displays to the user the searched person and his details, all of which in string form.</p>
 </div>
 <div class="paragraph">
-<p>2b. "check" command</p>
+<p><strong>2b. "check" command</strong></p>
 </div>
 <div class="paragraph">
 <p>Only a HQP may use this command. This command displays the timestamps of which a person with the specified NRIC was screened using the "find" command.
@@ -309,6 +309,70 @@ Eventually, we also used multiple message storage files, each dedicated to a spe
 </div>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p><strong>3. Autocorrection feature</strong></p>
+</div>
+<div class="paragraph">
+<p>Current Implementation</p>
+</div>
+<div class="paragraph">
+<p>The autocorrect mechanism is facilitated by use of dynamic programming.
+The algorithm called EditDistance checks the number of single character
+changes to be made to convert an invalid input into one expected by the
+system. Currently, changes involving one single character can be corrected
+by the system.
+It implements the following operations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>checkDistance() - It returns the edit distance needed to convert one
+string to the other. In this case, it returns the number of single character
+changes (either addition of a character, deletion of a character or changing
+a character) to convert invalid user input into its most probable correct
+implementation.</p>
+</li>
+<li>
+<p>getCommands() - This function returns the list of possible commands that
+the user can input.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The following is an example usage scenario of the autocorrection feature:</p>
+</div>
+<div class="paragraph">
+<p>Step 1: The user inputs his password and unlocks the system.</p>
+</div>
+<div class="paragraph">
+<p>Step 2: The user enters an invalid command.</p>
+</div>
+<div class="paragraph">
+<p>Step 3: The system predicts the most probable intended command the user
+would have wanted to input, based on a threshold and then prompts the user
+to use the prediction given in its valid format.</p>
+</div>
+<div class="paragraph">
+<p>The input is checked by the algorithm in the MainWindow before it is sent
+to the Parser class. This is to ensure invalid input can be caught by the
+algorithm to give its correction before it is deemed as invalid by the Parser
+during which time all commands will be laid out to the user.</p>
+</div>
+<div class="paragraph">
+<p>Alternatives considered-</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Running the algorithm from the Parser- This however will not allow the
+prediction to be reported efficiently.</p>
+</li>
+<li>
+<p>Include predictions with more than one character changes- This will bring
+in ambiguity in the correction algorithm and increases chances of errors.</p>
+</li>
+</ol>
 </div>
 </div>
 </div>
@@ -458,6 +522,9 @@ HQP- Headquarters Personnel</p>
 <p>Use case resumes at step 1.</p>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
 <p>3b. The number of attempts reaches zero.</p>
 <div class="ulist">
@@ -466,9 +533,6 @@ HQP- Headquarters Personnel</p>
 <p>3b1. System shuts down.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
-</div>
-</li>
-</ul>
 </div>
 </li>
 </ul>
@@ -516,6 +580,9 @@ HQP- Headquarters Personnel</p>
 <p>Use case resumes at step 1.</p>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
 <p>3b. The number of attempts reaches zero.</p>
 <div class="ulist">
@@ -524,9 +591,6 @@ HQP- Headquarters Personnel</p>
 <p>3b1. System shuts down.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
-</div>
-</li>
-</ul>
 </div>
 </li>
 </ul>
@@ -605,6 +669,9 @@ HQP- Headquarters Personnel</p>
 <p>Use case resumes at step 2.</p>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
 <p>3b. The number of attempts reaches zero.</p>
 <div class="ulist">
@@ -613,9 +680,6 @@ HQP- Headquarters Personnel</p>
 <p>3b1. System shuts down.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
-</div>
-</li>
-</ul>
 </div>
 </li>
 </ul>
@@ -714,7 +778,8 @@ HQP- Headquarters Personnel</p>
 </li>
 <li>
 <p>*a. At any time, User cancels add action.</p>
-</li>
+<div class="ulist">
+<ul>
 <li>
 <p>*a1. System requests for confirmation to cancel.</p>
 </li>
@@ -722,6 +787,9 @@ HQP- Headquarters Personnel</p>
 <p>*a2. User confirms cancellation.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
+</div>
+</li>
+</ul>
 </div>
 </li>
 </ul>
@@ -1203,13 +1271,6 @@ HQP- Headquarters Personnel</p>
 </ul>
 </div>
 </li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Extensions</strong></p>
-</div>
-<div class="ulist">
-<ul>
 <li>
 <p>5b. User enters an invalid input for which the system cannot find a prediction.</p>
 <div class="ulist">
@@ -1672,4 +1733,4 @@ which requested backup and police officer to dispatch.</p>
 </dl>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 17:24:42 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 17:33:05 UTC</div></div></div></body></html>
