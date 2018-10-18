@@ -141,6 +141,65 @@
 <div class="paragraph">
 <p>This section describes some of the more important details of certain features implemented.</p>
 </div>
+<div class="paragraph">
+<p>2a. "find" command (edited)</p>
+</div>
+<div class="paragraph">
+<p>The new "find" command is revised from the existing "find" command in AB3. Instead of finding a person by name, it finds a person using his NRIC.
+It also implements the following operations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>execute() - executes the "find" command itself and displays the result to the user</p>
+</li>
+<li>
+<p>getPersonWithNric() - Searches the addressbook to retrieve the person with the specified NRIC</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The following is an example usage scenario of the "find" command:</p>
+</div>
+<div class="paragraph">
+<p>Step 1: The user input his password and unlocks the system</p>
+</div>
+<div class="paragraph">
+<p>Step 2: The user executes "find s1234567a" command where the first argument is the command word "find" and the second argument is the NRIC to be
+searched, which in this case is "s1234567a" (all letter are lower cased). The "find" command calls execute() which also calls getPersonWithNric() method.</p>
+</div>
+<div class="paragraph">
+<p>Step 3: The getPersonWithNric() method searches the addressbook for the person with "s1234567a" if he exists and person is stored in a list.</p>
+</div>
+<div class="paragraph">
+<p>Step 4: The person is found and is stored in a matchedPerson list variable. execute() returns a CommandResult using the matchedPerson list as its argument.</p>
+</div>
+<div class="paragraph">
+<p>Step 5: The CommandResult object displays to the user the searched person and his details, all of which in string form.</p>
+</div>
+<div class="paragraph">
+<p>2b. "check" command</p>
+</div>
+<div class="paragraph">
+<p>Only a HQP may use this command. This command displays the timestamps of which a person with the specified NRIC was screened using the "find" command.
+The "check" command makes some use of the "find" command. Every time the "find" command successfully finds a person, a line in the format of:
+"NRIC timestamp" is printed in a text file called "ScreeningHistory.txt". The "check" command will read this file and retrieve the timestamps
+corresponding to the specified NRIC. Below is an example of its usage:</p>
+</div>
+<div class="paragraph">
+<p>Step 1: The user(a HQP) input his password and unlocks the system</p>
+</div>
+<div class="paragraph">
+<p>Step 2: The user executes "check s1234567a" where the first argument is the command word "check" and the second is the NRIC to be checked which in is "s1234567a"</p>
+</div>
+<div class="paragraph">
+<p>Step 3: The "check" command calls execute() which calls the getPersonWithNric() method. This method will read the ScreeningHistory.txt line by line, where each line
+is in the format of "NRIC timestamp", for example "s1234567a 18/10/2018-20:38:42". Each line is split into the NRIC and timestamp. If line[0] is the NRIC specified,
+the corresponding timestamp is stored in a list.</p>
+</div>
+<div class="paragraph">
+<p>Step 4: The list from step 3 gets returned by execute() to create a CommandResult object which displays all the timestamps to the user</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -744,7 +803,7 @@ HQP- Headquarters Personnel</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User opens System.</p>
+<p>User boots System.</p>
 </li>
 <li>
 <p>System prompts user to enter his password.</p>
@@ -1503,4 +1562,4 @@ which requested backup and police officer to dispatch.</p>
 </dl>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 11:43:07 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 13:45:17 UTC</div></div></div></body></html>
