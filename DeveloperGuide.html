@@ -204,25 +204,25 @@ TD- Fire Truck Driver</p>
 <h2 id="use-cases"><a class="link" href="#use-cases">Appendix B: Use Cases</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>(For all use cases below, the <strong>System</strong> is the <code>AddressBook</code> and the <strong>Actor</strong> is the <code>user</code>, unless specified otherwise)</p>
+<p>(For all use cases below, the <strong>System</strong> is the <code>AddressBook</code> and the <strong>User</strong> is either the `Police Officer (PO)' or 'Head Quarters Personnel (HQP)', unless specified otherwise)</p>
 </div>
 <div class="sect2">
 <h3 id="use-case-enter-headquarter-personnel-password"><a class="link" href="#use-case-enter-headquarter-personnel-password">Use case: Enter Headquarter Personnel password</a></h3>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>System prompts User to enter his password</p>
+<p>System prompts User to enter his password.</p>
 </li>
 <li>
-<p>User enters Headquarter Personnel password</p>
+<p>User enters HQP password.</p>
 </li>
 <li>
-<p>Only Headquarter Personnel commands are set to accessible, System displays message "Welcome Headquarter Personnel" and System prompts User for a command</p>
-</li>
-</ol>
-</div>
+<p>System displays message "Welcome Headquarter Personnel" and System prompts User for a command. Only HQP commands are set to accessible.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
+</div>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p><strong>Extensions</strong></p>
@@ -230,7 +230,7 @@ TD- Fire Truck Driver</p>
 <div class="ulist">
 <ul>
 <li>
-<p>2a. User enters invalid password</p>
+<p>2a. User enters invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -239,17 +239,17 @@ TD- Fire Truck Driver</p>
 <p>Use case resumes at step 1.</p>
 </div>
 </li>
-</ul>
-</div>
-</li>
 <li>
-<p>2a1a. The number of attempts reaches zero</p>
+<p>2a1a. The number of attempts reaches zero.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>2a1b. System shuts down</p>
+<p>2a1b. System shuts down.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
+</div>
+</li>
+</ul>
 </div>
 </li>
 </ul>
@@ -263,18 +263,18 @@ TD- Fire Truck Driver</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>System prompts User to enter his password</p>
+<p>System prompts User to enter his password.</p>
 </li>
 <li>
-<p>User enters Police Officer password</p>
+<p>User enters Police Officer password.</p>
 </li>
 <li>
-<p>Only Police Officer commands are set to accessible, System displays message "Welcome Police Officer" and System prompts User for a command</p>
-</li>
-</ol>
-</div>
+<p>Only Police Officer commands are set to accessible, System displays message "Welcome Police Officer" and System prompts User for a command.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
+</div>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p><strong>Extensions</strong></p>
@@ -282,7 +282,7 @@ TD- Fire Truck Driver</p>
 <div class="ulist">
 <ul>
 <li>
-<p>2a. User enters invalid password</p>
+<p>2a. User enters invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -291,17 +291,17 @@ TD- Fire Truck Driver</p>
 <p>Use case resumes at step 1.</p>
 </div>
 </li>
-</ul>
-</div>
-</li>
 <li>
-<p>2a1a. The number of attempts reaches zero</p>
+<p>2a1a. The number of attempts reaches zero.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>2a1b. System shuts down</p>
+<p>2a1b. System shuts down.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
+</div>
+</li>
+</ul>
 </div>
 </li>
 </ul>
@@ -315,10 +315,10 @@ TD- Fire Truck Driver</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User locks the System at any point</p>
+<p>User locks the System at any point.</p>
 </li>
 <li>
-<p>System sets all commands to inaccessible, displays System lock message and prompts User for password</p>
+<p>System sets all commands to inaccessible, displays System lock message and prompts User for password.</p>
 </li>
 </ol>
 </div>
@@ -331,33 +331,33 @@ TD- Fire Truck Driver</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to update password</p>
+<p>User requests to update password.</p>
 </li>
 <li>
-<p>System prompts User for current password to change</p>
+<p>System prompts User for current password to change.</p>
 </li>
 <li>
-<p>User enters existing password</p>
+<p>User enters existing password.</p>
 </li>
 <li>
-<p>System prompts User to enter new password</p>
+<p>System prompts User to enter new password.</p>
 </li>
 <li>
-<p>User enters new alphanumeric password</p>
+<p>User enters new alphanumeric password.</p>
 </li>
 <li>
-<p>System prompts User to enter new password again</p>
+<p>System prompts User to enter new password again.</p>
 </li>
 <li>
-<p>User enters same new alphanumeric password</p>
+<p>User enters same new alphanumeric password.</p>
 </li>
 <li>
-<p>System updates password to change to the new alphanumeric password and displays update password success message</p>
-</li>
-</ol>
-</div>
+<p>System updates password to change to the new alphanumeric password and displays update password success message.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
+</div>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p><strong>Extensions</strong></p>
@@ -365,7 +365,7 @@ TD- Fire Truck Driver</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a. User enters invalid password</p>
+<p>3a. User enters invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -374,15 +374,12 @@ TD- Fire Truck Driver</p>
 <p>Use case resumes at step 2.</p>
 </div>
 </li>
-</ul>
-</div>
-</li>
 <li>
-<p>3a1a. The number of attempts reaches zero</p>
+<p>3a1a. The number of attempts reaches zero.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1b. System shuts down</p>
+<p>3a1b. System shuts down.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -390,42 +387,37 @@ TD- Fire Truck Driver</p>
 </ul>
 </div>
 </li>
-<li>
-<p>5a or 7a. User enters new password without a number</p>
-</li>
-<li>
-<p>5b or 7b. System shows error message to include at least one number and prompts User to enter new alphanumeric password again</p>
-</li>
 </ul>
 </div>
+</li>
+<li>
+<p>5a or 7a. User enters new password without a number.</p>
+</li>
+<li>
+<p>5a1 or 7a1. System shows error message to include at least one number and prompts User to enter new alphanumeric password again.</p>
 <div class="paragraph">
 <p>Use case resumes at step 5.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>5a or 7a. User enters new password without a letter</p>
 </li>
 <li>
-<p>5b or 7b. System shows error message to include at least one letter and prompts User to enter new alphanumeric password again</p>
+<p>5b or 7b. User enters new password without a letter.</p>
 </li>
-</ul>
-</div>
+<li>
+<p>5b1 or 7b1. System shows error message to include at least one letter and prompts User to enter new alphanumeric password again.</p>
 <div class="paragraph">
 <p>Use case resumes at step 5.</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>5a or 7a. User enters new password without a letter nor a number</p>
 </li>
 <li>
-<p>5b or 7b. System shows error message for invalid new password</p>
+<p>5c or 7c. User enters new password without a letter nor a number.</p>
 </li>
-</ul>
-</div>
+<li>
+<p>5c1 or 7c1. System shows error message for invalid new password.</p>
 <div class="paragraph">
 <p>Use case resumes at step 5.</p>
+</div>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
@@ -436,8 +428,10 @@ TD- Fire Truck Driver</p>
 <p>User requests to add person to the list.</p>
 </li>
 <li>
-<p>System adds person to the list and informs User that person has been successfully added.
-Use case ends.</p>
+<p>System adds person to the list and informs User that person has been successfully added.</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
 </li>
 </ol>
 </div>
@@ -460,7 +454,7 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>2b. Person’s details are entered with invalid formats.</p>
+<p>2b. User enters person’s details with invalid formats.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -495,10 +489,13 @@ Use case ends.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>System prompts user to enter his password</p>
+<p>System prompts user to enter his password.</p>
 </li>
 <li>
-<p>User enters password</p>
+<p>User enters password.</p>
+</li>
+<li>
+<p>System prompts user to enter his command.</p>
 </li>
 <li>
 <p>User keys in NRIC of person to delete</p>
@@ -529,7 +526,7 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>2a. The entered password is invalid.</p>
+<p>2a. User enters an invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -542,11 +539,11 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>3a. The list is empty.</p>
+<p>4a. The list is empty.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System shows an error message</p>
+<p>4a1. System shows an error message</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -555,11 +552,11 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>3b. The given NRIC is invalid.</p>
+<p>4b. User enters invalid NRIC.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3b1. System shows an error message.</p>
+<p>4b1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -568,22 +565,18 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>3c. The person with given NRIC does not exists.</p>
+<p>4c. User enters an NRIC that does not exist in the system.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3c1. System shows an error message.</p>
-</li>
-</ul>
-</div>
-</li>
-</ul>
-</div>
+<p>4c1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes at step 3.</p>
 </div>
-<div class="ulist">
-<ul>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>*a. At any time, User chooses to cancel the delete action.</p>
 <div class="ulist">
@@ -646,11 +639,11 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>4a. The person’s details are entered with invalid format.</p>
+<p>3a. User enters person&#8217;s details with invalid format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>4a1. System shows an error message.</p>
+<p>3a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes at step 3.</p>
 </div>
@@ -700,15 +693,6 @@ Use case ends.</p>
 <p>User enters NRIC of person</p>
 </li>
 <li>
-<p>User requests to find person.</p>
-</li>
-<li>
-<p>System prompts User to key in NRIC of person.</p>
-</li>
-<li>
-<p>User enters NRIC of person.</p>
-</li>
-<li>
 <p>System displays details of person, if found on the list.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
@@ -722,11 +706,11 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a. The entered password is invalid</p>
+<p>3a. User enters an invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System shows an error message</p>
+<p>3a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes in step 2.</p>
 </div>
@@ -735,7 +719,7 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>5a. The person’s NRIC are entered with invalid format.</p>
+<p>5a. User enters person&#8217;s NRIC with invalid format.</p>
 <div class="ulist">
 <ul>
 <li>
@@ -752,7 +736,7 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>5b1. System shows an error essage</p>
+<p>5b1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -761,11 +745,11 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>6a. Person does not exist in the list</p>
+<p>5a. User enters an NRIC that does not exist in the list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>6a1. System informs User that person is not in the list</p>
+<p>5a1. System informs User that person is not in the list.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -778,12 +762,12 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>*a1. System requests confirmation to cancel</p>
+<p>*a1. System requests confirmation to cancel.</p>
 </li>
 <li>
 <p>*a2. User confirms the cancellation.</p>
 <div class="paragraph">
-<p>Use case ends</p>
+<p>Use case ends.</p>
 </div>
 </li>
 </ul>
@@ -800,19 +784,19 @@ Use case ends.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to check person&#8217;s screening history</p>
+<p>User requests to check person&#8217;s screening history.</p>
 </li>
 <li>
-<p>System prompts User to enter his password</p>
+<p>System prompts User to enter his password.</p>
 </li>
 <li>
-<p>User enters his password</p>
+<p>User enters his password.</p>
 </li>
 <li>
-<p>System prompts User to key in NRIC to check</p>
+<p>System prompts User to key in NRIC to check.</p>
 </li>
 <li>
-<p>User enters NRIC of person</p>
+<p>User enters NRIC of person.</p>
 </li>
 <li>
 <p>System displays past screening timestamps of person, if found on the list.</p>
@@ -828,16 +812,6 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a. The entered password is invalid</p>
-<div class="ulist">
-<ul>
-<li>
-<p>3a1. System shows an error message</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
 <p>1a. The list is empty.</p>
 <div class="ulist">
 <ul>
@@ -851,34 +825,76 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>3a. The person’s details are entered with invalid format.</p>
+<p>3a. User enters an invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
 <p>3a1. System shows an error message.</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
 </li>
 </ul>
 </div>
+</li>
+<li>
+<p>3b. User enters person&#8217;s details with invalid format.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3b1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes at step 3.</p>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
-<p>5a. The person’s NRIC are entered with invalid format.</p>
+<p>5a. User enters an NRIC that does not exist in the list.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>5a1. System shows an error message.</p>
+<p>5a1. System informs User that person is not in the list.</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
 </li>
 </ul>
 </div>
 </li>
 <li>
-<p>4a. Person does not exist in the list.</p>
+<p>5b. User enters the an NRIC with invalid format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>4a1. System informs User that person is not in the list.</p>
+<p>5b1. System shows an error message.</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>5c. The list of persons is empty.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>5c1. System shows an error message.</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>5d. User enters an NRIC that does not exist in the list.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>5d1. System informs User that person is not in the list.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -910,48 +926,18 @@ Use case ends.</p>
 <div class="paragraph">
 <p><strong>MSS</strong></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>5b. The list of persons is empty.</p>
-<div class="ulist">
-<ul>
-<li>
-<p>5b1. System shows an error essage</p>
-<div class="paragraph">
-<p>Use case ends.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>6a. Person does not exist in the list</p>
-<div class="ulist">
-<ul>
-<li>
-<p>6a1. System informs User that person is not in the list</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User enters invalid input</p>
+<p>User enters invalid input.</p>
 </li>
 <li>
-<p>System tries to predict what the user would have wanted to type</p>
-</li>
-<li>
-<p>System displays the valid use of input, if found</p>
+<p>System predicts what the user would have wanted to type and displays the list of valid inputs, if any.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
 </li>
 </ol>
-</div>
-</li>
-</ul>
-</div>
-</li>
-</ul>
 </div>
 <div class="paragraph">
 <p><strong>Extensions</strong></p>
@@ -959,24 +945,24 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a. The invalid input is an invalid command.</p>
+<p>1a. User enters an invalid input which is an invalid command.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System also displays the valid usage of the command.</p>
-</li>
-</ul>
-</div>
+<p>1a1. System also displays the valid usage of the command.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
 </li>
+</ul>
+</div>
+</li>
 <li>
-<p>*a. At any time, User chooses to cancel the delete action.</p>
+<p>*a. At any time, user chooses to cancel the delete action.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>*a1. System requests confirmation to cancel</p>
+<p>*a1. System requests confirmation to cancel.</p>
 </li>
 <li>
 <p>*a2. User confirms the cancellation.</p>
@@ -998,10 +984,10 @@ Use case ends.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>User requests to display messages in inbox</p>
+<p>User requests to display messages in inbox.</p>
 </li>
 <li>
-<p>System prints the number of unread messages, total messages and list of messages</p>
+<p>System prints the number of unread messages, total messages and list of messages.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -1018,7 +1004,7 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a1. System informs user that there are no messages available</p>
+<p>1a1. System informs user that there are no messages available.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -1165,27 +1151,11 @@ Use case ends.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a. User keys in invalid command format</p>
+<p>2a. User enters an invalid password.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a1. System shows error message</p>
-</li>
-<li>
-<p>1a2. System prompts correct format for request feature</p>
-<div class="paragraph">
-<p>Use case resumes from step 3.</p>
-</div>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>3a. The entered password is invalid</p>
-<div class="ulist">
-<ul>
-<li>
-<p>3a1. System shows an error message</p>
+<p>2a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes in step 1.</p>
 </div>
@@ -1194,14 +1164,24 @@ Use case ends.</p>
 </div>
 </li>
 <li>
-<p>6a. The case type entered is invalid.</p>
+<p>4a. User enters an invalid input with invalid command format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>6a1. System shows an error message.</p>
+<p>4a1. System shows error message and prompts correct format for request feature.</p>
+<div class="paragraph">
+<p>Use case resumes from step 3.</p>
+</div>
+</li>
+</ul>
+</div>
 </li>
 <li>
-<p>6a2. System will prompt current valid case types.</p>
+<p>6a. User enters an invalid case type.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>6a1. System shows an error message and prompts current valid case types.</p>
 <div class="paragraph">
 <p>Use case resumes at step 3.</p>
 </div>
@@ -1232,20 +1212,17 @@ Use case ends.</p>
 <p>User lists the current unread messages inside the inbox.</p>
 </li>
 <li>
-<p>System shows unread inbox messages.</p>
-</li>
-<li>
-<p>Inbox messages become read.</p>
+<p>System shows unread inbox messages and marks them as read.</p>
 </li>
 <li>
 <p>User types to dispatch backup with index of police officer<br>
-which requested backup &amp; police officer to dispatch</p>
+which requested backup and police officer to dispatch.</p>
 </li>
 <li>
-<p>System adds new message with ETA in police officer which requested backup</p>
+<p>System adds new message with ETA in police officer which requested backup.</p>
 </li>
 <li>
-<p>System adds new message with destination coordinates to dispatch idle police officer</p>
+<p>System adds new message with destination coordinates to dispatch idle police officer.</p>
 <div class="paragraph">
 <p>Use case ends.</p>
 </div>
@@ -1258,14 +1235,11 @@ which requested backup &amp; police officer to dispatch</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a. User keys in invalid command format</p>
+<p>0a. User keys in invalid command format.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>1a1. System shows error message</p>
-</li>
-<li>
-<p>1a2. System prompts correct format for dispatch feature</p>
+<p>0a1. System shows error message and prompts correct format for dispatch feature.</p>
 <div class="paragraph">
 <p>Use case resumes from step 3.</p>
 </div>
@@ -1274,11 +1248,11 @@ which requested backup &amp; police officer to dispatch</p>
 </div>
 </li>
 <li>
-<p>3a. The entered password is invalid</p>
+<p>2a. The entered password is invalid.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>3a1. System shows an error message</p>
+<p>2a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes in step 1.</p>
 </div>
@@ -1287,11 +1261,11 @@ which requested backup &amp; police officer to dispatch</p>
 </div>
 </li>
 <li>
-<p>4a. User is not a Headquarter Personnel</p>
+<p>4a. User is not a Headquarter Personnel.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>4a1. System shows an error message stating invalid credentials</p>
+<p>4a1. System shows an error message stating invalid credentials.</p>
 <div class="paragraph">
 <p>Use case resumes in step 3.</p>
 </div>
@@ -1300,11 +1274,11 @@ which requested backup &amp; police officer to dispatch</p>
 </div>
 </li>
 <li>
-<p>5a. Index entered for to dispatch police officer is invalid</p>
+<p>6a. User enters an invalid index entered for police officer to be dispatched.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>5a1. System shows an error message</p>
+<p>6a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes in step 3.</p>
 </div>
@@ -1313,11 +1287,11 @@ which requested backup &amp; police officer to dispatch</p>
 </div>
 </li>
 <li>
-<p>6a. Index entered for requested backup police officer is invalid</p>
+<p>6a. User enters an invalid index for police officer requesting backup.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>6a1. System shows an error message</p>
+<p>6a1. System shows an error message.</p>
 <div class="paragraph">
 <p>Use case resumes at step 3.</p>
 </div>
@@ -1402,4 +1376,4 @@ which requested backup &amp; police officer to dispatch</p>
 </dl>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-17 16:54:14 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 03:44:19 UTC</div></div></div></body></html>
