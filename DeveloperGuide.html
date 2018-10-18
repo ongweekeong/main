@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]--><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="Asciidoctor 1.5.6.1"><title>Developer Guide</title><link rel="stylesheet" href="stylesheets/gh-pages.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="stylesheets/coderay-asciidoctor.css"></head><body class="article"><div id="seedu-header"><nav class="navbar navbar-lg navbar-light bg-lighter"><div class="container"><a class="navbar-brand" href="https://se-edu.github.io/"><img src="images/SeEduLogo.png" alt="SE-EDU"></a><ul class="navbar-nav"><li class="nav-item"><a class="nav-link" href="https://se-edu.github.io/addressbook-level1">AB-1</a></li><li class="nav-item"><a class="nav-link" href="https://se-edu.github.io/addressbook-level2">AB-2</a></li><li class="nav-item"><a class="nav-link active" href="index.html">AB-3</a></li><li class="nav-item"><a class="nav-link" href="https://se-edu.github.io/addressbook-level4">AB-4</a></li><li class="nav-item"><a class="nav-link" href="https://se-edu.github.io/collate">Collate</a></li><li class="nav-item"><a class="nav-link" href="https://se-edu.github.io/se-book">Book</a></li><li class="nav-item"><a class="nav-link" href="https://se-edu.github.io/learningresources">Resources</a></li></ul></div></nav></div><div id="site-header"><nav class="navbar navbar-light bg-light"><div class="container"><a class="navbar-brand" href="index.html">AddressBook-Level3</a><ul class="navbar-nav"><li class="nav-item"><a class="nav-link" href="UserGuide.html">User Guide</a></li><li class="nav-item"><a class="nav-link active" href="DeveloperGuide.html">Developer Guide</a></li><li class="nav-item"><a class="nav-link" href="LearningOutcomes.html">LOs</a></li><li class="navitem"><a class="nav-link" href="https://github.com/se-edu/addressbook-level3"><span class="fa fa-github fa-lg" aria-hidden="true"></span>&nbsp;View on GitHub</a></li></ul></div></nav></div><div id="header"><h1>Developer Guide</h1><div id="toc" class="toc"><div id="toctitle"></div><ul class="sectlevel1">
+<li><a href="#introduction">Introduction</a></li>
 <li><a href="#setting-up">Setting up</a>
 <ul class="sectlevel2">
 <li><a href="#prerequisites">Prerequisites</a></li>
@@ -8,9 +9,11 @@
 </ul>
 </li>
 <li><a href="#design">Design</a></li>
+<li><a href="#implementation">Implementation</a></li>
+<li><a href="#use-cases">Use Cases</a></li>
 <li><a href="#testing">Testing</a></li>
 <li><a href="#user-stories">Appendix A: User Stories</a></li>
-<li><a href="#use-cases">Appendix B: Use Cases</a>
+<li><a href="#use-cases-2">Appendix B: Use Cases</a>
 <ul class="sectlevel2">
 <li><a href="#use-case-enter-headquarter-personnel-password">Use case: Enter Headquarter Personnel password</a></li>
 <li><a href="#use-case-enter-police-officer-password">Use case: Enter Police Officer password</a></li>
@@ -31,10 +34,24 @@
 <li><a href="#non-functional-requirements">Appendix C: Non Functional Requirements</a></li>
 <li><a href="#glossary">Appendix D: Glossary</a></li>
 </ul></div></div><div id="content"><div class="sect1">
+<h2 id="introduction"><a class="link" href="#introduction">Introduction</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The purpose of this Developer Guide is to provide useful information to software developers who desire to contribute to the project (e.g. optimizing of code, adding test cases, etc.), including an overview of the software architecture, design as well as current implementations and intended functionality of current features. The police database is for police officers(PO) and headquarters personnel(HQP). Both groups will have varying access and authorization levels to this database. POs would be able to read from the database after screening someone while on patrol and choose his course of action base on the status/threat level of subject. HQP would have the added functions of adding and removing people from the database. Refer to quick start to get started.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="setting-up"><a class="link" href="#setting-up">Setting up</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>To set up the project successfully on your computer, follow the steps below.</p>
+</div>
 <div class="sect2">
 <h3 id="prerequisites"><a class="link" href="#prerequisites">Prerequisites</a></h3>
+<div class="paragraph">
+<p>In order to start the setup, you are required to install the following:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -108,6 +125,9 @@
 <div class="sect1">
 <h2 id="design"><a class="link" href="#design">Design</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The diagram below shows a high level architecture design of the current classes that are used in the project.</p>
+</div>
 <div class="imageblock">
 <div class="content">
 <img src="images/mainClassDiagram.png" alt="mainClassDiagram">
@@ -116,8 +136,27 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="implementation"><a class="link" href="#implementation">Implementation</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section describes some of the more important details of certain features implemented.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="use-cases"><a class="link" href="#use-cases">Use Cases</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The use cases for the current features and commands implemented can be found in Appendix B.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="testing"><a class="link" href="#testing">Testing</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>To run tests for the project, complete the step below.</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
@@ -201,28 +240,22 @@ TD- Fire Truck Driver</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="use-cases"><a class="link" href="#use-cases">Appendix B: Use Cases</a></h2>
+<h2 id="use-cases-2"><a class="link" href="#use-cases-2">Appendix B: Use Cases</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>(For all use cases below, the <strong>System</strong> is the <code>AddressBook</code> and the <strong>User</strong> is either the `Police Officer (PO)' or 'Head Quarters Personnel (HQP)', unless specified otherwise)</p>
 </div>
 <div class="sect2">
 <h3 id="use-case-enter-headquarter-personnel-password"><a class="link" href="#use-case-enter-headquarter-personnel-password">Use case: Enter Headquarter Personnel password</a></h3>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>System prompts User to enter his password.</p>
-</li>
-<li>
-<p>User enters HQP password.</p>
-</li>
-<li>
-<p>System displays message "Welcome Headquarter Personnel" and System prompts User for a command. Only HQP commands are set to accessible.</p>
 <div class="paragraph">
-<p>Use case ends.</p>
+<p><strong>MSS</strong>
+. System prompts User to enter his password.
+. User enters HQP password.
+. System displays message "Welcome Headquarter Personnel" and System prompts User for a command. Only HQP commands are set to accessible.</p>
 </div>
-</li>
-</ol>
+<div class="paragraph">
+<p>+
+Use case ends.</p>
 </div>
 <div class="paragraph">
 <p><strong>Extensions</strong></p>
@@ -260,6 +293,9 @@ TD- Fire Truck Driver</p>
 </div>
 <div class="sect2">
 <h3 id="use-case-enter-police-officer-password"><a class="link" href="#use-case-enter-police-officer-password">Use case: Enter Police Officer password</a></h3>
+<div class="paragraph">
+<p><strong>MSS</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -312,6 +348,9 @@ TD- Fire Truck Driver</p>
 </div>
 <div class="sect2">
 <h3 id="use-case-lock-system"><a class="link" href="#use-case-lock-system">Use case: Lock System</a></h3>
+<div class="paragraph">
+<p><strong>MSS</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -328,6 +367,9 @@ TD- Fire Truck Driver</p>
 </div>
 <div class="sect2">
 <h3 id="use-case-update-any-password"><a class="link" href="#use-case-update-any-password">Use case: Update any password</a></h3>
+<div class="paragraph">
+<p><strong>MSS</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -422,6 +464,9 @@ TD- Fire Truck Driver</p>
 </div>
 <div class="sect2">
 <h3 id="use-case-add-person"><a class="link" href="#use-case-add-person">Use case: Add person</a></h3>
+<div class="paragraph">
+<p><strong>MSS</strong></p>
+</div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -1376,4 +1421,4 @@ which requested backup and police officer to dispatch.</p>
 </dl>
 </div>
 </div>
-</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 08:07:24 UTC</div></div></div></body></html>
+</div></div><div id="footer"><div class="container"><div id="footer-text">Last updated 2018-10-18 09:23:12 UTC</div></div></div></body></html>
