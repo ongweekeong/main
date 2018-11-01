@@ -5,14 +5,14 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import java.util.Arrays;
 
 /**
- * Represents a Person's criminal status (if any) in EX-SI-53.
- * Guarantees: mutable; is valid as declared in {@link #isValidStatus(String)}
+ * Represents a Person's criminal status (if any).
+ * Guarantees: mutable only for "clear" and "wanted"; is valid as declared in {@link #isValidStatus(String)}
  */
 
 public class Status {
 
     public static final String EXAMPLE = "wanted";
-    private static final String MESSAGE_NAME_CONSTRAINTS = "Status should be one of the 3: wanted/xc/clear";
+    public static final String MESSAGE_NAME_CONSTRAINTS = "Status should be one of the 3: wanted/xc/clear";
 
     public static final String WANTED_KEYWORD = "wanted";
     public static final String EXCONVICT_KEYWORD = "xc"; //ex-convict

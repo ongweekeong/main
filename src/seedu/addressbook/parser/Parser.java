@@ -44,6 +44,7 @@ public class Parser {
 
     public static final Pattern PERSON_NAME_FORMAT = Pattern.compile("(?<name>[^/]+)");
     public static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
+    public static final String PO_REGEX = "[Pp][Oo][0-9]+";
 
     /**
      * Signals that the user input could not be parsed.
@@ -307,25 +308,6 @@ public class Parser {
         }
     }
 
-
-    //@@author
-    /**
-     * Parses arguments in the context of the view command.
-     *
-     * @param args full command args string
-     * @return the prepared command
-     */
-    private Command prepareView(String args) {
-        try {
-            final int targetIndex = parseArgsAsDisplayedIndex(args);
-            return new ViewAllCommand(targetIndex);
-        } catch (ParseException | NumberFormatException e) {
-            logr.log(Level.WARNING, "Invalid view command format.", e);
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    ViewAllCommand.MESSAGE_USAGE));
-        }
-    }
-
     //@@author
     /**
      * Parses arguments in the context of the view all command.
@@ -362,6 +344,13 @@ public class Parser {
         return Integer.parseInt(matcher.group("targetIndex"));
     }
 //@@author muhdharun
+    /**
+     * Parses argument string as an NRIC
+     *
+     * @param args argument string to parse as NRIC
+     * @return the prepared NRIC
+     */
+
     private String parseArgsAsNric(String args) throws ParseException {
         final Matcher matcher = PERSON_NRIC_FORMAT.matcher(args.trim());
         if (!matcher.matches()) {
@@ -398,12 +387,19 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses arguments in the context of updating a PO's status.
+     *
+     * @param args full command args string
+     * @return the prepared command
+     */
+
     private Command prepareUpdateStatus(String args) {
         args = args.trim();
-        if (!args.equals("")) {
+        if (args.matches(PO_REGEX)) {
             return new UpdateStatusCommand(args);
         } else{
-            logr.warning("PO must be stated");
+            logr.warning("an existing or valid PO must be stated");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE));
         }
 
@@ -444,7 +440,7 @@ public class Parser {
      */
     private Command prepareDispatch(String args) {
         String backupOfficer, dispatchRequester, caseName;
-        String[] argParts = args.trim().split(" ",  3);
+        String[] argParts = args.trim().split("\\s+",  3);
 
         if (argParts.length < 3) {
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
