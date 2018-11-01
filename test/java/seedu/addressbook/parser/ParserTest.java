@@ -195,19 +195,20 @@ public class ParserTest {
     }
 
 //@@author ongweekeong
-    //
-    //@Test
-    //public void showUnreadCommand_parsedCorrectly(){
-    //    final String input = "showunread";
-    //    final InboxCommand result = parseAndAssertCommandType(input, InboxCommand.class);
-    //}
-    //TODO fix getID()
+    /*
+    @Test
+    public void showUnreadCommand_parsedCorrectly(){
+        final String input = "showunread";
+        final InboxCommand result = parseAndAssertCommandType(input, InboxCommand.class);
+    }
+
     @Test
     public void readCommand_parsedCorrectly(){
         final int index = 2;
         final String input = "read " + index;
         final ReadCommand result = parseAndAssertCommandType(input, ReadCommand.class);
     }
+    */
 
     @Test
     public void readCommand_invalidArgs_parsedIncorrectly() {
