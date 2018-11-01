@@ -4,6 +4,7 @@ package seedu.addressbook.logic;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.autocorrect.AutoCorrect;
@@ -14,16 +15,21 @@ import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.inbox.WriteNotification;
 import seedu.addressbook.password.Password;
+import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.storage.StorageFile;
 import seedu.addressbook.timeanddate.TimeAndDate;
 import seedu.addressbook.ui.Formatter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -249,7 +255,10 @@ public class LogicTest {
                 "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
-
+        assertCommandBehavior(
+                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
+        assertCommandBehavior(
+                "add Valid Name n/s1234567a d/2099 p/123456 s/wanted w/none o/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
     }
     //@@author muhdharun
 
@@ -720,6 +729,46 @@ public class LogicTest {
 
     }
 
+//    @Test
+//    public void execute_check_fileNotFound() throws Exception {
+//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
+//        String actualFileName = AddressBook.SCREENING_DATABASE;
+//        String nameForTesting = "screeningTestCase.txt";
+//        File actualFile = new File(actualFileName);
+//        File testFile = new File(nameForTesting);
+//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
+//
+//        boolean isChanged = actualFile.renameTo(testFile);
+//        if (isChanged) {
+//            ExpectedException thrown = ExpectedException.none();
+//            thrown.expect(IOException.class);
+//            CommandResult result = new CommandResult("File not found");
+//            assertCommandBehavior("check s1234567a", result.feedbackToUser);
+//            br.close();
+//            assertTrue(actualFile.renameTo(new File(actualFileName)));
+//        }
+//    }
+//
+//    @Test
+//    public void execute_find_fileNotFound() throws Exception {
+//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
+//        String actualFileName = AddressBook.SCREENING_DATABASE;
+//        String nameForTesting = "screeningTestCase.txt";
+//        File actualFile = new File(actualFileName);
+//        File testFile = new File(nameForTesting);
+//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
+//
+//        boolean isChanged = actualFile.renameTo(testFile);
+//        if (isChanged) {
+//            ExpectedException thrown = ExpectedException.none();
+//            thrown.expect(IOException.class);
+//            CommandResult result = new CommandResult("File not found");
+//            assertCommandBehavior("find s1234567a", result.feedbackToUser);
+//            br.close();
+//            assertTrue(actualFile.renameTo(new File(actualFileName)));
+//        }
+//    }
+
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {
         List<String> allPos = CheckPOStatusCommand.extractEngagementInformation(PatrolResourceStatus.getPatrolResourceStatus());
@@ -751,6 +800,31 @@ public class LogicTest {
         String expectedMessage = Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
         String actualMessage = Command.getMessageForPersonShownSummary(null);
         assertEquals(expectedMessage,actualMessage);
+    }
+
+    @Test
+    public void execute_PatrolResourceUnavailableException_message() throws Exception {
+        String po = "po2";
+        String expected = String.format("Patrol resource po2 is engaged.");
+        assertEquals(expected, new PatrolResourceUnavailableException(po).getMessage());
+    }
+
+    @Test
+    public void execute_PersonParametersEquals_equalObjects() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person test = helper.adam();
+        Name name = test.getName();
+        NRIC nric = test.getNric();
+        PostalCode postalCode = test.getPostalCode();
+        Status status = test.getStatus();
+        Offense offense = test.getWantedFor();
+
+        assertTrue(test.getName().equals(name));
+        assertTrue(test.getNric().equals(nric));
+        assertTrue(test.getPostalCode().equals(postalCode));
+        assertTrue(test.getStatus().equals(status));
+        assertTrue(test.getWantedFor().equals(offense));
+
     }
 
 //@@author
