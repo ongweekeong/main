@@ -17,7 +17,7 @@ public class CheckCommand extends Command {
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nricKeyword;
-    private String FILE_NOT_FOUND_ERROR = "File not found";
+    public static String FILE_NOT_FOUND_ERROR = "File not found";
 
     public CheckCommand(String nricToFind)
     {

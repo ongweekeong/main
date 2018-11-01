@@ -108,14 +108,6 @@ public class Person implements ReadOnlyPerson {
         return pastOffenses;
     }
 
-    public Set<String> getStringOffenses() {
-        Set<String> offenseStringSet = new HashSet<>();
-        for (Offense offense: this.pastOffenses) {
-            offenseStringSet.add(offense.getOffense());
-        }
-        return offenseStringSet;
-    }
-
     /**
      * Replaces this person's offenses with the offenses in {@code newPastOffenses}.
      */
