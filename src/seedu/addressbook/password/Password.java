@@ -530,24 +530,24 @@ public class Password {
     }
 
     public static String getID(){
-        String result = null;
+        String result = "Ghost";
         if(isHQP){
-            result = MESSAGE_HQP;
+            result = "hqp";
         }
         else if(isPO1){
-            result = MESSAGE_PO + MESSAGE_ONE;
+            result = "po1";
         }
         else if(isPO2){
-            result = MESSAGE_PO + MESSAGE_TWO;
+            result = "po2";
         }
         else if(isPO3){
-            result = MESSAGE_PO + MESSAGE_THREE;
+            result = "po3";
         }
         else if(isPO4){
-            result = MESSAGE_PO + MESSAGE_FOUR;
+            result = "po4";
         }
         else if(isPO5){
-            result = MESSAGE_PO + MESSAGE_FIVE;
+            result = "po5";
         }
         return result;
     }
