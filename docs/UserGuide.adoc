@@ -198,6 +198,19 @@ Examples:
 *	rb gun
 *   Sends a set of GPS coordinates, Current Case and Google Maps URL location to HQP.
 
+=== Dispatch assistance for requester: `dispatch` (HQP only)
+
+Generates message to dispatch an officer to backup a requester officer
+Message would be sent to requester & backup officer which includes ETA(Real Time) & Location (Google Maps URL).
+
+Format: 'dispatch [BACKUP OFFICER] [OFFENSE] [REQUESTER OFFICER]'
+
+*   dispatch po1 gun po3
+*   Sends a set of GPS coordinates, current case, ETA and Google Maps URL location of requester
+    to backup officer and vice-versa.
+
+
+
 === Lock System : `lock` (HQP & PO)
 
 Locks the system and unlocks with password input
