@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class AddressBook {
 
-    private static final String SCREENING_DATABASE = "ScreeningHistory.txt";
+    public static final String SCREENING_DATABASE = "ScreeningHistory.txt";
     private String tempNric;
     private String tempTimestamp;
     private int counter = 0;
@@ -65,7 +65,7 @@ public class AddressBook {
     public void addPersonToDbAndUpdate(ReadOnlyPerson toAdd) {
         TimeAndDate timeAndDate = new TimeAndDate();
         tempNric = toAdd.getNric().getIdentificationNumber();
-        tempTimestamp = timeAndDate.outputDATHrs();
+        tempTimestamp = timeAndDate.getOutputDAThrsForCheckCommand();
     }
 
     /**
@@ -106,7 +106,7 @@ public class AddressBook {
         PrintWriter myPrinter = new PrintWriter(write);
         try {
             while ((line = br.readLine()) !=  null){
-                String[] parts = line.split(" ");
+                String[] parts = line.split(" ",3);
                 if (parts[0].equals(tempNric)){
                     myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getID());
                     myPrinter.close();
