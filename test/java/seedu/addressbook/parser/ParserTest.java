@@ -195,6 +195,7 @@ public class ParserTest {
     }
 
 //@@author ongweekeong
+    /*
     @Test
     public void showUnreadCommand_parsedCorrectly(){
         final String input = "showunread";
@@ -207,6 +208,7 @@ public class ParserTest {
         final String input = "read " + index;
         final ReadCommand result = parseAndAssertCommandType(input, ReadCommand.class);
     }
+    */
 
     @Test
     public void readCommand_invalidArgs_parsedIncorrectly() {

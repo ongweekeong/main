@@ -23,7 +23,10 @@ public class DispatchCommand extends Command{
             + "Example: " + COMMAND_WORD
             + " PO1 gun PO3";
 
-    public static String MESSAGE_REQUEST_SUCCESS = "Dispatch for backup is successful.";
+    public static String MESSAGE_DISPATCH_SUCCESS = "Dispatch for %s backup is successful.\n";
+
+    public static String MESSAGE_OFFICER_UNAVAILABLE = "Please choose another officer to send for backup.\n\t"
+            + "Use 'checkstatus' command to see engaged/free officers.";
 
     private WriteNotification writeNotificationToBackupOfficer;
     private WriteNotification writeNotificationToRequester;
@@ -45,9 +48,8 @@ public class DispatchCommand extends Command{
     }
 
     public CommandResult execute()  {
-        destinationList.add(PatrolResourceStatus.getLocation(requester));
-
         try {
+            destinationList.add(PatrolResourceStatus.getLocation(requester));
             ArrayList<Pair<Integer, String>> etaList = origin.getEtaFrom(destinationList);
 
             int eta = etaList.get(0).getValue0();
@@ -74,13 +76,14 @@ public class DispatchCommand extends Command{
         } catch (IOException ioe) {
             return new CommandResult(Messages.MESSAGE_SAVE_ERROR);
         } catch (IllegalValueException ioe) {
-            return new CommandResult(Offense.MESSAGE_OFFENSE_INVALID); // TODO: Find proper message
+            return new CommandResult(Offense.MESSAGE_OFFENSE_INVALID + "\n" +
+                    Offense.getListOfValidOffences());
         } catch (JSONException jse) {
-            return new CommandResult(Messages.MESSAGE_ERROR); // TODO: JSON parsing problem
+            return new CommandResult(Messages.MESSAGE_JSON_PARSE_ERROR);
         } catch (PatrolResourceUnavailableException prue) {
-            return new CommandResult(prue.toString());
+            return new CommandResult(prue.getMessage() + "\n" + MESSAGE_OFFICER_UNAVAILABLE);
         }
 
-        return new CommandResult(MESSAGE_REQUEST_SUCCESS);
+        return new CommandResult(String.format(MESSAGE_DISPATCH_SUCCESS, requester));
     }
 }

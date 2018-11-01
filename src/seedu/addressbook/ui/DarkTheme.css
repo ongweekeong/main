@@ -1,17 +1,17 @@
 
 .text-area {
-    -fx-background-color: navy;
     -fx-control-inner-background: black;
-    -fx-font-family: "Gruppo";
+    -fx-font-family: "monospace";
     -fx-font-size: 10pt;
-    -fx-padding: 15 15 15 15;
+    -fx-padding: 0 325 250 0;
+    -fx-cursor: crosshair;
+    -fx-background-image: url(http://www.simontuckett.com/_Portfolio/PortImages_Pres/P_Il_Prism.jpg);
 }
 
 .text-field {
     -fx-font-size: 12pt;
-    -fx-font-family: "Allerta Stencil";
-    -fx-font-weight: bold;
+    -fx-font-family: "fantasy";
     -fx-text-fill: white;
     -fx-control-inner-background: black;
-    -fx-padding: 0 0 0 0;
+    -fx-cursor: crosshair;
 }
