@@ -20,7 +20,7 @@ import java.util.*;
  */
 public class AddressBook {
 
-    public static final String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private static final String SCREENING_DATABASE = "ScreeningHistory.txt";
     private String tempNric;
     private String tempTimestamp;
     private int counter = 0;
