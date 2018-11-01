@@ -1,16 +1,16 @@
 
 .text-area {
     -fx-background-color: navy;
-    -fx-control-inner-background: black;
-    -fx-font-family: "Gruppo";
+    -fx-control-inner-background: gray;
+    -fx-font-family: "monospace";
     -fx-font-size: 10pt;
-    -fx-padding: 15 15 15 15;
+    -fx-padding: 10 10 10 10;
+
 }
 
 .text-field {
     -fx-font-size: 12pt;
-    -fx-font-family: "Allerta Stencil";
-    -fx-font-weight: bold;
+    -fx-font-family: "fantasy";
     -fx-text-fill: white;
     -fx-control-inner-background: black;
     -fx-padding: 0 0 0 0;
