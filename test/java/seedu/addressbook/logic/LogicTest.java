@@ -399,22 +399,32 @@ public class LogicTest {
 
     @Test
     public void execute_dispatch_invalidOffense() throws Exception {
-        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID;
+        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID + "\n"
+                + Offense.getListOfValidOffences();
         assertCommandBehavior("dispatch po1 help po2", expectedMessage);
         assertCommandBehavior("dispatch po4 backup po1", expectedMessage);
     }
 
     @Test
     public void execute_dispatch_successful() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO1_INBOX);
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO2_INBOX);
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO3_INBOX);
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO4_INBOX);
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO5_INBOX);
+        PatrolResourceStatus.resetPatrolResourceStatus();
+        WriteNotification.clearAllInbox();
+        String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po2");
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po2", expectedMessage1);
 
-        String expectedMessage = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po2");
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po2", expectedMessage);
+        PatrolResourceStatus.resetPatrolResourceStatus();
+        WriteNotification.clearAllInbox();
+        String expectedMessage2 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po4");
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 gun po4", expectedMessage2);
+    }
+
+    @Test
+    public void execute_dispatch_engagedOfficer() throws Exception {
+        PatrolResourceStatus.setStatus("po3", true);
+        String baseMessage = "Patrol resource %s is engaged.\n" + DispatchCommand.MESSAGE_OFFICER_UNAVAILABLE;
+
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " hqp theft po3", String.format(baseMessage, "hqp"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 riot po2", String.format(baseMessage, "po3"));
     }
 
     @Test
@@ -441,6 +451,7 @@ public class LogicTest {
 
     @Test
     public void execute_request_recentMessageFail() throws Exception {
+        RequestHelpCommand.resetRecentMessage();
         thrown.expect(NullPointerException.class);
         RequestHelpCommand.getRecentMessage();
     }
@@ -561,16 +572,13 @@ public class LogicTest {
                                 threePersons);
     }
 
-
-
-//@@author andyrobert3
+    //@@author andyrobert3
     @Test
     public void execute_edit_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
         assertCommandBehavior("edit ", expectedMessage);
     }
 
-    //@@author andyrobert3
     @Test
     public void execute_edit_invalidCommandFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
@@ -600,10 +608,6 @@ public class LogicTest {
                 "edit n/s1234567a p/134546 s/xc w/none o/rr", Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
     }
 
-
-
-    //@@author andyrobert3
-
     @Test
     public void execute_edit_successful() throws Exception {
         String nric = "s1234567a";
@@ -619,7 +623,6 @@ public class LogicTest {
                                 Collections.emptyList());
     }
 
-    //@@author andyrobert3
     @Test
     public void execute_edit_personNotFound() throws Exception {
         assertCommandBehavior("edit n/s1234567a p/444555 s/clear w/none o/none",
