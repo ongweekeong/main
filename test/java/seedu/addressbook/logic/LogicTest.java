@@ -1,13 +1,11 @@
 package seedu.addressbook.logic;
 
 
-import org.javatuples.Triplet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.junit.runner.Request;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.common.HttpRestClient;
@@ -28,7 +26,6 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -251,6 +248,16 @@ public class LogicTest {
                 "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
 
     }
+    //@@author muhdharun
+
+    @Test
+    public void execute_CopyConstructorPerson() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        ReadOnlyPerson test = helper.adam();
+        Person duplicateAdam = new Person(test);
+        assertEquals(test,duplicateAdam);
+    }
+
 //@@author
     @Test
     public void execute_add_successful() throws Exception {
@@ -575,8 +582,8 @@ public class LogicTest {
     }
 
 
-    // TODO: HARUN HELP!
-//    //@@author andyrobert3
+
+    //@@author andyrobert3
 
     @Test
     public void execute_edit_successful() throws Exception {
@@ -750,6 +757,13 @@ public class LogicTest {
         assertCommandBehavior("updatestatus po1",String.format(UpdateStatusCommand.MESSAGE_UPDATE_PO_SUCCESS,"po1"));
     }
 
+    @Test
+    public void execute_getMessageForPersonShownSummary_NullInput() throws Exception {
+        String expectedMessage = Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+        String actualMessage = Command.getMessageForPersonShownSummary(null);
+        assertEquals(expectedMessage,actualMessage);
+    }
+
 //@@author
 //    @Test
 //    public void execute_autocorrect_command() throws Exception {
@@ -856,6 +870,111 @@ public class LogicTest {
         boolean result = Password.isPO();
         assertFalse(result);
     }
+
+    @Test
+    public void execute_matchPassword_wrongPassword(){
+        boolean result = Password.correctPassword("-795402416" , 1092381);
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_matchPassword_correctPassword(){
+        boolean result = Password.correctPassword("-795402416" , -795402416);
+        assertTrue(result);
+    }
+
+
+    @Test
+    public void execute_wrongHQP(){
+        boolean result = correctHQP("hqp","-795402416" , 123);
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_wrongPO1(){
+        boolean result = correctPO1("po1","-795402416" , 123);
+        assertFalse(result);
+    }
+    @Test
+    public void execute_wrongPO2(){
+        boolean result = correctPO2("po2","-795402416" , 123);
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_wrongPO3(){
+        boolean result = correctPO3("po3","-795402416" , 123);
+        assertFalse(result);
+    }
+    @Test
+    public void execute_wrongPO4(){
+        boolean result = correctPO4("po4","-795402416" , 123);
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_wrongPO5(){
+        boolean result = correctPO5("po5","-795402416" , 123);
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_correctHQP(){
+        boolean result = correctHQP("hqp","-795402416" , -795402416);
+        assertTrue(result);
+    }
+
+    @Test
+    public void execute_correctPO1(){
+        boolean result = correctPO1("po1","-795402416" , -795402416);
+        assertTrue(result);
+    }
+    @Test
+    public void execute_correctPO2(){
+        boolean result = correctPO2("po2","-795402416" , -795402416);
+        assertTrue(result);
+    }
+
+    @Test
+    public void execute_correctPO3(){
+        boolean result = correctPO3("po3","-795402416" , -795402416);
+        assertTrue(result);
+    }
+    @Test
+    public void execute_correctPO4(){
+        boolean result = correctPO4("po4","-795402416" , -795402416);
+        assertTrue(result);
+    }
+
+    @Test
+    public void execute_correctPO5(){
+        boolean result = correctPO5("po5","-795402416" , -795402416);
+        assertTrue(result);
+    }
+
+    @Test
+    public void execute_prepareUpdatePassword(){
+        String result = Password.prepareUpdatePassword();
+        assertEquals(Password.MESSAGE_ENTER_PASSWORD_TO_CHANGE, result);
+        assertTrue(Password.getIsUpdatingPassword());
+        assertEquals(5, Password.getWrongPasswordCounter());
+        Password.unprepareUpdatePassword();
+    }
+
+    /*
+    @Test
+    /*
+    public void execute_updatePassword(){
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = Password.updatePassword("thisiswrong", 5);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+                + "\n" + MESSAGE_ENTER_PASSWORD,result);
+        Password.lockIsHQP();
+    }
+    */
+
 
     //@@author ongweekeong
     @Test
@@ -975,6 +1094,61 @@ public class LogicTest {
         assertCommandBehavior(inputCommand, expected);
     }
 
+    @Test
+    public void execute_returnMessageFilePaths(){
+        String result = MessageFilePaths.getFilePathFromUserId("hqp");
+        String expected = MessageFilePaths.FILEPATH_HQP_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("hqp");
+        expected = MessageFilePaths.FILEPATH_HQP_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("po1");
+        expected = MessageFilePaths.FILEPATH_PO1_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("po2");
+        expected = MessageFilePaths.FILEPATH_PO2_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("po3");
+        expected = MessageFilePaths.FILEPATH_PO3_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("po4");
+        expected = MessageFilePaths.FILEPATH_PO4_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("po5");
+        expected = MessageFilePaths.FILEPATH_PO5_INBOX;
+        assertEquals(expected, result);
+
+        result = MessageFilePaths.getFilePathFromUserId("nonsense");
+        expected = MessageFilePaths.FILEPATH_DEFAULT;
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void execute_msgComparator() throws Exception {
+        final String testMsg = "This is a test message.";
+        Msg msgHigh = new Msg(Msg.Priority.HIGH, testMsg);
+        Msg msgMed = new Msg(Msg.Priority.MED, testMsg);
+        Msg msgLow = new Msg(Msg.Priority.LOW, testMsg);
+        final int expectedHighToLow = -1;
+        assertEquals(expectedHighToLow, msgHigh.compareTo(msgLow));
+        final int expectedHighToMed = -1;
+        assertEquals(expectedHighToMed, msgHigh.compareTo(msgMed));
+        final int expectedMedToLow = -1;
+        assertEquals(expectedMedToLow, msgMed.compareTo(msgLow));
+        final int expectedUnreadLowToReadHigh = -1; //Unread messages should have higher urgency than even read high priority messages.
+        msgHigh.setMsgAsRead();
+        assertEquals(expectedUnreadLowToReadHigh, msgLow.compareTo(msgHigh));
+        final int expectedEarlierToLater = -1; // Messages with same read status and priority will be compared by timestamp.
+        Thread.sleep(500);
+        Msg msgMedLater = new Msg(Msg.Priority.MED, testMsg);
+        assertEquals(expectedEarlierToLater, msgMed.compareTo(msgMedLater));
+    }
     //@@author
 
     /**
