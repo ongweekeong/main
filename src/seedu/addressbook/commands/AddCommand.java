@@ -13,7 +13,7 @@ public class AddCommand extends Command {
 
     public static final String COMMAND_WORD = "add";
     //@@ author muhdharun -reused
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Adds a person to the system. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Adds a person to the Police Records. "
             + "Parameters: NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR o/PASTOFFENSES...\n\t"
             + "Example: " + COMMAND_WORD
             + " John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs";
