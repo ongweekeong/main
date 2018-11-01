@@ -7,7 +7,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import seedu.addressbook.PatrolResourceStatus;
+import seedu.addressbook.autocorrect.AutoCorrect;
+import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.commands.*;
+import seedu.addressbook.commands.Dictionary;
 import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
@@ -971,10 +974,8 @@ public class LogicTest {
 
 
     //@@author ongweekeong
-
-
     @Test
-    public void execute_readMsgWithoutShowUnread() throws Exception {
+    public void execute_readMsg_withoutShowUnread() throws Exception {
         Inbox.numUnreadMsgs = -1; // Set numUnreadMsgs to default state before inbox is accessed.
         String inputCommand = ReadCommand.COMMAND_WORD + " 5";
         String expected = Inbox.INBOX_NOT_READ_YET;
@@ -982,7 +983,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_checkEmptyInbox() throws Exception{
+    public void execute_checkEmptyInbox_successful() throws Exception{
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
         String expectedResult = Messages.MESSAGE_NO_UNREAD_MSGS;
@@ -990,7 +991,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_checkInboxWithAnUnreadMessage() throws Exception{
+    public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String expectedResult = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n';
         final String testMessage = "This is a test message.";
@@ -999,28 +1000,9 @@ public class LogicTest {
 
         assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
     }
-//TODO: Wee keong, time fix
-//    @Test
-//    public void execute_checkInboxWithMultipleUnreadMessages() throws Exception {
-//        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-//        final String testMessage = "This is a test message.";
-//        Msg testMsg;
-//        int messageNum = 1, numOfMsgs = 3;
-//        String expectedResult = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION + '\n';
-//        //Check that at every additional message added at each loop, the expected result is correct as well.
-//        while(numOfMsgs!=0) {
-//            testMsg = generateMsgInInbox(testMessage);
-//
-//            expectedResult = assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
-//
-//            numOfMsgs--;
-//            messageNum++;
-//            Thread.sleep(50);
-//        }
-//    }
 
     @Test
-    public void execute_readMsgWithoutUnreadMsgs() throws Exception {
+    public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
@@ -1048,7 +1030,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_readMsgWithInvalidIndex() throws Exception {
+    public void execute_readMsg_invalidIndex() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
         final int numOfMsgs = 3;
@@ -1062,7 +1044,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_readMsgWithValidIndex() throws Exception {
+    public void execute_readMsg_ValidIndex() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
         int index = 1;
@@ -1078,7 +1060,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_returnMessageFilePaths(){
+    public void execute_returnMessageFilePaths_successful(){
         String result = MessageFilePaths.getFilePathFromUserId("hqp");
         String expected = MessageFilePaths.FILEPATH_HQP_INBOX;
         assertEquals(expected, result);
@@ -1131,6 +1113,20 @@ public class LogicTest {
         Thread.sleep(500);
         Msg msgMedLater = new Msg(Msg.Priority.MED, testMsg);
         assertEquals(expectedEarlierToLater, msgMed.compareTo(msgMedLater));
+    }
+
+    @Test
+    public void execute_clearInboxCommand_successful() throws Exception {
+        String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_SUCCESSFUL;
+        assertCommandBehavior(ClearInboxCommand.COMMAND_WORD, expected);
+    }
+//TODO
+    @Test
+    public void execute_ClearInboxCommand_unsuccessful() throws Exception {
+        String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_UNSUCCESSFUL;
+        Command input = new ClearInboxCommand("This file path does not exist");
+        CommandResult r = input.execute();
+        assertEquals(expected, r.feedbackToUser);
     }
     //@@author
 
@@ -1360,4 +1356,77 @@ public class LogicTest {
         return date;
     }
 
+    //@@author ShreyasKp
+
+    CheckDistance checker = new CheckDistance();
+    AutoCorrect correction = new AutoCorrect();
+    Dictionary dict = new Dictionary();
+
+    @Test
+    public void execute_addCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "ad",
+                "ade",
+                "adds"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_deleteCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "delet",
+                "delite",
+                "deletes"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_shutdownCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "shutdon",
+                "shutdoen",
+                "shutdowns"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_editCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "edt",
+                "exit",
+                "edits"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
 }
