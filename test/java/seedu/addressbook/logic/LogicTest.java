@@ -402,8 +402,21 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_dispatch_successful() throws Exception {
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO1_INBOX);
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO2_INBOX);
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO3_INBOX);
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO4_INBOX);
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_PO5_INBOX);
+
+        String expectedMessage = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po2");
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po2", expectedMessage);
+    }
+
+    @Test
     public void execute_httpGetRequest_internetAvailable() throws Exception {
-        String testUrl = "http://google.com";
+        String testUrl = "https://www.google.com";
 
         HttpRestClient httpRestClient = new HttpRestClient();
         int statusCode = httpRestClient.requestGetResponse(testUrl)
@@ -412,13 +425,16 @@ public class LogicTest {
         assertTrue(statusCode == 200 || statusCode == 201 || statusCode == 204);
     }
 
-    @Test
-    public void execute_request_failSaveFailure() throws Exception {
-        String expectedMessage = Messages.MESSAGE_SAVE_ERROR;
-        MessageFilePaths.FILEPATH_HQP_INBOX = "/stub";
-        assertCommandBehavior("");
-
-    }
+//    @Test
+//    public void execute_request_failSaveFailure() throws Exception {
+//        File file = new File(MessageFilePaths.FILEPATH_HQP_INBOX);
+//        if (file.renameTo(new File("inboxMessages/test"))) {
+//
+//        }
+//
+//        assertCommandBehavior("");
+//
+//    }
 
     @Test
     public void execute_request_recentMessageFail() throws Exception {
@@ -603,7 +619,6 @@ public class LogicTest {
     //@@author andyrobert3
     @Test
     public void execute_edit_personNotFound() throws Exception {
-
         assertCommandBehavior("edit n/s1234567a p/444555 s/clear w/none o/none",
                                 Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK,
                                 addressBook,
@@ -615,45 +630,6 @@ public class LogicTest {
                                 addressBook,
                                 false,
                                 Collections.emptyList());
-
-//    @Test
-//    public void execute_edit_successful() throws Exception {
-//        String nric = "s1234567a";
-//
-//        TestDataHelper helper = new TestDataHelper();
-//        Person toBeEdited = helper.generatePersonWithNric(nric);
-//        AddressBook addressBook = new AddressBook();
-//        addressBook.addPerson(toBeEdited);
-//
-//        assertCommandBehavior("edit n/s1234567a p/444555 s/xc w/theft o/theft",
-//                                String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, nric),
-//                                addressBook,
-//                                false,
-//                                Collections.emptyList());
-//    }
-//
-//    //@@author andyrobert3
-//    @Test
-//    public void execute_edit_personNotFound() throws Exception {
-//        TestDataHelper helper = new TestDataHelper();
-//        Person adam = helper.adam();
-//        AddressBook expectedAB = new AddressBook();
-//        expectedAB.addPerson(adam);
-//
-//        assertCommandBehavior("edit n/s1234567a p/444555 s/clear w/none o/none",
-//                                Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK,
-//                                expectedAB,
-//                                true,
-//                                addressBook.getAllPersons().immutableListView());
-//
-//        assertCommandBehavior("edit n/f3456789b p/444555 s/xc w/drugs o/drugs",
-//                                Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK,
-//                                expectedAB,
-//                                false,
-//                                Collections.emptyList());
-//
-//    }
-
 
     }
 
@@ -667,6 +643,7 @@ public class LogicTest {
     @Test
     public void execute_find_onlyMatchesFullNric() throws Exception {
         TestDataHelper helper = new TestDataHelper();
+
         Person pTarget1 = helper.generatePersonWithNric("s1234567a");
         Person pTarget2 = helper.generatePersonWithNric("s1234567b");
         Person p1 = helper.generatePersonWithNric("s1234567c");
@@ -678,9 +655,7 @@ public class LogicTest {
         String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
         CommandResult r = logic.execute(inputCommand);
 
-
         assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
-
     }
 
     @Test

@@ -24,7 +24,7 @@ public class DispatchCommand extends Command{
             + "Example: " + COMMAND_WORD
             + " PO1 gun PO3";
 
-    public static String MESSAGE_REQUEST_SUCCESS = "Dispatch for backup is successful.";
+    public static String MESSAGE_DISPATCH_SUCCESS = "Dispatch for %s backup is successful.";
 
     private WriteNotification writeNotificationToBackupOfficer;
     private WriteNotification writeNotificationToRequester;
@@ -82,6 +82,6 @@ public class DispatchCommand extends Command{
             return new CommandResult(prue.toString());
         }
 
-        return new CommandResult(MESSAGE_REQUEST_SUCCESS);
+        return new CommandResult(String.format(MESSAGE_DISPATCH_SUCCESS, requester));
     }
 }
