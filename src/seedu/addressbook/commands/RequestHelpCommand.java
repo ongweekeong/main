@@ -37,7 +37,6 @@ public class RequestHelpCommand extends Command {
         requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString, PatrolResourceStatus.getLocation(Password.getID()));
     }
 
-
     @Override
     public CommandResult execute() {
         try {
