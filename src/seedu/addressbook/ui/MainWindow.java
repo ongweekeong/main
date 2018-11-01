@@ -3,6 +3,7 @@ package seedu.addressbook.ui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import seedu.addressbook.autocorrect.AutoCorrect;
@@ -71,12 +72,12 @@ public class MainWindow {
             displayResult(result);
         }
         else if(Password.isLocked()) {
-            String unlockDeviceResult = Password.unlockDevice(userCommandText,password.getWrongPasswordCounter());
+            String unlockDeviceResult = Password.unlockDevice(userCommandText, Password.getWrongPasswordCounter());
             clearScreen();
             display(unlockDeviceResult);
         }
         else if(canUpdatePassword(userCommandText)){
-            String prepareUpdatePasswordResult = password.prepareUpdatePassword();
+            String prepareUpdatePasswordResult = Password.prepareUpdatePassword();
             clearScreen();
             display(prepareUpdatePasswordResult);
         }
@@ -86,7 +87,7 @@ public class MainWindow {
                 updatePasswordResult = password.updatePasswordFinal(userCommandText);
             }
             else{
-                updatePasswordResult = password.updatePassword(userCommandText,password.getWrongPasswordCounter());
+                updatePasswordResult = password.updatePassword(userCommandText, Password.getWrongPasswordCounter());
             }
             clearScreen();
             display(updatePasswordResult);
@@ -123,7 +124,7 @@ public class MainWindow {
 
     //@@author iamputradanish
     private boolean canUpdatePassword(String userCommandText){
-        return password.isHQPUser() && isUpdatePasswordCommand(userCommandText);
+        return Password.isHQPUser() && isUpdatePasswordCommand(userCommandText);
     }
 
     //@@author
@@ -175,7 +176,7 @@ public class MainWindow {
 
     void displayWelcomeMessage(String version, String storageFilePath) {
         String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
-        display(MESSAGE_WELCOME, version, storageFileInfo, tad.outputDATHrs() + "\n" , Password.MESSAGE_ENTER_PASSWORD);
+        display(MESSAGE_WELCOME, version, storageFileInfo, tad.outputDatMainHrs() + "\n" , Password.MESSAGE_ENTER_PASSWORD);
     }
 
     /**

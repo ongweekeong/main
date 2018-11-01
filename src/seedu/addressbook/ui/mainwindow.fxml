@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox stylesheets="@/seedu/addressbook/ui/DarkTheme.css" alignment="center" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="seedu.addressbook.ui.MainWindow">
+      fx:controller="seedu.addressbook.ui.MainWindow" >
 
     <children>
 
@@ -13,8 +13,7 @@
         </TextArea>
 
         <TextField fx:id="commandInput" onAction="#onCommand" VBox.vgrow="NEVER">
-        </TextField>
-
+            </TextField>
 
     </children>
 
