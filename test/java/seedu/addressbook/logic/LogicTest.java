@@ -984,7 +984,6 @@ public class LogicTest {
         String expected = Inbox.INBOX_NOT_READ_YET;
         assertCommandBehavior(inputCommand, expected);
     }
-    *///TODO:getID()
 
     @Test
     public void execute_checkEmptyInbox_successful() throws Exception{
@@ -1004,6 +1003,7 @@ public class LogicTest {
 
         assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
     }
+    *///TODO:getID()
 
     /*
     @Test
@@ -1123,12 +1123,13 @@ public class LogicTest {
         assertEquals(expectedEarlierToLater, msgMed.compareTo(msgMedLater));
     }
 
-    @Test
-    public void execute_clearInboxCommand_successful() throws Exception {
-        String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_SUCCESSFUL;
-        assertCommandBehavior(ClearInboxCommand.COMMAND_WORD, expected);
-    }
-//TODO
+    //@Test
+    //public void execute_clearInboxCommand_successful() throws Exception {
+    //    String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_SUCCESSFUL;
+    //    assertCommandBehavior(ClearInboxCommand.COMMAND_WORD, expected);
+    //}
+    //TODO getID()
+
     @Test
     public void execute_ClearInboxCommand_unsuccessful() throws Exception {
         String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_UNSUCCESSFUL;
