@@ -21,6 +21,34 @@ public class AutoCorrect {
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
+                case CheckCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case CheckPOStatusCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case ClearInboxCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case InboxCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case ReadCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case RequestHelpCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case UpdateStatusCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
                 case DateTimeCommand.COMMAND_WORD:
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
