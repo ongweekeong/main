@@ -110,8 +110,20 @@ public class MainWindow {
                 String displayCommand = correction.checkCommand(commandWordInput);
                 String output = checker.checkDistance(commandWordInput);
                 clearScreen();
-                display(String.format(dict.getCommandErrorMessage(), output));
-                display(displayCommand);
+                if(!(output.equals("none"))) {
+                    display(String.format(dict.getCommandErrorMessage(), output));
+                    display(displayCommand);
+                }
+                else {
+                    boolean isHQPFlag = password.isHQPUser();
+                    if(isHQPFlag) {
+                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
+                    }
+                    else {
+                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_PO_USAGES)).feedbackToUser;
+                    }
+                    display(displayCommand);
+                }
             }
             else{
                 clearScreen();

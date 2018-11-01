@@ -247,6 +247,12 @@ Format: 'read index'
 Examples:
 *  read 1
 
+=== Clear inbox: `clearinbox`
+
+Clears the text file containing all the messages (both read and unread) for the user.
+
+Format: 'clearinbox'
+
 === Exit program : `shutdown` (HQP & PO)
 
 Shutdown the system
@@ -261,6 +267,7 @@ Examples:
 
 AutoCorrect feature predicts expected input when the user enters invalid input.
 Currently all commands are covered by the feature.
+
 == Commands List
  
 *	*Help* : 'help'
@@ -311,6 +318,7 @@ E.g. dispatch PO2
 *	*Check notifications* : 'showunread'
 
 *   *Read message* : 'read index'
+*   *Clear Inbox*  : 'clearinbox'
 
 E.g  read 1
 
