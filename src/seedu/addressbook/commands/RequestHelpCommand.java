@@ -18,8 +18,7 @@ public class RequestHelpCommand extends Command {
             + "Requests help from headquarters.\n\t"
             + "Message from police officer can be appended in text.\n\t"
             + "Example: " + COMMAND_WORD
-            + " gun "
-            + " Help needed on Jane Street";
+            + " gun";
 
 
     public static String MESSAGE_REQUEST_SUCCESS = "Request for backup case from %s has been sent to HQP.";

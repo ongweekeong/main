@@ -1,6 +1,7 @@
 //@@author andyrobert3
 package seedu.addressbook.commands;
 
+import org.apache.http.client.HttpResponseException;
 import org.javatuples.Pair;
 import org.json.JSONException;
 import seedu.addressbook.PatrolResourceStatus;
@@ -47,7 +48,7 @@ public class DispatchCommand extends Command{
         this.destinationList = new ArrayList<>();
     }
 
-    public CommandResult execute()  {
+    public CommandResult execute() {
         try {
             destinationList.add(PatrolResourceStatus.getLocation(requester));
             ArrayList<Pair<Integer, String>> etaList = origin.getEtaFrom(destinationList);
@@ -62,19 +63,21 @@ public class DispatchCommand extends Command{
                     PatrolResourceStatus.getLocation(backupOfficer).getGoogleMapsURL();
 
             Msg dispatchMessage = new Msg(Offense.getPriority(offense), dispatchStringMessage,
-                                            PatrolResourceStatus.getLocation(requester), eta);
+                    PatrolResourceStatus.getLocation(requester), eta);
 
             if (PatrolResourceStatus.getPatrolResource(backupOfficer).getValue2()) {
                 throw new PatrolResourceUnavailableException(backupOfficer);
             }
-            
+
             Msg requesterMessage = new Msg(Offense.getPriority(offense), requesterStringMessage,
-                                            PatrolResourceStatus.getLocation(backupOfficer), eta);
+                    PatrolResourceStatus.getLocation(backupOfficer), eta);
 
             writeNotificationToRequester.writeToFile(requesterMessage);
             writeNotificationToBackupOfficer.writeToFile(dispatchMessage);
+        } catch (HttpResponseException hre) {
+            return new CommandResult(hre.getMessage());
         } catch (IOException ioe) {
-            return new CommandResult(Messages.MESSAGE_SAVE_ERROR);
+            return new CommandResult(Messages.MESSAGE_SAVE_ERROR + "/" + Messages.MESSAGE_INTERNET_NOT_AVAILABLE);
         } catch (IllegalValueException ioe) {
             return new CommandResult(Offense.MESSAGE_OFFENSE_INVALID + "\n" +
                     Offense.getListOfValidOffences());
