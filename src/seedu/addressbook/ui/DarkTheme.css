@@ -1,5 +1,6 @@
 
 .text-area {
+    -fx-background-color: black;
     -fx-control-inner-background: black;
     -fx-font-family: "monospace";
     -fx-font-size: 10pt;
