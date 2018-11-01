@@ -18,7 +18,7 @@ public class FindCommand extends Command {
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nric;
-    private String PERSON_NOT_FOUND_ERROR = "Cannot find person with nric";
+    private  String FILE_NOT_FOUND_ERROR = "File not found";
 
     public FindCommand(String nricToFind) {
         this.nric = nricToFind;
@@ -34,7 +34,7 @@ public class FindCommand extends Command {
             final ReadOnlyPerson personFound = getPersonWithNric();
             return new CommandResult(getMessageForPersonShownSummary(personFound));
         } catch(IOException ioe) {
-            return new CommandResult(PERSON_NOT_FOUND_ERROR);
+            return new CommandResult(FILE_NOT_FOUND_ERROR);
         }
     }
 
