@@ -965,10 +965,8 @@ public class LogicTest {
 
 
     //@@author ongweekeong
-
-
     @Test
-    public void execute_readMsgWithoutShowUnread() throws Exception {
+    public void execute_readMsg_withoutShowUnread() throws Exception {
         Inbox.numUnreadMsgs = -1; // Set numUnreadMsgs to default state before inbox is accessed.
         String inputCommand = ReadCommand.COMMAND_WORD + " 5";
         String expected = Inbox.INBOX_NOT_READ_YET;
@@ -976,7 +974,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_checkEmptyInbox() throws Exception{
+    public void execute_checkEmptyInbox_successful() throws Exception{
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
         String expectedResult = Messages.MESSAGE_NO_UNREAD_MSGS;
@@ -984,7 +982,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_checkInboxWithAnUnreadMessage() throws Exception{
+    public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String expectedResult = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n';
         final String testMessage = "This is a test message.";
@@ -993,28 +991,9 @@ public class LogicTest {
 
         assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
     }
-//TODO: Wee keong, time fix
-//    @Test
-//    public void execute_checkInboxWithMultipleUnreadMessages() throws Exception {
-//        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-//        final String testMessage = "This is a test message.";
-//        Msg testMsg;
-//        int messageNum = 1, numOfMsgs = 3;
-//        String expectedResult = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION + '\n';
-//        //Check that at every additional message added at each loop, the expected result is correct as well.
-//        while(numOfMsgs!=0) {
-//            testMsg = generateMsgInInbox(testMessage);
-//
-//            expectedResult = assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
-//
-//            numOfMsgs--;
-//            messageNum++;
-//            Thread.sleep(50);
-//        }
-//    }
 
     @Test
-    public void execute_readMsgWithoutUnreadMsgs() throws Exception {
+    public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
@@ -1042,7 +1021,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_readMsgWithInvalidIndex() throws Exception {
+    public void execute_readMsg_invalidIndex() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
         final int numOfMsgs = 3;
@@ -1056,7 +1035,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_readMsgWithValidIndex() throws Exception {
+    public void execute_readMsg_ValidIndex() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
         int index = 1;
@@ -1072,7 +1051,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_returnMessageFilePaths(){
+    public void execute_returnMessageFilePaths_successful(){
         String result = MessageFilePaths.getFilePathFromUserId("hqp");
         String expected = MessageFilePaths.FILEPATH_HQP_INBOX;
         assertEquals(expected, result);
@@ -1125,6 +1104,20 @@ public class LogicTest {
         Thread.sleep(500);
         Msg msgMedLater = new Msg(Msg.Priority.MED, testMsg);
         assertEquals(expectedEarlierToLater, msgMed.compareTo(msgMedLater));
+    }
+
+    @Test
+    public void execute_clearInboxCommand_successful() throws Exception {
+        String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_SUCCESSFUL;
+        assertCommandBehavior(ClearInboxCommand.COMMAND_WORD, expected);
+    }
+//TODO
+    @Test
+    public void execute_ClearInboxCommand_unsuccessful() throws Exception {
+        String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_UNSUCCESSFUL;
+        Command input = new ClearInboxCommand("This file path does not exist");
+        CommandResult r = input.execute();
+        assertEquals(expected, r.feedbackToUser);
     }
     //@@author
 
