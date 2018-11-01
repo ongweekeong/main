@@ -246,6 +246,12 @@ Format: 'read index'
 Examples:
 *  read 1
 
+=== Clear inbox: `clearinbox`
+
+Clears the text file containing all the messages (both read and unread) for the user.
+
+Format: 'clearinbox'
+
 === Exit program : `shutdown`
 
 Shutdown the system
@@ -306,6 +312,7 @@ E.g. dispatch PO2
 *	*Check notifications* : 'showunread'
 
 *   *Read message* : 'read index'
+*   *Clear Inbox*  : 'clearinbox'
 
 E.g  read 1
 
