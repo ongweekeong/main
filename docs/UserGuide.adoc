@@ -44,24 +44,24 @@ image::Ui.png[width="790"]
 * Items with `…`​ after them can be used multiple times including zero times e.g. `o/OFFENSE...` can be used as `{nbsp}` (i.e. 0 times), `o/theft`, `o/riot o/drugs` etc
 ====
 	
-=== Viewing help : `help`
+=== Viewing help : `help` (HQP & PO)
 
-Lists all the features in a user friendly format for users and how to use them
+Lists all the features in a user friendly format for users and how to use them.
 
 Format: 'help'
 
 
 image::HelpCommand.png[width="790"]
 
-=== Display date and time : `time`
+=== Display date and time : `time` (HQP & PO)
 
-Shows the current date and time
+Shows the current date and time.
 
 Format: 'time'
 
-=== Adding a person: `add`
+=== Adding a person: `add` (HQP only)
 
-Adds a criminal to the database - only by HQP.
+Adds a criminal to the database.
 
 Format: 'add NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR o/PASTOFFENSES'
 
@@ -82,11 +82,11 @@ image::AddCommand.png[width="790"]
 [TIP]
 A person can have more than 0 past offenses
 
-=== Editing a person : `edit`
+=== Editing a person : `edit` (HQP only)
 
 Edit a specified parameter of an existing person in the address book - only by HQP
 
-Format: 'edit NRIC n/[NAME] p/[POSTAL_CODE] s/[STATUS] w/WANTED_FOR o/PAST_OFFENCES'
+Format: 'edit n/[NRIC] p/[POSTAL_CODE] s/[STATUS] w/WANTED_FOR o/PAST_OFFENCES'
 
 ****
 *	Edits the person with the specified NRIC.
@@ -99,7 +99,7 @@ Examples:
 *	edit g1952866Q p/510246
 *	Edits the postal code of the person with the specified NRIC to be 510246
 
-=== Display a list of all persons : `list`
+=== Display a list of all persons : `list` (HQP & PO)
 
 Shows a list of every person in the records
 
@@ -108,11 +108,11 @@ Format: 'list'
 Examples:
 
 *	list
-*	displays list of all persons
+*	Displays list of all persons
 
 image::ListCommand.png[width="790"]
 
-=== Find a person by NRIC : `find`
+=== Find a person by NRIC : `find` (HQP & PO)
 
 Finds a person in the records by the specified NRIC
 
@@ -129,7 +129,7 @@ Examples:
 *   A timestamp and current ID is stored whenever this command is used
 ====
 
-=== Get screening history of a person: `check`
+=== Get screening history of a person: `check` (HQP)
 
 Displays all the times a person was screened in the form of timestamps (using 'find' command) - Only by HQP
 
@@ -145,13 +145,13 @@ Examples:
 
 image::CheckCommand.png[width="790"]
 
-=== Get status of POs: `checkstatus`
+=== Get status of POs: `checkstatus` (HQP & PO)
 
 Shows all POs and their current engagement statuses
 
 Format: 'checkstatus'
 
-=== Update status of PO: `updatestatus`
+=== Update status of PO: `updatestatus` (PO only)
 
 Updates the PO so that it is not engaged anymore
 
@@ -162,9 +162,9 @@ Examples:
 *  updatestatus po2
 *  po2 is now free for dispatch
 
-=== Deleting a person : `delete`
+=== Deleting a person : `delete` (HQP only)
 
-Deletes the specified person from the database- only by HQP.
+Deletes the specified person from the database.
 
 Format: 'delete NRIC'
 
@@ -175,9 +175,9 @@ Examples:
 *	delete G1952866Q
 *	Deletes the person with the specified NRIC from the records.
 
-=== Clear records : `clear`
+=== Clear records : `clear` (HQP only)
 
-Clears the records of persons- only by HQP
+Clears the records of persons
 
 Format: 'clear'
 
@@ -186,7 +186,7 @@ Example:
 *	clear
 *	Records will now be empty
 
-=== Requesting for assistance : 'rb'
+=== Requesting for assistance : `rb` (HQP & PO)
 
 Generates GPS coordinates of current location with current case and sends it to HQP.
 HQP would receive message in inbox.
@@ -196,8 +196,9 @@ Format: 'rb OFFENSE'
 Examples:
 
 *	rb gun
-*   Returns a set of GPS coordinates, Current Case and Google Maps URL location to HQP.
-=== Lock System : `lock`
+*   Sends a set of GPS coordinates, Current Case and Google Maps URL location to HQP.
+
+=== Lock System : `lock` (HQP & PO)
 
 Locks the system and unlocks with password input
 
@@ -208,7 +209,7 @@ Examples:
 *	lock
 *	Any user must enter their respective password to unlock
 
-=== Update Password : `update password`
+=== Update Password : `update password` (HQP)
 
 Updates password of user - only HQP can change the user's password
 
@@ -220,7 +221,7 @@ Examples:
 *	Please select a password to change
 *   User then has to enter old and new alphanumeric password
 
-=== Check notifications: `showunread`
+=== Check notifications: `showunread` (HQP & PO)
 
 For HQPs: Check inbox to see a list of dispatch requests made by POs, and are sorted based on severity first, and then time stamp.
 For POs: Check inbox to see who is responding to request for backup/ambulance/fire truck or to see if have any dispatch orders
@@ -237,7 +238,7 @@ Examples (as a PO):
 *	'showunread'
 *	Shows any dispatch messages by HQ or response for backup if any
 
-=== Read message : `read`
+=== Read message : `read`(HQP & PO)
 
 Updates the status of unread messages to read. Command to be used after `showunread` command
 
@@ -246,16 +247,20 @@ Format: 'read index'
 Examples:
 *  read 1
 
-=== Exit program : `shutdown`
+=== Exit program : `shutdown` (HQP & PO)
 
 Shutdown the system
 
 Format: 'shutdown'
 
 Examples:
-* shutdown
-* Police Records shuts down
+*   shutdown
+*   Police Records shuts down
 
+=== AutoCorrect feature
+
+AutoCorrect feature predicts expected input when the user enters invalid input.
+Currently all commands are covered by the feature.
 == Commands List
  
 *	*Help* : 'help'
