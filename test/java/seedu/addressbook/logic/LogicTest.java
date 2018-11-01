@@ -1495,4 +1495,38 @@ public class LogicTest {
             assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
+
+    @Test
+    public void execute_checkCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "chek",
+                "chick",
+                "checks"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+//    @Test
+//    public void execute_CheckPOStatusCommand_wrongSpellingOfCommandWord() {
+//        final String[] inputs = {
+//                "chekstatus",
+//                "checkstauts",
+//                "checkstatuts"
+//        };
+//        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+//        expected = expected.substring(expected.indexOf("!") + 1);
+//        for (String input: inputs) {
+//            String output = checker.checkDistance(input);
+//            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+//            String displayCommand = correction.checkCommand(input);
+//            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+//        }
+//    }
 }
