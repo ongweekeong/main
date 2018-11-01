@@ -13,15 +13,16 @@ import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.person.*;
-import seedu.addressbook.inbox.*;
+import seedu.addressbook.inbox.Inbox;
+import seedu.addressbook.inbox.MessageFilePaths;
+import seedu.addressbook.inbox.Msg;
+import seedu.addressbook.inbox.WriteNotification;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.storage.StorageFile;
 import seedu.addressbook.timeanddate.TimeAndDate;
 import seedu.addressbook.ui.Formatter;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -33,7 +34,8 @@ import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static seedu.addressbook.common.Messages.*;
+import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
 import static seedu.addressbook.password.Password.*;
 
 
@@ -203,7 +205,7 @@ public class LogicTest {
     //@@author
     @Test
     public void execute_exit() throws Exception {
-        assertCommandBehavior("shutdown", ExitCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
+        assertCommandBehavior(ExitCommand.COMMAND_WORD, ExitCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
     }
 
     @Test
@@ -213,7 +215,7 @@ public class LogicTest {
         addressBook.addPerson(helper.generatePerson(2));
         addressBook.addPerson(helper.generatePerson(3));
 
-        assertCommandBehavior("clear", ClearCommand.MESSAGE_SUCCESS, AddressBook.empty(), false, Collections.emptyList());
+        assertCommandBehavior(ClearCommand.COMMAND_WORD, ClearCommand.MESSAGE_SUCCESS, AddressBook.empty(), false, Collections.emptyList());
     }
 //@@author muhdharun -reused
     @Test
@@ -1004,18 +1006,7 @@ public class LogicTest {
 
 
     //@@author ongweekeong
-    @Test
-    public void execute_missingInboxFile() {
-        String result = "";
-        try{
-            ReadNotification testReader = new ReadNotification("Nonsense");
-            TreeSet<Msg> testSet = testReader.ReadFromFile();
-        }
-        catch (IOException e){
-            result = MESSAGE_INBOX_FILE_NOT_FOUND;
-        }
-        assertEquals(MESSAGE_INBOX_FILE_NOT_FOUND, result);
-    }
+
 
     @Test
     public void execute_readMsgWithoutShowUnread() throws Exception {
