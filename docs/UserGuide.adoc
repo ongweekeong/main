@@ -177,7 +177,7 @@ Examples:
 
 === Clear records : `clear` (HQP only)
 
-Clears the records of persons
+Clears all records of people in policeRecords.txt
 
 Format: 'clear'
 
