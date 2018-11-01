@@ -100,7 +100,6 @@ public class Location {
                 etaList.add(durationPair);
             }
 
-            return etaList;
         } catch(JSONException jsonE) {
             // TODO: Handle exception better
             jsonE.printStackTrace();

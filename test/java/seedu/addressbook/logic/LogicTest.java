@@ -352,6 +352,19 @@ public class LogicTest {
 
     //@@author andyrobert3
     @Test
+    public void execute_location_setters()  {
+        Location location = new Location(1.2345, 2.4567);
+        double newLatitude = 4.5679;
+        double newLongitude = 9.6533;
+
+        location.setLatitude(newLatitude);
+        location.setLongitude(newLongitude);
+
+        assertTrue(location.getLatitude() == newLatitude);
+        assertTrue(location.getLongitude() == newLongitude);
+    }
+
+    @Test
     public void execute_request_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE);
         assertCommandBehavior("rb", expectedMessage);
@@ -450,7 +463,7 @@ public class LogicTest {
 //    }
 
     @Test
-    public void execute_request_recentMessageFail() throws Exception {
+    public void execute_request_recentMessageFail() {
         RequestHelpCommand.resetRecentMessage();
         thrown.expect(NullPointerException.class);
         RequestHelpCommand.getRecentMessage();
