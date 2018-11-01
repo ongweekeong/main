@@ -12,6 +12,7 @@ import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.MessageFilePaths;
@@ -250,7 +251,10 @@ public class LogicTest {
                 "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
-
+        assertCommandBehavior(
+                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
+        assertCommandBehavior(
+                "add Valid Name n/s1234567a d/2099 p/123456 s/wanted w/none o/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
     }
     //@@author muhdharun
 
@@ -792,6 +796,31 @@ public class LogicTest {
         String expectedMessage = Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
         String actualMessage = Command.getMessageForPersonShownSummary(null);
         assertEquals(expectedMessage,actualMessage);
+    }
+
+    @Test
+    public void execute_PatrolResourceUnavailableException_message() throws Exception {
+        String po = "po2";
+        String expected = String.format("Patrol resource po2 is engaged.");
+        assertEquals(expected, new PatrolResourceUnavailableException(po).getMessage());
+    }
+
+    @Test
+    public void execute_PersonParametersEquals_equalObjects() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person test = helper.adam();
+        Name name = test.getName();
+        NRIC nric = test.getNric();
+        PostalCode postalCode = test.getPostalCode();
+        Status status = test.getStatus();
+        Offense offense = test.getWantedFor();
+
+        assertTrue(test.getName().equals(name));
+        assertTrue(test.getNric().equals(nric));
+        assertTrue(test.getPostalCode().equals(postalCode));
+        assertTrue(test.getStatus().equals(status));
+        assertTrue(test.getWantedFor().equals(offense));
+
     }
 
 //@@author

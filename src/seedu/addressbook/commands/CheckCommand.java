@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class CheckCommand extends Command {
-
+    
     public static final String COMMAND_WORD = "check";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Gets screening history of person with specified NRIC \n\t"
             + "Parameters: NRIC ...\n\t"
