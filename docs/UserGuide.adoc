@@ -194,7 +194,7 @@ Example:
 *	clear
 *	Records will now be empty
 
-=== Requesting for assistance : 'rb'
+=== Requesting for assistance : `rb`
 
 Generates GPS coordinates of current location with current case and sends it to HQP.
 HQP would receive message in inbox.
@@ -254,6 +254,12 @@ Format: 'read index'
 Examples:
 *  read 1
 
+=== Clear inbox: `clearinbox`
+
+Clears the text file containing all the messages (both read and unread) for the user.
+
+Format: 'clearinbox'
+
 === Exit program : `shutdown`
 
 Shutdown the system
@@ -263,6 +269,10 @@ Format: 'shutdown'
 Examples:
 * shutdown
 * Police Records shuts down
+
+=== AutoCorrection feature
+
+Autocorrection feature predicts input expected by the system and currently covers all commands.
 
 == Commands List
  
@@ -314,6 +324,7 @@ E.g. dispatch PO2
 *	*Check notifications* : 'showunread'
 
 *   *Read message* : 'read index'
+*   *Clear Inbox*  : 'clearinbox'
 
 E.g  read 1
 
