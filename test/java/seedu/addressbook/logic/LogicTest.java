@@ -5,6 +5,7 @@ import org.javatuples.Triplet;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.Request;
 import seedu.addressbook.PatrolResourceStatus;
@@ -40,6 +41,9 @@ public class LogicTest {
     /**
      * See https://github.com/junit-team/junit4/wiki/rules#temporaryfolder-rule
      */
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Rule
     public TemporaryFolder saveFolder = new TemporaryFolder();
 
@@ -399,6 +403,20 @@ public class LogicTest {
                             .getStatusLine().getStatusCode();
 
         assertTrue(statusCode == 200 || statusCode == 201 || statusCode == 204);
+    }
+
+    @Test
+    public void execute_request_failSaveFailure() throws Exception {
+        String expectedMessage = Messages.MESSAGE_SAVE_ERROR;
+        MessageFilePaths.FILEPATH_HQP_INBOX = "/stub";
+        assertCommandBehavior("");
+
+    }
+
+    @Test
+    public void execute_request_recentMessageFail() throws Exception {
+        thrown.expect(NullPointerException.class);
+        RequestHelpCommand.getRecentMessage();
     }
 
     //@@author
