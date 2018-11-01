@@ -34,7 +34,7 @@ public class FindCommand extends Command {
             final ReadOnlyPerson personFound = getPersonWithNric();
             return new CommandResult(getMessageForPersonShownSummary(personFound));
         } catch(IOException ioe) {
-            return new CommandResult(PERSON_NOT_FOUND_ERROR);
+            return new CommandResult(FILE_NOT_FOUND_ERROR);
         }
     }
 
