@@ -18,7 +18,7 @@ public class FindCommand extends Command {
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nric;
-    public static String FILE_NOT_FOUND_ERROR = "File not found";
+    private  String FILE_NOT_FOUND_ERROR = "File not found";
 
     public FindCommand(String nricToFind) {
         this.nric = nricToFind;
