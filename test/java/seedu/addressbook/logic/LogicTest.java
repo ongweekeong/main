@@ -4,7 +4,6 @@ package seedu.addressbook.logic;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.*;
@@ -18,12 +17,9 @@ import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.inbox.WriteNotification;
 import seedu.addressbook.password.Password;
-import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.storage.StorageFile;
 import seedu.addressbook.timeanddate.TimeAndDate;
 import seedu.addressbook.ui.Formatter;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -719,46 +715,6 @@ public class LogicTest {
                 Collections.emptyList());
 
     }
-
-//    @Test
-//    public void execute_check_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult(CheckCommand.FILE_NOT_FOUND_ERROR);
-//            assertCommandBehavior("check s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
-//
-//    @Test
-//    public void execute_find_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult(FindCommand.FILE_NOT_FOUND_ERROR);
-//            assertCommandBehavior("find s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
 
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {
