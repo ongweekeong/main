@@ -12,7 +12,7 @@ public class Password {
     public static final String MESSAGE_ENTER_PASSWORD = "Please enter password: ";
     public static final String MESSAGE_ENTER_COMMAND = "Please enter a command: ";
     public static final String MESSAGE_WELCOME = "Welcome %s.";
-    public static final String MESSAGE_UNAUTHORIZED = "You are not authorized to ADD, CLEAR, CHECK, DELETE, EDIT, UPDATE PASSWORD nor UPDATE STATUS.";
+    public static final String MESSAGE_UNAUTHORIZED = "You are not authorized to ADD, CLEAR, CHECK, DELETE, DISPATCH, EDIT, UPDATE PASSWORD nor UPDATE STATUS.";
     public static final String MESSAGE_INCORRECT_PASSWORD = "Password is incorrect. " + MESSAGE_TRY_AGAIN;
     public static final String MESSAGE_ATTEMPTS_LEFT = "You have %1$d attempts left. ";
     public static final String MESSAGE_ATTEMPT_LEFT = "You have %1$d attempt left. ";
@@ -521,8 +521,14 @@ public class Password {
     }
 
     private boolean isRejectPO(String userCommandWord){
-        return (userCommandWord.equals("add") || userCommandWord.equals("delete") || userCommandWord.equals("clear")
-                || userCommandWord.equals("edit") || userCommandWord.equals("check") || userCommandWord.equals("update password") || userCommandWord.equals("updatestatus"));
+        return (userCommandWord.equals("add") 
+                || userCommandWord.equals("check") 
+                || userCommandWord.equals("clear") 
+                || userCommandWord.equals("delete") 
+                || userCommandWord.equals("dispatch")
+                || userCommandWord.equals("edit")  
+                || userCommandWord.equals("update password") 
+                || userCommandWord.equals("updatestatus"));
     }
 
     public String invalidPOResult(String userCommandText) {

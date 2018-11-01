@@ -1,4 +1,4 @@
-= Police Records System
+= Police Records and Intelligence Syetem (PRISM)
 ifdef::env-github,env-browser[:relfileprefix: docs/]
 ifdef::env-github,env-browser[:imagesDir: docs/images]
 
@@ -27,7 +27,7 @@ HQ personnel also have less administrative workload to deal with. Now, they focu
 
 == Contributors
 
-The full list of contributors for Police Records System can be found link:docs/AboutUs.adoc[here]
+The full list of contributors for Police Records and Intelligence Syetem can be found link:docs/AboutUs.adoc[here]
 
 == Acknowledgements
 

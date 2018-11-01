@@ -13,9 +13,8 @@ import seedu.addressbook.data.exception.IllegalValueException;
 public class UpdateStatusCommand extends Command {
 
     public static final String COMMAND_WORD = "updatestatus";
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Updates the 'isEngaged' status of PO to false \n\t"
-            + "Parameters: po(ID)\n\t"
-            + "Example: " + COMMAND_WORD + " po2";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Updates the 'isEngaged' status of current PO to false \n\t"
+            + "Example: " + COMMAND_WORD;
 
 
     private String toUpdate;
