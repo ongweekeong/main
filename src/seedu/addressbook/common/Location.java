@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -116,7 +117,7 @@ public class Location {
      */
 
     public ArrayList<Pair<Integer, String>> getEtaFrom(ArrayList<Location> locations) throws IOException, JSONException{
-        ArrayList<Pair<Integer, String>> etaList;
+        ArrayList<Pair<Integer, String>> etaList = new ArrayList<>();
 
         HttpRestClient httpRestClient = new HttpRestClient();
         HttpResponse response = httpRestClient.requestGetResponse(getMapsDistanceUrl(locations));

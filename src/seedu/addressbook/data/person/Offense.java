@@ -78,7 +78,7 @@ public class Offense {
         offense = offense.toLowerCase().trim();
 
         if (!isValidOffense(offense)) {
-            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + Offense.getListOfValidOffences());
+            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
         }
 
         this.offense = offense;
