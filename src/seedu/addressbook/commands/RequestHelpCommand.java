@@ -48,6 +48,10 @@ public class RequestHelpCommand extends Command {
         }
     }
 
+    public static void resetRecentMessage() {
+        requestHelpMessage = null;
+    }
+
     public static Msg getRecentMessage() {
         if (requestHelpMessage == null) {
             throw new NullPointerException("Request command was never called");

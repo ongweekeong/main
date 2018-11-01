@@ -3,6 +3,7 @@ package seedu.addressbook.common;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.javatuples.Pair;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,7 +100,6 @@ public class Location {
                 etaList.add(durationPair);
             }
 
-            return etaList;
         } catch(JSONException jsonE) {
             // TODO: Handle exception better
             jsonE.printStackTrace();
@@ -118,19 +118,16 @@ public class Location {
     public ArrayList<Pair<Integer, String>> getEtaFrom(ArrayList<Location> locations) throws IOException, JSONException{
         ArrayList<Pair<Integer, String>> etaList = new ArrayList<>();
 
-//        try {
         HttpRestClient httpRestClient = new HttpRestClient();
         HttpResponse response = httpRestClient.requestGetResponse(getMapsDistanceUrl(locations));
+        int responseStatusCode = response.getStatusLine().getStatusCode();
 
-        if (response != null) {
-            String jsonString = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
-            etaList = getEtaFromJsonObject(new JSONObject(jsonString));
-        } // TODO: Change this exception
-//        } catch (IOException ioe) {
-//            ioe.printStackTrace();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        if (responseStatusCode != 200 && responseStatusCode != 201 && responseStatusCode != 204) {
+            throw new HttpResponseException(responseStatusCode, "Request to Google Maps API did not work. Try again");
+        }
+
+        String jsonString = IOUtils.toString(response.getEntity().getContent(), "UTF-8");
+        etaList = getEtaFromJsonObject(new JSONObject(jsonString));
 
         return sortEta(etaList);
     }

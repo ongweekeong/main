@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class PatrolResourceStatus {
     // Triplet<Police Officer ID, Location, isEngaged
     private static ArrayList<Triplet<String, Location, Boolean>> patrolResourceStatus = new ArrayList<>(){{
-        add( new Triplet<>("hqp", new Location(1.294166, 103.770730), false) ); // NUS FASS
+        add( new Triplet<>("hqp", new Location(1.294166, 103.770730), true) ); // NUS FASS
         add( new Triplet<>("po1", new Location(1.306935, 103.790564), false) ); // Buona Vista
         add( new Triplet<>("po2", new Location(1.346301, 103.682060), false) ); // NTU
         add( new Triplet<>("po3", new Location(1.296057, 103.849865), false) ); // SMU
@@ -22,6 +22,18 @@ public class PatrolResourceStatus {
 
     public static ArrayList<Triplet<String, Location, Boolean>> getPatrolResourceStatus() {
         return patrolResourceStatus;
+    }
+
+    public static void resetPatrolResourceStatus() {
+        int index = 0;
+        for (Triplet<String, Location, Boolean> policeOfficer : patrolResourceStatus) {
+            if (policeOfficer.getValue0().equalsIgnoreCase("hqp")) {
+                patrolResourceStatus.set(index, Triplet.with(policeOfficer.getValue0(),policeOfficer.getValue1(), true));
+            } else {
+                patrolResourceStatus.set(index, Triplet.with(policeOfficer.getValue0(),policeOfficer.getValue1(), false));
+            }
+            index++;
+        }
     }
 
     public static Triplet<String, Location, Boolean> getPatrolResource(String patrolResource) {
