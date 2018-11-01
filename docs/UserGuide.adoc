@@ -186,7 +186,7 @@ Example:
 *	clear
 *	Records will now be empty
 
-=== Requesting for assistance : 'rb'
+=== Requesting for assistance : `rb`
 
 Generates GPS coordinates of current location with current case and sends it to HQP.
 HQP would receive message in inbox.
@@ -261,6 +261,10 @@ Format: 'shutdown'
 Examples:
 * shutdown
 * Police Records shuts down
+
+=== AutoCorrection feature
+
+Autocorrection feature predicts input expected by the system and currently covers all commands.
 
 == Commands List
  
