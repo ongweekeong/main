@@ -1,11 +1,11 @@
 
 .text-area {
     -fx-background-color: navy;
-    -fx-control-inner-background: gray;
+    -fx-control-inner-background: black;
     -fx-font-family: "monospace";
     -fx-font-size: 10pt;
     -fx-padding: 10 10 10 10;
-
+    -fx-control-inner-cursor: crosshair;
 }
 
 .text-field {
@@ -13,5 +13,4 @@
     -fx-font-family: "fantasy";
     -fx-text-fill: white;
     -fx-control-inner-background: black;
-    -fx-padding: 0 0 0 0;
 }
