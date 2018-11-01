@@ -10,7 +10,7 @@ import java.util.TreeSet;
 
 public class WriteNotification {
     private String path;
-    private boolean isAppend = false;
+    private boolean isAppend;
 
     public WriteNotification(String userId){
         path = MessageFilePaths.getFilePathFromUserId(userId);
@@ -21,7 +21,6 @@ public class WriteNotification {
         path = filePath;
         isAppend = appendValue;
     }
-
 
     /**	Message format should look like this
      *	Read/Unread (1 or 0)
@@ -78,10 +77,6 @@ public class WriteNotification {
             if (msg.isLocationAvailable) {
                 myPrinter.println("Location:" + msg.getLatitude() + "," + msg.getLongitude());
             } else myPrinter.println('-');
-//            if(msg.hasPoliceOfficerId()) {
-//                myPrinter.println("Police Officer ID:" + msg.getPoliceOfficerId());
-//            }
-//            else myPrinter.println('-');
 
             myPrinter.println("> END OF MESSAGE <");
         }
@@ -90,9 +85,26 @@ public class WriteNotification {
     }
 
     public static void clearInbox(String path) throws IOException {
-        FileWriter write = new FileWriter (path, false);
+        clearInboxFromPath(path);
+    }
+    public static void clearAllInbox() throws IOException {
+        String[] paths = {
+                MessageFilePaths.FILEPATH_HQP_INBOX,
+                MessageFilePaths.FILEPATH_PO1_INBOX,
+                MessageFilePaths.FILEPATH_PO2_INBOX,
+                MessageFilePaths.FILEPATH_PO3_INBOX,
+                MessageFilePaths.FILEPATH_PO4_INBOX,
+                MessageFilePaths.FILEPATH_PO5_INBOX,
+                MessageFilePaths.FILEPATH_DEFAULT
+        };
+        for (String myPath : paths) {
+            clearInboxFromPath(myPath);
+        }
+    }
+
+    private static void clearInboxFromPath(String myPath) throws IOException {
+        FileWriter write = new FileWriter(myPath, false);
         PrintWriter myPrinter = new PrintWriter(write);
-        myPrinter = new PrintWriter(write);
         myPrinter.print("");
         myPrinter.close();
     }
