@@ -16,11 +16,12 @@ import seedu.addressbook.inbox.WriteNotification;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class DispatchCommand extends Command{
+public class DispatchCommand extends Command {
     public static final String COMMAND_WORD = "dispatch";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
-            + "Dispatch help from headquarters.\n\t"
+            + "Headquarters Personnel would dispatch backup officer to requesting officer.\n\t"
+            + "Parameters: dispatch [BACKUP_OFFICER_ID] [OFFENSE] [REQUESTER_OFFICER_ID] \n\t"
             + "Example: " + COMMAND_WORD
             + " PO1 gun PO3";
 
@@ -72,10 +73,11 @@ public class DispatchCommand extends Command{
             Msg requesterMessage = new Msg(Offense.getPriority(offense), requesterStringMessage,
                     PatrolResourceStatus.getLocation(backupOfficer), eta);
 
+            //PatrolResourceStatus.setStatus(requester, true);
             writeNotificationToRequester.writeToFile(requesterMessage);
             writeNotificationToBackupOfficer.writeToFile(dispatchMessage);
         } catch (HttpResponseException hre) {
-            return new CommandResult(hre.getMessage());
+            return new CommandResult( hre.getMessage());
         } catch (IOException ioe) {
             return new CommandResult(Messages.MESSAGE_SAVE_ERROR + "/" + Messages.MESSAGE_INTERNET_NOT_AVAILABLE);
         } catch (IllegalValueException ioe) {
