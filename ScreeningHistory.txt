@@ -3,6 +3,3 @@ s1234567a 28/10/2018-03:02:00 Headquarters Personnel
 s1234567a 29/10/2018-12:45:13 Headquarters Personnel
 s1234567a 29/11/2018-22:02:00 Headquarters Personnel
 s1234567a 01/11/2018-22:02:00 Headquarters Personnel
-s1234567b 02/11/2018-13:24:32 Ghost
-s1234567b 02/11/2018-13:27:55 Ghost
-s1234567b 02/11/2018-13:30:32 Ghost
