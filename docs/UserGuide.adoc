@@ -22,7 +22,7 @@ The police database is for police officers(PO) and headquarter personnel(HQP). B
 == Quick Start
 
 .	Ensure that you have Java Version 9 installed on your device.
-.	Download the latest version of PRISM https://github.com/CS2113-AY1819S1-F10-3/main/releases/download/v1.3/PRISM.zip[here].
+.	Download the latest version of PRISM https://github.com/CS2113-AY1819S1-F10-3/main/releases/download/v1.3.1/PRISM.jar[here].
 .	Copy the file to another folder (a clean one preferably).
 .	Double-click the file to start the app. The user interface should appear in a few seconds.
 .	NOTE: DO NOT edit the text files that comes with the PRISM jar file.
