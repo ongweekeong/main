@@ -429,7 +429,7 @@ public class Parser {
         try {
             return new RequestHelpCommand(caseName, message);
         } catch (IllegalValueException ive) {
-            return new IncorrectCommand(Offense.MESSAGE_OFFENSE_INVALID);
+            return new IncorrectCommand(Offense.MESSAGE_OFFENSE_INVALID + Offense.getListOfValidOffences());
         }
     }
 

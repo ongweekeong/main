@@ -12,7 +12,7 @@ import java.util.*;
 public class Offense {
     public static final String EXAMPLE = "theft";
     public static final String NULL_OFFENSE = "none";
-    public static final String MESSAGE_OFFENSE_INVALID = "Offense must be inside the list:\n";
+    public static final String MESSAGE_OFFENSE_INVALID = "Offense must be inside this list:\n";
 
 //@@author andyrobert3
     private static HashMap<String, Msg.Priority> OFFENSE_LIST = new HashMap<>();
@@ -61,7 +61,8 @@ public class Offense {
                 result += entry.getKey() + "\n";
             }
         }
-        return result + "";
+
+        return result;
     }
 
     public Offense(){
@@ -77,19 +78,11 @@ public class Offense {
         offense = offense.toLowerCase().trim();
 
         if (!isValidOffense(offense)) {
-            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + "\n" + getListOfValidOffences());
+            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
         }
 
         this.offense = offense;
     }
-
-//    private static String getOffenseList() {
-//        String offenseList = "";
-//        for (Map.Entry<String, Msg.Priority> entry : OFFENSE_LIST.entrySet()) {
-//            offenseList += entry.getKey() + "\n";
-//        }
-//        return offenseList;
-//    }
 
     /**
      * Returns true if a given string is a valid tag name.
@@ -101,7 +94,8 @@ public class Offense {
     public String getOffense() {
         return offense;
     }
-//@@author andyrobert3
+
+    //@@author andyrobert3
     /**
      * Returns priority for a given offense.
      *
@@ -111,7 +105,7 @@ public class Offense {
     public static Msg.Priority getPriority(String offense) throws IllegalValueException {
         offense = offense.toLowerCase();
         if (!OFFENSE_LIST.containsKey(offense)) {
-            throw new IllegalValueException("Offense does not exist in database");
+            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + "\n" + getListOfValidOffences());
         }
 
         return OFFENSE_LIST.get(offense);
