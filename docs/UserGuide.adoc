@@ -240,7 +240,7 @@ Examples:
 
 *	update password
 *	Please select a password to change
-*   User then has to enter old and new alphanumeric password
+*   User then has to enter old password and new alphanumeric password of minimum length 5
 
 === Check notifications: `showunread` (HQP & PO)
 
