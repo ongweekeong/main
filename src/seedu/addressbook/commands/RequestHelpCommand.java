@@ -40,9 +40,12 @@ public class RequestHelpCommand extends Command {
     public CommandResult execute() {
         try {
             writeNotification.writeToFile(requestHelpMessage);
+            PatrolResourceStatus.setStatus(Password.getID(), true);
             return new CommandResult(String.format(MESSAGE_REQUEST_SUCCESS, Password.getID()));
         } catch (IOException ioe) {
             return new CommandResult(Messages.MESSAGE_SAVE_ERROR);
+        } catch (IllegalValueException ive) {
+            return new CommandResult(Messages.MESSAGE_PO_NOT_FOUND);
         }
     }
 
