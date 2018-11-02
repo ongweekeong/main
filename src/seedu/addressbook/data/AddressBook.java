@@ -78,7 +78,7 @@ public class AddressBook {
         BufferedReader br = readerAndWriter.openReader(databaseFile);
         line = br.readLine();
         while (line != null){
-            String[] parts = line.split(" ");
+            String[] parts = line.split(" ", 3);
 
             if (parts[0].equals(nric)){
                 if(parts[2].equals("null")){
