@@ -34,4 +34,5 @@ notifications\.txt
 
 Todo List\.txt
 
-parserLog\.log\.lck
+inboxMessages/
+
