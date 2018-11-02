@@ -29,9 +29,7 @@ The police database is for police officers(PO) and headquarter personnel(HQP). B
 +
 image::Ui.png[width="790"]
 +
-.	Type the command in the command box and press kbd:[Enter] to execute it.
-.	To display the full list of commands and a summary of their functions in the application, type ‘help’ and press “Enter”.
-.	Refer to Section 3, “Features” for details of each command.
+.	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
 .	Defaults passwords for the users:
 .. HQP: papa123
 .. PO1: popo1
@@ -39,6 +37,10 @@ image::Ui.png[width="790"]
 .. PO3: popo3
 .. PO4: popo4
 .. PO5: popo5
+.	Type a command in the same text box and press kbd:[Enter] to excecute it.
+.	To display the full list of commands and a summary of their functions in the application, type `help` and press kbd:[Enter].
+.	Refer to Section 3, “Features” for details of each command.
+
 
 [[Features]]
 == Features
@@ -47,8 +49,8 @@ image::Ui.png[width="790"]
 *Command Format*
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`
-* Items in the WANTEDFOR parameter must be given if STATUS is "wanted"
-* * Items in square brackets are optional e.g `n/NAME [p/POSTALCODE] [s/STATUS]' can be used as 'n/John Doe p/510246 s/xc' or 'n/John Doe s/xc'
+* Items in the `WANTEDFOR` parameter must be given if `STATUS` is "wanted"
+*  Items in square brackets are optional e.g `n/NAME [p/POSTALCODE] [s/STATUS]` can be used as `n/John Doe p/510246 s/xc` or `n/John Doe s/xc`
 * Items with `…`​ after them can be used multiple times including zero times e.g. `o/OFFENSE...` can be used as `{nbsp}` (i.e. 0 times), `o/theft`, `o/riot o/drugs` etc
 ====
 	
@@ -92,7 +94,7 @@ A person can have more than 0 past offenses
 
 === Editing a person : `edit` (HQP only)
 
-Edit a specified parameter of an existing person in PRISM - only by HQP
+Edit a specified parameter of an existing person in the Police Records - only by HQP
 
 Format: 'edit n/[NRIC] p/[POSTAL_CODE] s/[STATUS] w/WANTED_FOR o/PAST_OFFENCES'
 
@@ -109,7 +111,7 @@ Examples:
 
 === Display a list of all persons : `list` (HQP & PO)
 
-Shows a list of every person in the records
+Shows a list of every person in the Police Records
 
 Format: 'list'
 
@@ -122,7 +124,7 @@ image::ListCommand.png[width="790"]
 
 === Find a person by NRIC : `find` (HQP & PO)
 
-Finds a person in the records by the specified NRIC
+Finds a person in the Police Records by the specified NRIC
 
 Format: 'find NRIC'
 
@@ -185,7 +187,7 @@ Examples:
 
 === Clear records : `clear` (HQP only)
 
-Clears all records of people in policeRecords.txt
+Clears all records of people in the Police Records.
 
 Format: 'clear'
 
@@ -208,7 +210,7 @@ Examples:
 
 === Dispatch assistance for requester: `dispatch` (HQP only)
 
-Generates message to dispatch an officer to backup a requester officer
+Generates message to dispatch an officer to backup a requesting officer
 Message would be sent to requester & backup officer which includes ETA(Real Time) & Location (Google Maps URL).
 
 Format: 'dispatch [BACKUP OFFICER] [OFFENSE] [REQUESTER OFFICER]'
@@ -274,7 +276,7 @@ Clears the text file containing all the messages (both read and unread) for the 
 
 Format: 'clearinbox'
 
-=== Exit program : `shutdown` (HQP & PO)
+=== Shutdown program : `shutdown` (HQP & PO)
 
 Shutdown the system
 
@@ -326,7 +328,7 @@ E.g. delete g1952866q
 
 *	*Clear* : 'clear'
 
-*	*Request for assistance* : 'RA' (Ambulance) or 'RF' (Fire Brigade) or 'RB' (Backup)
+*	*Request for backup* : 'RB'
 
 *	*Dispatch* : 'dispatch PO(ID)'
 
@@ -343,7 +345,7 @@ E.g. dispatch PO2
 
 E.g  read 1
 
-*	*Exit* : 'shutdown'
+*	*Shutdown* : 'shutdown'
 
 	
 
