@@ -38,7 +38,7 @@ image::Ui.png[width="790"]
 .. PO4: popo4
 .. PO5: popo5
 .	Type a command in the same text box and press kbd:[Enter] to excecute it.
-.	To display the full list of commands and a summary of their functions in the application, type `help` and press kbd:[Enter].
+.	To display the full list of commands and a summary of their functions in the application, type 'help' and press kbd:[Enter].
 .	Refer to Section 3, “Features” for details of each command.
 
 
@@ -60,9 +60,6 @@ Lists all the features in a user friendly format for users and how to use them.
 
 Format: 'help'
 
-
-image::HelpCommand.png[width="790"]
-
 === Display date and time : `time` (HQP & PO)
 
 Shows the current date and time.
@@ -81,7 +78,6 @@ Examples:
 *	add John Doe n/f1234567p d/1996 p/510246 s/xc w/none o/theft o/drugs"
 *   Displays a message stating the new person being added
 
-image::AddCommand.png[width="790"]
 
 [NOTE]
 ====
@@ -120,7 +116,6 @@ Examples:
 *	list
 *	Displays list of all persons
 
-image::ListCommand.png[width="790"]
 
 === Find a person by NRIC : `find` (HQP & PO)
 
@@ -153,7 +148,6 @@ Examples:
 *	check s1234567a
 *	Shows an indexed list of timestamps for when person with s1234567a was screened by any POs
 
-image::CheckCommand.png[width="790"]
 
 === Get status of POs: `checkstatus` (HQP & PO)
 
