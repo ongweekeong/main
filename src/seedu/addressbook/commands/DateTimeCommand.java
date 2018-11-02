@@ -21,6 +21,6 @@ public class DateTimeCommand extends Command {
 
     @Override
     public CommandResult execute() {
-        return new CommandResult(timeAndDate.outputDATHrs());
+        return new CommandResult(timeAndDate.outputDatMainHrs());
     }
 }
