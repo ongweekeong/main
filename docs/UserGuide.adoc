@@ -29,6 +29,13 @@ The police database is for police officers(PO) and headquarter personnel(HQP). B
 +
 image::Ui.png[width="790"]
 +
+
+[NOTE]
+====
+*   The text box is located at the bottom of the screen
+*   Throughout the list of features, each command will indicate if its available for HQP, PO or both
+====
+
 .	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
 .	Defaults passwords for the users:
 .. HQP: papa123
@@ -70,7 +77,7 @@ Format: 'time'
 
 Adds a criminal to the database.
 
-Format: 'add NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR o/PASTOFFENSES'
+Format: 'add NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]'
 
 Examples:
 
@@ -83,10 +90,11 @@ Examples:
 ====
 *   If a person's STATUS is "wanted", the WANTEDFOR parameter has to be filled
 *   No two persons can have the same NRICs, the other parameters such as NAME, POSTALCODE, etc, can be the same
+*   Date of birth here only refers to the year
 ====
 
 [TIP]
-A person can have more than 0 past offenses
+A person can have 0 or more past offenses
 
 === Editing a person : `edit` (HQP only)
 
@@ -155,7 +163,7 @@ Shows all POs and their current engagement statuses
 
 Format: 'checkstatus'
 
-=== Update status of PO: `updatestatus` (PO only)
+=== Update status of PO: `updatestatus` (HQP only)
 
 Updates the PO so that it is not engaged anymore
 
@@ -176,7 +184,7 @@ Format: 'delete NRIC'
 
 Examples:
 
-*	delete G1952866Q
+*	delete g1952866q
 *	Deletes the person with the specified NRIC from the records.
 
 === Clear records : `clear` (HQP only)

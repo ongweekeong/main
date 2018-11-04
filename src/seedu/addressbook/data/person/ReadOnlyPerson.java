@@ -4,7 +4,7 @@ import java.util.Set;
 
 
 /**
- * A read-only immutable interface for a Person in PRISM.
+ * A read-only immutable interface for a Person in the records.
  * Implementations should guarantee: details are present and not null, field values are validated.
  */
 public interface ReadOnlyPerson {
