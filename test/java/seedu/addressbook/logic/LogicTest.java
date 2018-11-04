@@ -1342,7 +1342,7 @@ public class LogicTest {
         /**
          * Creates a list of Persons based on the give Person objects.
          */
-        List<Person> generatePersonList(Person... persons) throws Exception{
+        List<Person> generatePersonList(Person... persons) {
             List<Person> personList = new ArrayList<>();
             for(Person p: persons){
                 personList.add(p);

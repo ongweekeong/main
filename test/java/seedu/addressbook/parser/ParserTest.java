@@ -371,7 +371,7 @@ public class ParserTest {
     }
 
     @Test
-    public void addCommand_duplicateTags_merged() throws IllegalValueException {
+    public void addCommand_duplicateTags_merged() {
         final Person testPerson = generateTestPerson();
         String input = convertPersonToAddCommandString(testPerson);
         for (Offense tag : testPerson.getPastOffenses()) {
