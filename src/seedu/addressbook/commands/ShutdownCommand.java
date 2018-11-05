@@ -3,7 +3,7 @@ package seedu.addressbook.commands;
 /**
  * Terminates the program.
  */
-public class ExitCommand extends Command {
+public class ShutdownCommand extends Command {
 
     public static final String COMMAND_WORD = "shutdown";
 

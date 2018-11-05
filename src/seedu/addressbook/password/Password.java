@@ -38,6 +38,7 @@ public class Password {
     public static final String UPDATE_PASSWORD_COMMAND_WORD = "update password";
     public static final String UPDATE_PASSWORD_MESSAGE_USAGE = UPDATE_PASSWORD_COMMAND_WORD + ":\n" + "Updates a password\n\t"
             + "Example: " + UPDATE_PASSWORD_COMMAND_WORD;
+    public static final String MESSAGE_CANCELLED = "Request to update password cancelled." + "\n" + MESSAGE_ENTER_COMMAND;
 
 
     public static int getWrongPasswordCounter() {
@@ -115,7 +116,7 @@ public class Password {
         return isUpdatePasswordConfirm;
     }
 
-    private boolean isUpdatePasswordConfirm = false;
+    private static boolean isUpdatePasswordConfirm = false;
 
     private boolean isNotLogin(){
         return (!isLoginHQP && !isLoginPO());
@@ -348,7 +349,7 @@ public class Password {
     public String updatePasswordFinal (String userCommandText) throws IOException {
 
         String result = null;
-        int lineNumber =0 , linesLeft;
+        int lineNumber = 0 , linesLeft;
 
         File originalFile = readerandwriter.fileToUse("passwordStorage.txt");
         BufferedReader br = readerandwriter.openReader(originalFile);
@@ -555,6 +556,30 @@ public class Password {
         else if(isPO5){
             result = "po5";
         }
+        return result;
+    }
+
+    public static String getfullID(String ID){
+        String result = "Ghost";
+        if(ID.equals("hqp")){
+            result = MESSAGE_HQP;
+        }
+        else if(ID.equals("po1")){
+            result = MESSAGE_PO + MESSAGE_ONE;
+        }
+        else if(ID.equals("po2")){
+            result = MESSAGE_PO + MESSAGE_TWO;
+        }
+        else if(ID.equals("po3")){
+            result = MESSAGE_PO + MESSAGE_THREE;
+        }
+        else if(ID.equals("po4")){
+            result = MESSAGE_PO + MESSAGE_FOUR;
+        }
+        else if(ID.equals("po5")){
+            result = MESSAGE_PO + MESSAGE_FIVE;
+        }
+
         return result;
     }
 }

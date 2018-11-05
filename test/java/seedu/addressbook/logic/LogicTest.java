@@ -15,22 +15,15 @@ import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
-import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.storage.StorageFile;
-import seedu.addressbook.timeanddate.TimeAndDate;
-import seedu.addressbook.ui.Formatter;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
@@ -38,7 +31,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
 import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
 import static seedu.addressbook.password.Password.*;
 
 
@@ -211,13 +203,13 @@ public class LogicTest {
 
     @Test
     public void execute_lock() throws Exception {
-        assertCommandBehavior(LockCommand.COMMAND_WORD, LockCommand.MESSAGE_LOCK);
+        assertCommandBehavior(LogoutCommand.COMMAND_WORD, LogoutCommand.MESSAGE_LOCK);
     }
 
     //@@author
     @Test
     public void execute_exit() throws Exception {
-        assertCommandBehavior(ExitCommand.COMMAND_WORD, ExitCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
+        assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
     }
 
     @Test
@@ -1501,7 +1493,7 @@ public class LogicTest {
                 "shutdoen",
                 "shutdowns"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
