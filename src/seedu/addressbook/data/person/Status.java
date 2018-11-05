@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 /**
  * Represents a Person's criminal status (if any).
- * Guarantees: mutable only for "clear" and "wanted"; is valid as declared in {@link #isValidStatus(String)}
+ * Guarantees: Can be edited using 'edit' command only for "clear" and "wanted"; is valid as declared in {@link #isValidStatus(String)}
  */
 
 public class Status {

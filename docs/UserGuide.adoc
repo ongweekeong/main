@@ -29,6 +29,13 @@ The police database is for police officers(PO) and headquarter personnel(HQP). B
 +
 image::Ui.png[width="790"]
 +
+
+[NOTE]
+====
+*   The text box is located at the bottom of the screen, and is grey in colour
+*   Throughout the list of features, each command will indicate if its available for HQP, PO or both
+====
+
 .	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
 .	Defaults passwords for the users:
 .. HQP: papa123
@@ -58,6 +65,11 @@ image::Ui.png[width="790"]
 
 Lists all the features in a user friendly format for users and how to use them.
 
+[NOTE]
+====
+*   You will be unable to see the list of available commands until logged in, due to the sensitivity of the data
+====
+
 Format: 'help'
 
 === Display date and time : `time` (HQP & PO)
@@ -70,7 +82,7 @@ Format: 'time'
 
 Adds a criminal to the database.
 
-Format: 'add NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR o/PASTOFFENSES'
+Format: 'add NAME n/NRIC d/YEAROFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]'
 
 Examples:
 
@@ -83,16 +95,23 @@ Examples:
 ====
 *   If a person's STATUS is "wanted", the WANTEDFOR parameter has to be filled
 *   No two persons can have the same NRICs, the other parameters such as NAME, POSTALCODE, etc, can be the same
+*   Date of birth here only refers to the year
 ====
 
 [TIP]
-A person can have more than 0 past offenses
+A person can have 0 or more past offenses
 
 === Editing a person : `edit` (HQP only)
 
 Edit a specified parameter of an existing person in the Police Records - only by HQP
 
-Format: 'edit n/[NRIC] p/[POSTAL_CODE] s/[STATUS] w/WANTED_FOR o/PAST_OFFENCES'
+Format: 'edit n/NRIC p/[POSTAL_CODE] s/[STATUS] w/[WANTED_FOR] o/[PAST_OFFENCES]'
+
+[NOTE]
+====
+*   The NRIC tag 'n/' is required
+*   The other tags are optional, but at least one of them must be filled
+====
 
 ****
 *	Edits the person with the specified NRIC.
@@ -155,7 +174,7 @@ Shows all POs and their current engagement statuses
 
 Format: 'checkstatus'
 
-=== Update status of PO: `updatestatus` (PO only)
+=== Update status of PO: `updatestatus` (HQP only)
 
 Updates the PO so that it is not engaged anymore
 
@@ -176,7 +195,7 @@ Format: 'delete NRIC'
 
 Examples:
 
-*	delete G1952866Q
+*	delete g1952866q
 *	Deletes the person with the specified NRIC from the records.
 
 === Clear records : `clear` (HQP only)
@@ -291,7 +310,7 @@ Currently all commands are covered by the feature.
 
 *   *Show time* : 'time'
 
-*	*Add*  : 'add n/NAME n/NRIC d/DATE_OF_BIRTH p/POSTAL_CODE s/STATUS w/WANTED_FOR o/PAST OFFENCES...'
+*	*Add*  : 'add n/NAME n/NRIC d/YEAR_OF_BIRTH p/POSTAL_CODE s/STATUS w/WANTED_FOR o/PAST OFFENCES...'
 
 E.g. add John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs
 E.g. add Bob n/g1234567a d/1996 p/111111 s/clear w/none
