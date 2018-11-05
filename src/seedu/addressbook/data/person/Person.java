@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 /**
- * Represents a Person in the system.
+ * Represents a Person in the records.
  * Guarantees: details are present and not null, field values are validated.
  */
 //@@author muhdharun -reused

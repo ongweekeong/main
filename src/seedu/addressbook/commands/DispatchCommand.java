@@ -1,7 +1,6 @@
 //@@author andyrobert3
 package seedu.addressbook.commands;
 
-import org.apache.http.client.HttpResponseException;
 import org.javatuples.Pair;
 import org.json.JSONException;
 import seedu.addressbook.PatrolResourceStatus;
@@ -30,14 +29,18 @@ public class DispatchCommand extends Command {
     public static String MESSAGE_OFFICER_UNAVAILABLE = "Please choose another officer to send for backup.\n\t"
             + "Use 'checkstatus' command to see engaged/free officers.";
 
-    private WriteNotification writeNotificationToBackupOfficer;
-    private WriteNotification writeNotificationToRequester;
+    private final WriteNotification writeNotificationToBackupOfficer;
+    private final WriteNotification writeNotificationToRequester;
+
     private Location origin;
     private ArrayList<Location> destinationList;
     private String backupOfficer;
     private String requester;
     private String offense;
 
+    /**
+     * Convenience constructor using raw values
+     */
     public DispatchCommand(String backupOfficer, String requester, String caseName) {
         writeNotificationToBackupOfficer = new WriteNotification(backupOfficer);
         writeNotificationToRequester = new WriteNotification(requester);
@@ -49,40 +52,39 @@ public class DispatchCommand extends Command {
         this.destinationList = new ArrayList<>();
     }
 
+    private String generateStringMessage(String etaMessage, String patrolResourceId, boolean isRequester) {
+        return "ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
+                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsURL();
+    }
+
     public CommandResult execute() {
+
         try {
             destinationList.add(PatrolResourceStatus.getLocation(requester));
             ArrayList<Pair<Integer, String>> etaList = origin.getEtaFrom(destinationList);
 
-            int eta = etaList.get(0).getValue0();
-            String etaMessage = etaList.get(0).getValue1();
+            Pair<Integer, String> etaPair = etaList.get(0);
 
-            String dispatchStringMessage = "ETA " + etaMessage + ", Location of Requester: " +
-                    PatrolResourceStatus.getLocation(backupOfficer).getGoogleMapsURL();
-
-            String requesterStringMessage = "ETA " + etaMessage + ", Location of Backup: " +
-                    PatrolResourceStatus.getLocation(backupOfficer).getGoogleMapsURL();
+            String dispatchStringMessage = generateStringMessage(etaPair.getValue1(), requester, true);
+            String requesterStringMessage = generateStringMessage(etaPair.getValue1(), backupOfficer, false);
 
             Msg dispatchMessage = new Msg(Offense.getPriority(offense), dispatchStringMessage,
-                    PatrolResourceStatus.getLocation(requester), eta);
+                    PatrolResourceStatus.getLocation(requester), etaPair.getValue0());
 
             if (PatrolResourceStatus.getPatrolResource(backupOfficer).getValue2()) {
                 throw new PatrolResourceUnavailableException(backupOfficer);
             }
 
             Msg requesterMessage = new Msg(Offense.getPriority(offense), requesterStringMessage,
-                    PatrolResourceStatus.getLocation(backupOfficer), eta);
+                    PatrolResourceStatus.getLocation(backupOfficer), etaPair.getValue0());
 
             //PatrolResourceStatus.setStatus(requester, true);
             writeNotificationToRequester.writeToFile(requesterMessage);
             writeNotificationToBackupOfficer.writeToFile(dispatchMessage);
-        } catch (HttpResponseException hre) {
-            return new CommandResult( hre.getMessage());
         } catch (IOException ioe) {
-            return new CommandResult(Messages.MESSAGE_SAVE_ERROR + "/" + Messages.MESSAGE_INTERNET_NOT_AVAILABLE);
+            return new CommandResult(Messages.MESSAGE_INTERNET_NOT_AVAILABLE + "/" + Messages.MESSAGE_SAVE_ERROR);
         } catch (IllegalValueException ioe) {
-            return new CommandResult(Offense.MESSAGE_OFFENSE_INVALID + "\n" +
-                    Offense.getListOfValidOffences());
+            return new CommandResult(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
         } catch (JSONException jse) {
             return new CommandResult(Messages.MESSAGE_JSON_PARSE_ERROR);
         } catch (PatrolResourceUnavailableException prue) {
