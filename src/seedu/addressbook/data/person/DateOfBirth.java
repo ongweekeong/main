@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 public class DateOfBirth {
     public static final String EXAMPLE = "1996";
-    public static final String MESSAGE_DATE_OF_BIRTH_CONSTRAINTS = "DoB must from 1900 onwards, and less than or equal to current year";
+    public static final String MESSAGE_DATE_OF_BIRTH_CONSTRAINTS = "Year of Birth must from 1900 onwards, and less than or equal to current year";
     private static final String DATE_OF_BIRTH_VALIDATION_REGEX =  "[1-2][0-9]{3}";
     private final int year = Calendar.getInstance().get(Calendar.YEAR);
     private final String birthYear;

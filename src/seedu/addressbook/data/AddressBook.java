@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Represents PRISM. Contains the data of PRISM.
+ * Represents the records. Contains the data of all persons and POs.
  */
 public class AddressBook {
 
@@ -34,23 +34,23 @@ public class AddressBook {
     }
 
     /**
-     * Creates an empty PRISM system.
+     * Creates an empty record.
      */
     public AddressBook() {
         allPersons = new UniquePersonList();
     }
 
     /**
-     * Constructs a PRISM system with the given data.
+     * Constructs a record with the given data.
      *
-     * @param persons external changes to this will not affect PRISM
+     * @param persons external changes to this will not affect the records
      */
     public AddressBook(UniquePersonList persons) {
         this.allPersons = new UniquePersonList(persons);
     }
 
     /**
-     * Adds a person to PRISM.
+     * Adds a person to the records.
      *
      * @throws DuplicatePersonException if an equivalent person already exists.
      */
@@ -129,7 +129,7 @@ public class AddressBook {
     }
 //@@author
     /**
-     * Checks if an equivalent person exists in PRISM.
+     * Checks if an equivalent person exists in the records.
      */
     public boolean containsPerson(ReadOnlyPerson key) {
         return allPersons.contains(key);
@@ -137,7 +137,7 @@ public class AddressBook {
 
 
     /**
-     * Removes the equivalent person from PRISM.
+     * Removes the equivalent person from the records.
      *
      * @throws PersonNotFoundException if no such Person could be found.
      */
@@ -146,7 +146,7 @@ public class AddressBook {
     }
 
     /**
-     * Edits the equivalent person from PRISM with new data fields.
+     * Edits the equivalent person from the records with new data fields.
      *
      * @throws PersonNotFoundException if no such Person could be found.
      * @throws DuplicatePersonException if an equivalent person already exists.
@@ -157,14 +157,14 @@ public class AddressBook {
 //    }
 
     /**
-     * Clears all persons from PRISM.
+     * Clears all persons from the records.
      */
     public void clear() {
         allPersons.clear();
     }
 
     /**
-     * Defensively copied UniquePersonList of all persons in PRISM at the time of the call.
+     * Defensively copied UniquePersonList of all persons in the records at the time of the call.
      */
     public UniquePersonList getAllPersons() {
         return new UniquePersonList(allPersons);

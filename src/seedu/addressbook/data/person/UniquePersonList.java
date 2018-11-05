@@ -52,7 +52,7 @@ public class UniquePersonList implements Iterable<Person> {
     public UniquePersonList() {}
 
     /**
-     * Checks if a person in PRISM has the specified NRIC
+     * Checks if a person in the records has the specified NRIC
      *
      */
 
