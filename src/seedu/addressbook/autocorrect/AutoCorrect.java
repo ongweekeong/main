@@ -33,8 +33,8 @@ public class AutoCorrect {
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
-                case InboxCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
+                case ShowUnreadCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
                 case ReadCommand.COMMAND_WORD:

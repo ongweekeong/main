@@ -163,8 +163,8 @@ public class Parser {
             case ListCommand.COMMAND_WORD:
                 return new ListCommand();
 
-            case InboxCommand.COMMAND_WORD:
-                return new InboxCommand();
+            case ShowUnreadCommand.COMMAND_WORD:
+                return new ShowUnreadCommand();
 
             case ClearInboxCommand.COMMAND_WORD:
                 return new ClearInboxCommand();

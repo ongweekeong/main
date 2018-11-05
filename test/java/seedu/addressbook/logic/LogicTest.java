@@ -155,7 +155,7 @@ public class LogicTest {
 
         testMsg.setTime(adjustExpectedTimestamp(r.feedbackToUser, msgIndex));
 
-        expectedResult += InboxCommand.concatenateMsg(msgIndex, testMsg);
+        expectedResult += ShowUnreadCommand.concatenateMsg(msgIndex, testMsg);
 
         assertEquals(String.format(expectedResult, msgIndex), r.feedbackToUser);
         return expectedResult;
@@ -407,7 +407,7 @@ public class LogicTest {
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
-        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg(), 1);
+        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg(), 1);
         Password.lockIsHQP();
     }
 
@@ -1076,7 +1076,7 @@ public class LogicTest {
     @Test
     public void execute_checkEmptyInbox_successful() throws Exception{
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
+        CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String expectedResult = Messages.MESSAGE_NO_UNREAD_MSGS;
         assertEquals(expectedResult, r.feedbackToUser);
     }
@@ -1089,13 +1089,13 @@ public class LogicTest {
         Msg testMsg = generateMsgInInbox(testMessage);
         int messageNum = 1;
 
-        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
+        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
     }
 
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
+        CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
         String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
         assertCommandBehavior(inputCommand, expected);
@@ -1111,7 +1111,7 @@ public class LogicTest {
             testMsg = generateMsgInInbox("This is a test message.");
             Thread.sleep(100);
         }
-        CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
+        CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String input1 = ReadCommand.COMMAND_WORD + " 0";
         String expected1 = String.format(Inbox.INDEX_OUT_OF_BOUNDS, numOfMsgs);
         assertCommandBehavior(input1, expected1);
@@ -1144,7 +1144,7 @@ public class LogicTest {
             testMsg = generateMsgInInbox("This is a test message. " + index++);
             Thread.sleep(100);
         }
-        CommandResult r = logic.execute(InboxCommand.COMMAND_WORD);
+        CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " " + numOfMsgs;
         String expected = ReadCommand.MESSAGE_UPDATE_SUCCESS;
         assertCommandBehavior(inputCommand, expected);

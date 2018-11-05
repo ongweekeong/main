@@ -16,7 +16,7 @@ import java.util.TreeSet;
  * @return messages to be printed out on the main window.
  */
 
-public class InboxCommand extends Command {
+public class ShowUnreadCommand extends Command {
     public static final String COMMAND_WORD = "showunread";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
