@@ -4,8 +4,8 @@ package seedu.addressbook.data.person;
 import seedu.addressbook.data.exception.IllegalValueException;
 
 /**
- * Represents a Person's Postal Code in the address book.
- * Guarantees: immutable; is valid as declared in {@link #isValidPostalCode(String)}
+ * Represents a Person's Postal Code in the records.
+ * Guarantees: Can be edited using the 'edit' command; is valid as declared in {@link #isValidPostalCode(String)}
  */
 
 public class PostalCode {

@@ -377,10 +377,10 @@ public class LogicTest {
         assertCommandBehavior("rb", expectedMessage);
         assertCommandBehavior("rb    ", expectedMessage);
     }
-    /*
+
     @Test
     public void execute_request_invalidOffense() throws Exception {
-        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID;
+        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID + Offense.getListOfValidOffences();
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " crime", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " tired", expectedMessage);
     }
@@ -389,12 +389,14 @@ public class LogicTest {
     @Test
     public void execute_request_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, Password.getID());
+        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
+        Password.unlockHQP();
+
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " gun", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " theft", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " riot", expectedMessage);
     }
-    *///TODO travis fail
+
 
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
@@ -403,7 +405,7 @@ public class LogicTest {
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
-        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMessage(), 1);
+        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg(), 1);
         Password.lockIsHQP();
     }
 
@@ -476,7 +478,7 @@ public class LogicTest {
     public void execute_request_recentMessageFail() {
         RequestHelpCommand.resetRecentMessage();
         thrown.expect(NullPointerException.class);
-        RequestHelpCommand.getRecentMessage();
+        RequestHelpCommand.getRecentMsg();
     }
 
     //@@author
@@ -669,25 +671,24 @@ public class LogicTest {
         assertCommandBehavior("find S1234567A", expectedMessage);
     }
 
-    /*
-    @Test
-    public void execute_find_onlyMatchesFullNric() throws Exception {
-        TestDataHelper helper = new TestDataHelper();
 
-        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
-        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
-        Person p1 = helper.generatePersonWithNric("s1234567c");
-        Person p2 = helper.generatePersonWithNric("s1234567d");
-
-        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
-        Person expectedPerson = pTarget2;
-        helper.addToAddressBook(addressBook, fourPersons);
-        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
-        CommandResult r = logic.execute(inputCommand);
-
-        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
-    }
-    *///TODO travis fails
+//    @Test
+//    public void execute_find_onlyMatchesFullNric() throws Exception {
+//        TestDataHelper helper = new TestDataHelper();
+//
+//        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+//        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
+//        Person p1 = helper.generatePersonWithNric("s1234567c");
+//        Person p2 = helper.generatePersonWithNric("s1234567d");
+//
+//        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
+//        Person expectedPerson = pTarget2;
+//        helper.addToAddressBook(addressBook, fourPersons);
+//        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
+//        CommandResult r = logic.execute(inputCommand);
+//
+//        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
+//    }
 
     @Test
     public void execute_find_isCaseSensitive() throws Exception {
@@ -717,27 +718,27 @@ public class LogicTest {
         assertCommandBehavior("check ", expectedMessage);
     }
 
-    /*
-    @Test
-    public void execute_check_validNric() throws Exception {
-        TestDataHelper helper = new TestDataHelper();
-        Person toBeAdded = helper.generateDummyPerson();
-        String nric = toBeAdded.getNric().getIdentificationNumber();
 
-        List<String> emptyTimestamps = new ArrayList<>();
-        Formatter formatter = new Formatter();
-        String result = formatter.formatForStrings(emptyTimestamps);
-
-        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-        addressBook.addPerson(toBeAdded);
-        assertCommandBehavior("check " + nric,
-                expectedMessage,
-                addressBook,
-                false,
-                Collections.emptyList());
-
-    }
-    *? //TODO Travis fails
+//    @Test
+//    public void execute_check_validNric() throws Exception {
+//        TestDataHelper helper = new TestDataHelper();
+//        Person toBeAdded = helper.generateDummyPerson();
+//        String nric = toBeAdded.getNric().getIdentificationNumber();
+//
+//        List<String> emptyTimestamps = new ArrayList<>();
+//        Formatter formatter = new Formatter();
+//        String result = formatter.formatForStrings(emptyTimestamps);
+//
+//        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
+//        addressBook.addPerson(toBeAdded);
+//        assertCommandBehavior("check " + nric,
+//                expectedMessage,
+//                addressBook,
+//                false,
+//                Collections.emptyList());
+//
+//    }
+//    //TODO Travis fails
 
 //    @Test
 //    public void execute_check_fileNotFound() throws Exception {
@@ -1034,19 +1035,17 @@ public class LogicTest {
         Password.unprepareUpdatePassword();
     }
 
-    /*
-    @Test
-    /*
-    public void execute_updatePassword(){
-        Password.unlockHQP();
-        Password.prepareUpdatePassword();
-        String result = Password.updatePassword("thisiswrong", 5);
-        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
-                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
-                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-        Password.lockIsHQP();
-    }
-    */
+
+//    @Test
+//    public void execute_updatePassword() throws Exception{
+//        Password.unlockHQP();
+//        Password.prepareUpdatePassword();
+//        String result = Password.updatePassword("thisiswrong", 5);
+//        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+//                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+//                + "\n" + MESSAGE_ENTER_PASSWORD,result);
+//        Password.lockIsHQP();
+//    }
 
 
     //@@author ongweekeong
@@ -1218,6 +1217,7 @@ public class LogicTest {
         CommandResult r = input.execute();
         assertEquals(expected, r.feedbackToUser);
     }
+
     //@@author
 
     /**

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Returns the list of timestamps for when a perosn was screened using 'find' command, if person exists in PRISM
+ * Returns the list of timestamps for when a person was screened using 'find' command, if person exists in the records
  */
 
 public class CheckCommand extends Command {

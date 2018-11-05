@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Adds a person to PRISM.
+ * Adds a person to the records.
  */
 public class AddCommand extends Command {
 
@@ -50,6 +50,7 @@ public class AddCommand extends Command {
         );
     }
 
+    //TODO: Is code still used?
     public AddCommand(Person toAdd) {
         this.toAdd = toAdd;
     }

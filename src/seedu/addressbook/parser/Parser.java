@@ -269,7 +269,7 @@ public class Parser {
     }
 
 
-//@@author andyrobert3
+    //@@author andyrobert3
 
     /**
      * Parses arguments in the context of the edit person command.
@@ -278,19 +278,43 @@ public class Parser {
      * @return the prepared command
      */
     private Command prepareEdit(String args) {
-        final Matcher matcher = EDIT_DATA_ARGS_FORMAT.matcher(args.trim());
-        // Validate arg string format
-        if (!matcher.matches()) {
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        args = args.trim();
+
+        String argParts[] = args.split("\\s");
+        String editCommandIdentifiers[] = {
+            "n/", "p/", "s/", "w/", "o/"
+        };
+
+        String userInputParameters[] = new String[editCommandIdentifiers.length];
+
+        for (int i = 0; i < editCommandIdentifiers.length; i++) {
+            for (String argument : argParts) {
+                if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
+                    userInputParameters[i] = argument.substring(2);
+                    break;
+                }
+            }
         }
+
+        Set<String> offenses = null;
+
         try {
+            if (userInputParameters[0] == null) {
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+            }
+
+            if (userInputParameters[4] != null) {
+                offenses = getTagsFromArgs(userInputParameters[4]);
+            }
+
             return new EditCommand(
-                    matcher.group("nric"),
-                    matcher.group("postalCode"),
-                    matcher.group("status"),
-                    matcher.group("wantedFor"),
-                    getTagsFromArgs(matcher.group("pastOffenseArguments"))
+                    userInputParameters[0],
+                    userInputParameters[1],
+                    userInputParameters[2],
+                    userInputParameters[3],
+                    offenses
             );
+
         } catch (IllegalValueException ive) {
             logr.log(Level.WARNING, "Invalid edit command format.", ive);
             return new IncorrectCommand(ive.getMessage());
