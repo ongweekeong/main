@@ -688,10 +688,12 @@ public class LogicTest {
 
         List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
         Person expectedPerson = pTarget2;
+        String nric = expectedPerson.getNric().getIdentificationNumber();
         helper.addToAddressBook(addressBook, fourPersons);
-        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
-        CommandResult r = logic.execute(inputCommand);
-
+        FindCommand findCommand = new FindCommand(nric);
+        findCommand.setFile("TestScreen.txt");
+        findCommand.setAddressBook(addressBook);
+        CommandResult r = findCommand.execute();
         assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
     }
 
@@ -741,25 +743,7 @@ public class LogicTest {
                                 Collections.emptyList());
     }
 
-//    @Test
-//    public void execute_check_validNric() throws Exception {
-//        TestDataHelper helper = new TestDataHelper();
-//        Person toBeAdded = helper.generateDummyPerson();
-//        String nric = toBeAdded.getNric().getIdentificationNumber();
-//
-//        List<String> emptyTimestamps = new ArrayList<>();
-//        UiFormatter formatter = new UiFormatter();
-//        String result = formatter.formatForStrings(emptyTimestamps);
-//
-//        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-//        addressBook.addPerson(toBeAdded);
-//        assertCommandBehavior("check " + nric,
-//                expectedMessage,
-//                addressBook,
-//                false,
-//                Collections.emptyList());
-//
-//    }
+
 
 
 //    @Test

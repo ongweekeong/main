@@ -18,7 +18,7 @@ public class CheckCommand extends Command {
 
     private String nricKeyword;
     private String FILE_NOT_FOUND_ERROR = "File not found";
-    private static final String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private String SCREENING_DATABASE = "ScreeningHistory.txt";
 
     public CheckCommand(String nricToFind)
     {
@@ -27,6 +27,10 @@ public class CheckCommand extends Command {
 
     public String getNricKeyword(){
         return nricKeyword;
+    }
+
+    public void setFile(String file) {
+        this.SCREENING_DATABASE = file;
     }
 
     @Override
