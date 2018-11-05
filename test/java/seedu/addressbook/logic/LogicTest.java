@@ -15,22 +15,15 @@ import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
-import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.storage.StorageFile;
-import seedu.addressbook.timeanddate.TimeAndDate;
-import seedu.addressbook.ui.Formatter;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
@@ -38,7 +31,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
 import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
 import static seedu.addressbook.password.Password.*;
 
 
@@ -385,10 +377,10 @@ public class LogicTest {
         assertCommandBehavior("rb", expectedMessage);
         assertCommandBehavior("rb    ", expectedMessage);
     }
-    /*
+
     @Test
     public void execute_request_invalidOffense() throws Exception {
-        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID;
+        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID + Offense.getListOfValidOffences();
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " crime", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " tired", expectedMessage);
     }
@@ -397,12 +389,12 @@ public class LogicTest {
     @Test
     public void execute_request_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, Password.getID());
+        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, 1));
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " gun", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " theft", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " riot", expectedMessage);
     }
-    *///TODO travis fail
+
 
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
@@ -411,7 +403,7 @@ public class LogicTest {
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
-        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMessage(), 1);
+        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg(), 1);
         Password.lockIsHQP();
     }
 
@@ -484,7 +476,7 @@ public class LogicTest {
     public void execute_request_recentMessageFail() {
         RequestHelpCommand.resetRecentMessage();
         thrown.expect(NullPointerException.class);
-        RequestHelpCommand.getRecentMessage();
+        RequestHelpCommand.getRecentMsg();
     }
 
     //@@author
@@ -677,7 +669,7 @@ public class LogicTest {
         assertCommandBehavior("find S1234567A", expectedMessage);
     }
 
-    /*
+
     @Test
     public void execute_find_onlyMatchesFullNric() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -695,7 +687,6 @@ public class LogicTest {
 
         assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
     }
-    *///TODO travis fails
 
     @Test
     public void execute_find_isCaseSensitive() throws Exception {

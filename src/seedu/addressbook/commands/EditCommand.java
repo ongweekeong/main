@@ -48,11 +48,18 @@ public class EditCommand extends Command {
     private void updatePerson() throws UniquePersonList.PersonNotFoundException {
         for (Person person : addressBook.getAllPersons()) {
             if (person.getNric().equals(this.nric)) {
-                person.setPostalCode(postalCode);
-                person.setWantedFor(wantedFor);
-                person.setStatus(status);
-                person.addPastOffenses(offenses);
-
+                if (postalCode != null) {
+                    person.setPostalCode(postalCode);
+                }
+                if (wantedFor != null) {
+                    person.setWantedFor(wantedFor);
+                }
+                if (status != null) {
+                    person.setStatus(status);
+                }
+                if (offenses != null) {
+                    person.addPastOffenses(offenses);
+                }
                 return;
             }
         }
@@ -67,10 +74,22 @@ public class EditCommand extends Command {
                        Set<String> offenses) throws IllegalValueException {
 
         this.nric = new NRIC(nric);
-        this.postalCode = new PostalCode(postalCode);
-        this.status = new Status(status);
-        this.wantedFor = new Offense(wantedFor);
-        this.offenses = Offense.getOffenseSet(offenses);
+
+        if (postalCode != null) {
+            this.postalCode = new PostalCode(postalCode);
+        }
+
+        if (status != null) {
+            this.status = new Status(status);
+        }
+
+        if (wantedFor != null) {
+            this.wantedFor = new Offense(wantedFor);
+        }
+
+        if (offenses != null) {
+            this.offenses = Offense.getOffenseSet(offenses);
+        }
     }
 
     @Override
