@@ -672,23 +672,23 @@ public class LogicTest {
     }
 
 
-    @Test
-    public void execute_find_onlyMatchesFullNric() throws Exception {
-        TestDataHelper helper = new TestDataHelper();
-
-        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
-        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
-        Person p1 = helper.generatePersonWithNric("s1234567c");
-        Person p2 = helper.generatePersonWithNric("s1234567d");
-
-        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
-        Person expectedPerson = pTarget2;
-        helper.addToAddressBook(addressBook, fourPersons);
-        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
-        CommandResult r = logic.execute(inputCommand);
-
-        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
-    }
+//    @Test
+//    public void execute_find_onlyMatchesFullNric() throws Exception {
+//        TestDataHelper helper = new TestDataHelper();
+//
+//        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+//        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
+//        Person p1 = helper.generatePersonWithNric("s1234567c");
+//        Person p2 = helper.generatePersonWithNric("s1234567d");
+//
+//        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
+//        Person expectedPerson = pTarget2;
+//        helper.addToAddressBook(addressBook, fourPersons);
+//        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
+//        CommandResult r = logic.execute(inputCommand);
+//
+//        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
+//    }
 
     @Test
     public void execute_find_isCaseSensitive() throws Exception {
