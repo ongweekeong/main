@@ -117,7 +117,7 @@ public class Location {
      */
 
     public ArrayList<Pair<Integer, String>> getEtaFrom(ArrayList<Location> locations) throws IOException, JSONException{
-        ArrayList<Pair<Integer, String>> etaList = new ArrayList<>();
+        ArrayList<Pair<Integer, String>> etaList;
 
         HttpRestClient httpRestClient = new HttpRestClient();
         HttpResponse response = httpRestClient.requestGetResponse(getMapsDistanceUrl(locations));

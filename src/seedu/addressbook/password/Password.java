@@ -1,5 +1,6 @@
 package seedu.addressbook.password;
 
+import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 
@@ -536,25 +537,20 @@ public class Password {
     }
 
     public static String getID(){
-        String result = "Ghost";
-        if(isHQP){
-            result = "hqp";
+        if (isHQP){
+            return PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID;
+        } else if(isPO1){
+            return PatrolResourceStatus.POLICE_OFFICER_1_ID;
+        } else if(isPO2){
+            return PatrolResourceStatus.POLICE_OFFICER_2_ID;
+        } else if(isPO3){
+            return PatrolResourceStatus.POLICE_OFFICER_3_ID;
+        } else if(isPO4){
+            return PatrolResourceStatus.POLICE_OFFICER_4_ID;
+        } else if(isPO5){
+            return PatrolResourceStatus.POLICE_OFFICER_5_ID;
         }
-        else if(isPO1){
-            result = "po1";
-        }
-        else if(isPO2){
-            result = "po2";
-        }
-        else if(isPO3){
-            result = "po3";
-        }
-        else if(isPO4){
-            result = "po4";
-        }
-        else if(isPO5){
-            result = "po5";
-        }
-        return result;
+
+        return "Ghost";
     }
 }

@@ -22,6 +22,7 @@ public class RequestHelpCommand extends Command {
 
 
     public static String MESSAGE_REQUEST_SUCCESS = "Request for backup case from %s has been sent to HQP.";
+    public static String MESSAGE_RECENT_MESSAGE_EMPTY = "Request command was never called";
 
     private static Msg requestHelpMessage;
     private WriteNotification writeNotification;
@@ -53,12 +54,15 @@ public class RequestHelpCommand extends Command {
         requestHelpMessage = null;
     }
 
-    public static Msg getRecentMessage() {
+    /**
+     * Retrieves most recent Msg from request command
+     * @return most recent Msg
+     */
+    public static Msg getRecentMsg() {
         if (requestHelpMessage == null) {
-            throw new NullPointerException("Request command was never called");
+            throw new NullPointerException(MESSAGE_RECENT_MESSAGE_EMPTY);
         }
         return requestHelpMessage;
     }
-
 
 }
