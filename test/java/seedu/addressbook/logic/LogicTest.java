@@ -724,6 +724,23 @@ public class LogicTest {
     }
 
 
+    @Test
+    public void execute_check_validNric() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person toBeAdded = helper.adam();
+        String nric = toBeAdded.getNric().getIdentificationNumber();
+        addressBook.addPerson(toBeAdded);
+        List<String> emptyTimestamps = new ArrayList<>();
+        UiFormatter formatter = new UiFormatter();
+        String result = formatter.formatForStrings(emptyTimestamps);
+        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
+        assertCommandBehavior("check " + nric,
+                                expectedMessage,
+                                addressBook,
+                                false,
+                                Collections.emptyList());
+    }
+
 //    @Test
 //    public void execute_check_validNric() throws Exception {
 //        TestDataHelper helper = new TestDataHelper();

@@ -25,7 +25,7 @@ public class TimeAndDate {
     }
 
     public String getOutputDAThrsForCheckCommand() {
-        return outputDATForCheckCommand;
+        return outputDATForCheckCommand + "hrs";
     }
 
 }
