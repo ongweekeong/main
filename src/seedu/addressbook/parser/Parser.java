@@ -234,7 +234,7 @@ public class Parser {
      * Extracts the new person's tags from the add command's tag arguments string.
      * Merges duplicate tag strings.
      */
-    private static Set<String> getTagsFromArgs(String tagArguments) throws IllegalValueException {
+    private static Set<String> getTagsFromArgs(String tagArguments) {
         // no tags
         if (tagArguments.isEmpty()) {
             return Collections.emptySet();
@@ -286,15 +286,22 @@ public class Parser {
         };
 
         String userInputParameters[] = new String[editCommandIdentifiers.length];
+        String offenseString = "";
 
         for (int i = 0; i < editCommandIdentifiers.length; i++) {
             for (String argument : argParts) {
                 if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
-                    userInputParameters[i] = argument.substring(2);
-                    break;
+                    if (editCommandIdentifiers[i].equals(editCommandIdentifiers[4])) {
+                        offenseString += " " + argument;
+                    } else {
+                        userInputParameters[i] = argument.substring(2);
+                        break;
+                    }
                 }
             }
         }
+
+        userInputParameters[4] = (!offenseString.equals("")) ? offenseString : null;
 
         Set<String> offenses = null;
 
@@ -477,7 +484,17 @@ public class Parser {
         caseName = argParts[1].toLowerCase();
         dispatchRequester = argParts[2].toLowerCase();
 
-        return new DispatchCommand(backupOfficer, dispatchRequester, caseName);
+        try {
+            if (backupOfficer.equalsIgnoreCase(dispatchRequester)) {
+                throw new IllegalValueException(String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME,
+                        backupOfficer));
+            }
+            return new DispatchCommand(backupOfficer, dispatchRequester, caseName);
+        } catch (IllegalValueException ive) {
+            return new IncorrectCommand(ive.getMessage());
+        }
+
+
     }
 
 }

@@ -29,6 +29,8 @@ public class DispatchCommand extends Command {
     public static String MESSAGE_OFFICER_UNAVAILABLE = "Please choose another officer to send for backup.\n\t"
             + "Use 'checkstatus' command to see engaged/free officers.";
 
+    public static String MESSAGE_BACKUP_DISPATCH_SAME = "Backup resource & Requester cannot be the same officer %s!";
+
     private final WriteNotification writeNotificationToBackupOfficer;
     private final WriteNotification writeNotificationToRequester;
 
@@ -75,6 +77,8 @@ public class DispatchCommand extends Command {
                 throw new PatrolResourceUnavailableException(backupOfficer);
             }
 
+            PatrolResourceStatus.setStatus(backupOfficer, true);
+
             Msg requesterMessage = new Msg(Offense.getPriority(offense), requesterStringMessage,
                     PatrolResourceStatus.getLocation(backupOfficer), etaPair.getValue0());
 
@@ -84,11 +88,11 @@ public class DispatchCommand extends Command {
         } catch (IOException ioe) {
             return new CommandResult(Messages.MESSAGE_INTERNET_NOT_AVAILABLE + "/" + Messages.MESSAGE_SAVE_ERROR);
         } catch (IllegalValueException ioe) {
-            return new CommandResult(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
+            return new CommandResult(String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), this.offense));
         } catch (JSONException jse) {
             return new CommandResult(Messages.MESSAGE_JSON_PARSE_ERROR);
         } catch (PatrolResourceUnavailableException prue) {
-            return new CommandResult(prue.getMessage() + "\n" + MESSAGE_OFFICER_UNAVAILABLE);
+            return new CommandResult(prue.getMessage() + "\n" + MESSAGE_OFFICER_UNAVAILABLE + "/" + " ");
         }
 
         return new CommandResult(String.format(MESSAGE_DISPATCH_SUCCESS, requester));

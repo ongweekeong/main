@@ -252,7 +252,7 @@ public class LogicTest {
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/13456 s/clear w/none", PostalCode.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
+                "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rob"));
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
         assertCommandBehavior(
@@ -426,18 +426,18 @@ public class LogicTest {
 
     @Test
     public void execute_dispatch_invalidOffense() throws Exception {
-        String expectedMessage = Offense.MESSAGE_OFFENSE_INVALID + "\n"
-                + Offense.getListOfValidOffences();
-        assertCommandBehavior("dispatch po1 help po2", expectedMessage);
-        assertCommandBehavior("dispatch po4 backup po1", expectedMessage);
+        assertCommandBehavior("dispatch po1 help po2",  String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
+                + Offense.getListOfValidOffences(), "help"));
+        assertCommandBehavior("dispatch po4 backup po1",  String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
+                + Offense.getListOfValidOffences(), "backup"));
     }
 
     @Test
     public void execute_dispatch_successful() throws Exception {
         PatrolResourceStatus.resetPatrolResourceStatus();
         WriteNotification.clearAllInbox();
-        String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po2");
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po2", expectedMessage1);
+        String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po5");
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po5", expectedMessage1);
 
         PatrolResourceStatus.resetPatrolResourceStatus();
         WriteNotification.clearAllInbox();
@@ -452,6 +452,18 @@ public class LogicTest {
 
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " hqp theft po3", String.format(baseMessage, "hqp"));
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 riot po2", String.format(baseMessage, "po3"));
+    }
+
+    @Test
+    public void execute_dispatch_backupRequesterSameOfficer() throws Exception {
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1", String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME, "po1"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5", String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME, "po5"));
+    }
+
+    @Test
+    public void execute_patrolResource_getDefaultDetails() {
+        PatrolResourceStatus.resetPatrolResourceStatus();
+        assertEquals(PatrolResourceStatus.getPatrolResource(" "), PatrolResourceStatus.getPatrolResource("hqp"));
     }
 
     @Test
@@ -604,35 +616,28 @@ public class LogicTest {
     public void execute_edit_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
         assertCommandBehavior("edit ", expectedMessage);
-    }
-
-    @Test
-    public void execute_edit_invalidCommandFormat() throws Exception {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
-        assertCommandBehavior("edit ", expectedMessage);
         assertCommandBehavior("edit hello world", expectedMessage);
     }
 
     //@@author andyrobert3
     @Test
     public void execute_edit_invalidDataFormat() throws Exception {
-
         TestDataHelper helper = new TestDataHelper();
         Person adam = helper.generatePersonWithNric("s1234567a");
         AddressBook addressBook = new AddressBook();
         addressBook.addPerson(adam);
 
-
+        assertCommandBehavior("edit n/s1234567a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         assertCommandBehavior(
-                "edit n/s123456a p/510247 s/wanted w/murder o/gun", NRIC.MESSAGE_NAME_CONSTRAINTS);
+                "edit n/s123456a p/510247", NRIC.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "edit n/s1234567a p/50247 s/wanted w/murder o/gun", PostalCode.MESSAGE_NAME_CONSTRAINTS);
+                "edit n/s1234567a p/50247 w/murder o/gun", PostalCode.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
                 "edit n/s1234567a p/123456 s/c w/none", Status.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "edit n/s1234567a p/133456 s/wanted w/ne", Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
+                "edit n/s1234567a p/133456 s/wanted w/ne", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "ne"));
         assertCommandBehavior(
-                "edit n/s1234567a p/134546 s/xc w/none o/rr", Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
+                "edit n/s1234567a p/134546 s/xc w/none o/rr", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rr"));
     }
 
     @Test
@@ -644,6 +649,16 @@ public class LogicTest {
         addressBook.addPerson(toBeEdited);
 
         assertCommandBehavior("edit n/s1234567a p/444555 s/xc w/theft o/theft",
+                                String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, nric),
+                                addressBook,
+                                false,
+                                Collections.emptyList());
+        assertCommandBehavior("edit n/s1234567a o/riot",
+                                String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, nric),
+                                addressBook,
+                                false,
+                                Collections.emptyList());
+        assertCommandBehavior("edit n/s1234567a p/123456 w/gun",
                                 String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS, nric),
                                 addressBook,
                                 false,
