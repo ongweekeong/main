@@ -19,6 +19,7 @@ public class FindCommand extends Command {
 
     private String nric;
     private  String FILE_NOT_FOUND_ERROR = "File not found";
+    private static final String SCREENING_DATABASE = "ScreeningHistory.txt";
 
     public FindCommand(String nricToFind) {
         this.nric = nricToFind;
@@ -48,7 +49,7 @@ public class FindCommand extends Command {
         for (ReadOnlyPerson person : relevantPersons) {
             if (person.getNric().getIdentificationNumber().equals(nric)) {
                 addressBook.addPersonToDbAndUpdate(person);
-                addressBook.updateDatabase();
+                addressBook.updateDatabase(SCREENING_DATABASE);
                 return person;
             }
         }
