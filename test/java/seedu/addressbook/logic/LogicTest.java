@@ -389,7 +389,9 @@ public class LogicTest {
     @Test
     public void execute_request_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, 1));
+        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
+        Password.unlockHQP();
+
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " gun", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " theft", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " riot", expectedMessage);

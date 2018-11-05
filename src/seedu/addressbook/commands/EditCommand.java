@@ -38,8 +38,8 @@ public class EditCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
             + "Edits the person identified by the NRIC number.\n\t"
-            + "Contact details can be marked private by prepending 'p' to the prefix.\n\t"
             + "Parameters: n/NRIC p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]...\n\t"
+            + "p/POSTALCODE s/STATUS w/WANTEDOR o/PASTOFFENSES tags are optional. \n\t"
             + "Example: " + COMMAND_WORD
             + " n/s1234567a p/510247 s/wanted w/murder o/gun";
 

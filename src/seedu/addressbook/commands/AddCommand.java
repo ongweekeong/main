@@ -50,6 +50,7 @@ public class AddCommand extends Command {
         );
     }
 
+    //TODO: Is code still used?
     public AddCommand(Person toAdd) {
         this.toAdd = toAdd;
     }
