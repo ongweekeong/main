@@ -15,6 +15,7 @@ import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
@@ -718,27 +720,27 @@ public class LogicTest {
         assertCommandBehavior("check ", expectedMessage);
     }
 
-    /*
-    @Test
-    public void execute_check_validNric() throws Exception {
-        TestDataHelper helper = new TestDataHelper();
-        Person toBeAdded = helper.generateDummyPerson();
-        String nric = toBeAdded.getNric().getIdentificationNumber();
 
-        List<String> emptyTimestamps = new ArrayList<>();
-        Formatter formatter = new Formatter();
-        String result = formatter.formatForStrings(emptyTimestamps);
-
-        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-        addressBook.addPerson(toBeAdded);
-        assertCommandBehavior("check " + nric,
-                expectedMessage,
-                addressBook,
-                false,
-                Collections.emptyList());
-
-    }
-    *? //TODO Travis fails
+//    @Test
+//    public void execute_check_validNric() throws Exception {
+//        TestDataHelper helper = new TestDataHelper();
+//        Person toBeAdded = helper.generateDummyPerson();
+//        String nric = toBeAdded.getNric().getIdentificationNumber();
+//
+//        List<String> emptyTimestamps = new ArrayList<>();
+//        Formatter formatter = new Formatter();
+//        String result = formatter.formatForStrings(emptyTimestamps);
+//
+//        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
+//        addressBook.addPerson(toBeAdded);
+//        assertCommandBehavior("check " + nric,
+//                expectedMessage,
+//                addressBook,
+//                false,
+//                Collections.emptyList());
+//
+//    }
+//    //TODO Travis fails
 
 //    @Test
 //    public void execute_check_fileNotFound() throws Exception {
@@ -1035,19 +1037,17 @@ public class LogicTest {
         Password.unprepareUpdatePassword();
     }
 
-    /*
-    @Test
-    /*
-    public void execute_updatePassword(){
-        Password.unlockHQP();
-        Password.prepareUpdatePassword();
-        String result = Password.updatePassword("thisiswrong", 5);
-        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
-                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
-                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-        Password.lockIsHQP();
-    }
-    */
+
+//    @Test
+//    public void execute_updatePassword() throws Exception{
+//        Password.unlockHQP();
+//        Password.prepareUpdatePassword();
+//        String result = Password.updatePassword("thisiswrong", 5);
+//        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+//                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+//                + "\n" + MESSAGE_ENTER_PASSWORD,result);
+//        Password.lockIsHQP();
+//    }
 
 
     //@@author ongweekeong
@@ -1219,6 +1219,7 @@ public class LogicTest {
         CommandResult r = input.execute();
         assertEquals(expected, r.feedbackToUser);
     }
+
     //@@author
 
     /**
