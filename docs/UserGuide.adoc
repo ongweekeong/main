@@ -32,7 +32,7 @@ image::Ui.png[width="790"]
 
 [NOTE]
 ====
-*   The text box is located at the bottom of the screen
+*   The text box is located at the bottom of the screen, and is grey in colour
 *   Throughout the list of features, each command will indicate if its available for HQP, PO or both
 ====
 
@@ -65,6 +65,11 @@ image::Ui.png[width="790"]
 
 Lists all the features in a user friendly format for users and how to use them.
 
+[NOTE]
+====
+*   You will be unable to see the list of available commands until logged in, due to the sensitivity of the data
+====
+
 Format: 'help'
 
 === Display date and time : `time` (HQP & PO)
@@ -77,7 +82,7 @@ Format: 'time'
 
 Adds a criminal to the database.
 
-Format: 'add NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]'
+Format: 'add NAME n/NRIC d/YEAROFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]'
 
 Examples:
 
@@ -100,7 +105,13 @@ A person can have 0 or more past offenses
 
 Edit a specified parameter of an existing person in the Police Records - only by HQP
 
-Format: 'edit n/[NRIC] p/[POSTAL_CODE] s/[STATUS] w/WANTED_FOR o/PAST_OFFENCES'
+Format: 'edit n/NRIC p/[POSTAL_CODE] s/[STATUS] w/[WANTED_FOR] o/[PAST_OFFENCES]'
+
+[NOTE]
+====
+*   The NRIC tag 'n/' is required
+*   The other tags are optional, but at least one of them must be filled
+====
 
 ****
 *	Edits the person with the specified NRIC.
@@ -299,7 +310,7 @@ Currently all commands are covered by the feature.
 
 *   *Show time* : 'time'
 
-*	*Add*  : 'add n/NAME n/NRIC d/DATE_OF_BIRTH p/POSTAL_CODE s/STATUS w/WANTED_FOR o/PAST OFFENCES...'
+*	*Add*  : 'add n/NAME n/NRIC d/YEAR_OF_BIRTH p/POSTAL_CODE s/STATUS w/WANTED_FOR o/PAST OFFENCES...'
 
 E.g. add John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs
 E.g. add Bob n/g1234567a d/1996 p/111111 s/clear w/none
