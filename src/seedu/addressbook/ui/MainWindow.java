@@ -195,18 +195,18 @@ public class MainWindow {
      * Private contact details are hidden.
      */
     private void display(List<? extends ReadOnlyPerson> persons) {
-        display(new Formatter().format(persons));
+        display(new UiFormatter().format(persons));
     }
 
     public void displayTimestamps(List<String> history){
-        display(new Formatter().formatForStrings(history));
+        display(new UiFormatter().formatForStrings(history));
     }
 
     /**
      * Displays the given messages on the output display area, after formatting appropriately.
      */
     private void display(String... messages) {
-        outputConsole.setText(outputConsole.getText() + new Formatter().format(messages));
+        outputConsole.setText(outputConsole.getText() + new UiFormatter().format(messages));
     }
 
 }
