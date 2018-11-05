@@ -67,12 +67,16 @@ public abstract class Command {
      */
 
     public static String getMessageForScreeningHistoryShownSummary(List<String> timestampsDisplayed, String nric) {
+        if (timestampsDisplayed == null){
+            return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+        }
+        else {
+            Formatter formatter = new Formatter();
+            String result = formatter.formatForStrings(timestampsDisplayed);
 
-        Formatter formatter = new Formatter();
-        String result = formatter.formatForStrings(timestampsDisplayed);
-
-        String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
-        return finalResult;
+            String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
+            return finalResult;
+        }
     }
 
     public static String getMessage(List<String> args) {

@@ -1,6 +1,8 @@
 package seedu.addressbook.commands;
 
 //@@author muhdharun
+import seedu.addressbook.data.person.ReadOnlyPerson;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,9 +50,14 @@ public class CheckCommand extends Command {
 
     private List<String> getPersonWithNric(String nric) throws IOException{
         List<String> screeningHistory;
-        screeningHistory = addressBook.readDatabase(nric);
+        for(ReadOnlyPerson person : relevantPersons) {
+            if(person.getNric().getIdentificationNumber().equals(nric)) {
+                screeningHistory = addressBook.readDatabase(nric);
+                return screeningHistory;
+            }
+        }
 
-        return screeningHistory;
+        return null;
     }
 
 }
