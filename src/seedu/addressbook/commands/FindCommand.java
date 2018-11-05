@@ -40,7 +40,7 @@ public class FindCommand extends Command {
 
 
     /**
-     * Retrieve the person in PRISM whose name contain the specified NRIC.
+     * Retrieve the person in the records whose name contain the specified NRIC.
      *
      * @return Persons found, null if no person found
      */

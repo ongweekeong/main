@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Adds a person to PRISM.
+ * Adds a person to the records.
  */
 public class AddCommand extends Command {
 
