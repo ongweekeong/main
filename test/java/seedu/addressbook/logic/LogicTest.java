@@ -1074,7 +1074,7 @@ public class LogicTest {
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_PASSWORD_LENGTH, userInput.length())
                 + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
-                       + Password.MESSAGE_TRY_AGAIN
+                + "\n" + Password.MESSAGE_TRY_AGAIN
         ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1088,7 +1088,7 @@ public class LogicTest {
         String userInput = "123456";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
-                        + Password.MESSAGE_TRY_AGAIN ,result);
+                        + "\n" + Password.MESSAGE_TRY_AGAIN ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
     }
@@ -1101,7 +1101,7 @@ public class LogicTest {
         String userInput = "popopo";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
-                        + Password.MESSAGE_TRY_AGAIN
+                        + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1114,8 +1114,8 @@ public class LogicTest {
         Password password = new Password();
         String userInput = "*********";
         String result = password.passwordValidityChecker(userInput);
-        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number.")
-                        + Password.MESSAGE_TRY_AGAIN
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
+                        + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1129,7 +1129,7 @@ public class LogicTest {
         String userInput = "papa123";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(Password.MESSAGE_PASSWORD_EXISTS
-                        + Password.MESSAGE_TRY_AGAIN
+                        + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1182,7 +1182,6 @@ public class LogicTest {
         userInput = "papa123";
         Password.setOTP(userInput);
         password.updatePasswordFinal(userInput);
-
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
@@ -1208,6 +1207,78 @@ public class LogicTest {
     public void execute_getFullID_ghost(){
         String result = getFullID("nonsense");
         assertEquals("Ghost",result);
+    }
+
+    @Test
+    public void execute_passwordExistsChecker_exists() throws IOException {
+        Password password = new Password();
+        String result = password.passwordExistsChecker("papa123");
+        assertEquals(Password.MESSAGE_PASSWORD_EXISTS,result);
+    }
+
+    @Test
+    public void execute_passwordExistsChecker_valid() throws IOException {
+        Password password = new Password();
+        String result = password.passwordExistsChecker("police123");
+        assertEquals(Password.MESSAGE_VALID,result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_missingAlphabet() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("123132442");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet"), result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_missingNumber() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("papapaapap");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number"), result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_notAlphanumeric() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("*******");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number"), result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_valid() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("papa123");
+        assertEquals(MESSAGE_VALID, result);
+    }
+
+    @Test
+    public void execute_LengthChecker_tooShort(){
+        Password password = new Password();
+        String newEnteredPassword = "";
+        int lengthPassword = newEnteredPassword.length();
+        int minNumPassword = 5;
+        String result = password.passwordLengthChecker(newEnteredPassword);
+        assertEquals(String.format(MESSAGE_PASSWORD_LENGTH, lengthPassword)
+                + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
+                , result);
+    }
+
+    @Test
+    public void execute_LengthChecker_valid(){
+        Password password = new Password();
+        String newEnteredPassword = "papa123";
+        String result = password.passwordLengthChecker(newEnteredPassword);
+        assertEquals(MESSAGE_VALID, result);
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_tooShortAndMissingAlphabet() throws IOException {
+        Password password = new Password();
+        String newEnteredPassword = "p";
+        String result = password.passwordValidityChecker(newEnteredPassword);
+        assertEquals(password.passwordLengthChecker(newEnteredPassword)
+                + "\n" + password.passwordAlphanumericChecker(newEnteredPassword)
+                + "\n" + MESSAGE_TRY_AGAIN, result);
     }
 
     //@@author ongweekeong

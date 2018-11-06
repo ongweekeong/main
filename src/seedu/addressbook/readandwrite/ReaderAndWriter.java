@@ -15,11 +15,6 @@ public class ReaderAndWriter {
         return br;
     }
 
-    public PrintWriter openWriter (File file) throws IOException {
-        PrintWriter pw = new PrintWriter(file);
-        return pw;
-    }
-
     public PrintWriter openTempWriter (File file) throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter(file));
         return pw;

@@ -39,6 +39,7 @@ public class Password {
     public static final String UPDATE_PASSWORD_COMMAND_WORD = "update password";
     public static final String UPDATE_PASSWORD_MESSAGE_USAGE = UPDATE_PASSWORD_COMMAND_WORD + ":\n" + "Updates a password\n\t"
             + "Example: " + UPDATE_PASSWORD_COMMAND_WORD;
+    public static final String MESSAGE_VALID = "valid";
 
 
     public static int getWrongPasswordCounter() {
@@ -341,7 +342,7 @@ public class Password {
         }
         else{
             result = passwordValidityChecker(userCommandText);
-            if(result == null){
+            if(result.equals(MESSAGE_VALID)){
                 setOTP(userCommandText);
                 setUpdatingFinal();
                 result = MESSAGE_ENTER_NEW_PASSWORD_AGAIN;
@@ -442,8 +443,8 @@ public class Password {
         pw.flush();
     }
 
-    private String passwordExistsChecker (String newEnteredPassword) throws IOException {
-        String result = null;
+    public String passwordExistsChecker(String newEnteredPassword) throws IOException {
+        String result = MESSAGE_VALID;
 
         File originalFile = readerandwriter.fileToUse("passwordStorage.txt");
         BufferedReader br = readerandwriter.openReader(originalFile);
@@ -464,10 +465,10 @@ public class Password {
         br.close();
         return result;
     }
-    private String passwordAlphanumericChecker(String newEnteredPassword){
+    public String passwordAlphanumericChecker(String newEnteredPassword){
         String result;
         if (newEnteredPassword.matches(".*\\d+.*") && newEnteredPassword.matches(".*[a-zA-Z]+.*")) {
-            return null;
+            result = MESSAGE_VALID;
         }
         else if (newEnteredPassword.matches(".*\\d+.*") && !newEnteredPassword.matches(".*[a-zA-Z]+.*")) {
             result = String.format(MESSAGE_AT_LEAST_ONE, "alphabet");
@@ -476,13 +477,13 @@ public class Password {
             result = String.format(MESSAGE_AT_LEAST_ONE, "number");
         }
         else {
-            result = String.format(MESSAGE_AT_LEAST_ONE, "alphabet and at least one number.");
+            result = String.format(MESSAGE_AT_LEAST_ONE, "alphabet and at least one number");
         }
         return result;
     }
 
-    private String passwordLengthChecker(String newEnteredPassword){
-        String result = null;
+    public String passwordLengthChecker(String newEnteredPassword){
+        String result = MESSAGE_VALID;
         int lengthPassword = newEnteredPassword.length();
         int minNumPassword = 5;
         if(lengthPassword < minNumPassword){
@@ -493,24 +494,24 @@ public class Password {
     }
 
     public String passwordValidityChecker(String newEnteredPassword) throws IOException {
-        String result = null;
-        if(passwordExistsChecker(newEnteredPassword) != null){
+        String result = MESSAGE_VALID;
+        if(!passwordExistsChecker(newEnteredPassword).equals(MESSAGE_VALID)){
             result = passwordExistsChecker(newEnteredPassword);
         }
-        else if(passwordAlphanumericChecker(newEnteredPassword) != null && passwordLengthChecker(newEnteredPassword) != null){
-            result = passwordAlphanumericChecker(newEnteredPassword)
-                    + "\n" + passwordLengthChecker(newEnteredPassword);
+        else if(!passwordAlphanumericChecker(newEnteredPassword).equals(MESSAGE_VALID) && !passwordLengthChecker(newEnteredPassword).equals(MESSAGE_VALID)){
+            result = passwordLengthChecker(newEnteredPassword)
+                    + "\n" + passwordAlphanumericChecker(newEnteredPassword);
         }
-        else if(passwordAlphanumericChecker(newEnteredPassword) != null ){
+        else if(!passwordAlphanumericChecker(newEnteredPassword).equals(MESSAGE_VALID)){
             result = passwordAlphanumericChecker(newEnteredPassword);
         }
-        else if(passwordLengthChecker(newEnteredPassword) != null){
+        else if(!passwordLengthChecker(newEnteredPassword).equals(MESSAGE_VALID)){
             result = passwordLengthChecker(newEnteredPassword);
         }
-        return (result == null) ? null : result + MESSAGE_TRY_AGAIN ;
+        return (result.equals(MESSAGE_VALID)) ? MESSAGE_VALID : result + "\n" + MESSAGE_TRY_AGAIN ;
     }
 
-    private String getUnauthorizedPOCommand(String input){
+    public String getUnauthorizedPOCommand(String input){
         String commandWord;
         if(isRejectPO(input)){
             commandWord = input;
@@ -531,7 +532,7 @@ public class Password {
         return isRejectPO(userCommandWord);
     }
 
-    private boolean isRejectPO(String userCommandWord){
+    public boolean isRejectPO(String userCommandWord){
         return (userCommandWord.equals("add") 
                 || userCommandWord.equals("check") 
                 || userCommandWord.equals("clear") 
@@ -565,23 +566,25 @@ public class Password {
 
     public static String getFullID(String ID){
         String result = "Ghost";
-        if(ID.equals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID)){
-            result = MESSAGE_HQP;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_1_ID)){
-            result = MESSAGE_PO + MESSAGE_ONE;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_2_ID)){
-            result = MESSAGE_PO + MESSAGE_TWO;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_3_ID)){
-            result = MESSAGE_PO + MESSAGE_THREE;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_4_ID)){
-            result = MESSAGE_PO + MESSAGE_FOUR;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_5_ID)){
-            result = MESSAGE_PO + MESSAGE_FIVE;
+        switch (ID) {
+            case PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID:
+                result = MESSAGE_HQP;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_1_ID:
+                result = MESSAGE_PO + MESSAGE_ONE;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_2_ID:
+                result = MESSAGE_PO + MESSAGE_TWO;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_3_ID:
+                result = MESSAGE_PO + MESSAGE_THREE;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_4_ID:
+                result = MESSAGE_PO + MESSAGE_FOUR;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_5_ID:
+                result = MESSAGE_PO + MESSAGE_FIVE;
+                break;
         }
 
         return result;
