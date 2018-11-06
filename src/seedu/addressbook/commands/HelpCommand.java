@@ -22,6 +22,7 @@ public class HelpCommand extends Command {
             + "\n" + UpdateStatusCommand.MESSAGE_USAGE
             + "\n" + FindCommand.MESSAGE_USAGE
             + "\n" + ShowUnreadCommand.MESSAGE_USAGE
+            + "\n" + InboxCommand.MESSAGE_USAGE
             + "\n" + RequestHelpCommand.MESSAGE_USAGE
             + "\n" + DispatchCommand.MESSAGE_USAGE
             + "\n" + ReadCommand.MESSAGE_USAGE
@@ -38,6 +39,7 @@ public class HelpCommand extends Command {
             + "\n" + HelpCommand.MESSAGE_USAGE
             + "\n" + RequestHelpCommand.MESSAGE_USAGE
             + "\n" + ShowUnreadCommand.MESSAGE_USAGE
+            + "\n" + InboxCommand.MESSAGE_USAGE
             + "\n" + ReadCommand.MESSAGE_USAGE
             + "\n" + LogoutCommand.MESSAGE_USAGE
             + "\n" + ShutdownCommand.MESSAGE_USAGE;
