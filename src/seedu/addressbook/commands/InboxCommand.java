@@ -3,6 +3,7 @@ package seedu.addressbook.commands;
 
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.inbox.Inbox;
+import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.timeanddate.TimeAndDate;
@@ -22,7 +23,8 @@ public class InboxCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
             + "Displays all messages in the application starting from the unread and most urgent.\n\t"
             + "Example: " + COMMAND_WORD;
-    public static final String MESSAGE_TOTAL_MESSAGE_NOTIFICATION = "You have %d total messages, %d unread.";
+    public static final String MESSAGE_TOTAL_MESSAGE_NOTIFICATION = "You have %d total messages, %d unread.\n";
+    public static final String MESSAGE_UNKNOWN_ERROR = "Error loading messages. Check that %s exists.\n";
 
     @Override
     public CommandResult execute() {
@@ -36,7 +38,7 @@ public class InboxCommand extends Command {
             allMsgs = myInbox.loadMsgs();
             totalMsgs = allMsgs.size();
             myUnreadMsgs = myInbox.checkNumUnreadMessages();
-            String fullPrintedMessage = MESSAGE_TOTAL_MESSAGE_NOTIFICATION + '\n';
+            String fullPrintedMessage = MESSAGE_TOTAL_MESSAGE_NOTIFICATION;
             for (Msg msgToPrint : allMsgs) {
                // msgToPrint = allMsgs.pollFirst();
                 fullPrintedMessage += concatenateMsg(messageNum, msgToPrint);
@@ -46,8 +48,8 @@ public class InboxCommand extends Command {
             return new CommandResult(String.format(fullPrintedMessage, totalMsgs, myUnreadMsgs));
 
         } catch (IOException e) {
-            e.printStackTrace();
-            return new CommandResult("Error loading messages.");
+            //e.printStackTrace();
+            return new CommandResult(String.format(MESSAGE_UNKNOWN_ERROR, MessageFilePaths.getFilePathFromUserId(Password.getID())));
         }
     }
 

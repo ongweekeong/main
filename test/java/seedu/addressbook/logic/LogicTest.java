@@ -171,6 +171,10 @@ public class LogicTest {
         expectedResult += InboxCommand.concatenateMsg(1, testMsg);
         assertEquals(r.feedbackToUser, expectedResult);
     }
+    private void assertCommandBehavior(String commandWord, String expectedResult, String testMsg) throws Exception {
+        CommandResult r = logic.execute(commandWord);
+        assertEquals(r.feedbackToUser, expectedResult);
+    }
 
     //@@author iamputradanish
     @Test
@@ -186,14 +190,6 @@ public class LogicTest {
         Password.unlockHQP();
         assertCommandBehavior("help", HelpCommand.MESSAGE_ALL_USAGES);
         Password.lockIsHQP();
-    }
-
-    //@@author ongweekeong
-    @Test
-    public void execute_timeCommand() throws Exception {
-        String command = DateTimeCommand.COMMAND_WORD;
-        TimeAndDate timeAndDate = new TimeAndDate();
-        assertTimeCommandBehavior(command, timeAndDate.outputDATHrs());
     }
 
     //@@author iamputradanish
@@ -1220,6 +1216,13 @@ public class LogicTest {
 
     //@@author ongweekeong
     @Test
+    public void execute_timeCommand() throws Exception {
+        String command = DateTimeCommand.COMMAND_WORD;
+        TimeAndDate timeAndDate = new TimeAndDate();
+        assertTimeCommandBehavior(command, timeAndDate.outputDATHrs());
+    }
+
+    @Test
     public void execute_missingInboxFile() {
         String result = "";
         try{
@@ -1230,6 +1233,29 @@ public class LogicTest {
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
         }
         assertEquals(MESSAGE_INBOX_FILE_NOT_FOUND, result);
+    }
+
+    @Test
+    public void execute_inbox_noUnreadMessages() throws Exception {
+        Password.lockIsPO(); Password.lockIsPO();
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        String inputCommand = InboxCommand.COMMAND_WORD;
+        final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
+        assertCommandBehavior(inputCommand, expected);
+    }
+
+    @Test
+    public void execute_inbox_successful_readAndUnread() throws Exception {
+        Password.lockIsPO(); Password.lockIsPO();
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        final String test = "This is the unread test msg";
+        Msg testMsg = generateMsgInInbox(test);
+        Thread.sleep(50);
+        Msg readMsg = generateReadMsgInInbox("This is the read test msg");
+        String inputCommand = InboxCommand.COMMAND_WORD;
+        String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION + InboxCommand.concatenateMsg(1, testMsg) +
+                InboxCommand.concatenateMsg(2, readMsg), 2, 1);
+        assertCommandBehavior(inputCommand, expected, test);
     }
 
 
@@ -1257,8 +1283,10 @@ public class LogicTest {
         String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
         final String testMessage = "This is a test message.";
         Msg testMsg = generateMsgInInbox(testMessage);
+        String expectedResult1 = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 1, 1);
 
         assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedResult, testMsg);
+        assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult1, testMsg);
     }
 
     @Test
@@ -1608,6 +1636,7 @@ public class LogicTest {
         Timestamp newTime = new Timestamp(formattedTime.getTime());
         return newTime;
     }
+
     Msg generateMsgInInbox(String testMessage) throws Exception {
         TestDataHelper MessageGenerator = new TestDataHelper();
         Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
@@ -1615,6 +1644,16 @@ public class LogicTest {
         testWriter.writeToFile(testMsg);
         return testMsg;
     }
+
+    Msg generateReadMsgInInbox(String testMessage) throws Exception {
+        TestDataHelper MessageGenerator = new TestDataHelper();
+        Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
+        testMsg.setMsgAsRead();
+        WriteNotification testWriter = new WriteNotification(MessageFilePaths.FILEPATH_DEFAULT, true);
+        testWriter.writeToFile(testMsg);
+        return testMsg;
+    }
+
     String parseMsgForTimestamp(String message){
         //int limit = 1 + msgNum;
         String[] timestamp = message.split("-", 2);
