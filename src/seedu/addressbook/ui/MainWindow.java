@@ -141,7 +141,7 @@ public class MainWindow {
     //@@author
     /** Returns true if the result given is the result of an exit command */
     private boolean isExitCommand(String userCommandText) {
-        return userCommandText.equals(ExitCommand.COMMAND_WORD);
+        return userCommandText.equals(ShutdownCommand.COMMAND_WORD);
     }
 
     //@@author iamputradanish
@@ -154,7 +154,7 @@ public class MainWindow {
     }
 
     private boolean isLockCommand(String userCommandText) {
-        return userCommandText.equals(LockCommand.COMMAND_WORD);
+        return userCommandText.equals(LogoutCommand.COMMAND_WORD);
     }
 
     //@@author

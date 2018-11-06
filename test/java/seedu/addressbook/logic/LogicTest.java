@@ -206,16 +206,16 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_lock() throws Exception {
-        assertCommandBehavior(LockCommand.COMMAND_WORD, LockCommand.MESSAGE_LOCK);
+    public void execute_logout() throws Exception {
+        assertCommandBehavior(LogoutCommand.COMMAND_WORD, LogoutCommand.MESSAGE_LOCK);
     }
 
-    //@@author
     @Test
-    public void execute_exit() throws Exception {
-        assertCommandBehavior(ExitCommand.COMMAND_WORD, ExitCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
+    public void execute_shutdown() throws Exception {
+        assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
     }
 
+    //@author
     @Test
     public void execute_clear() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -1041,18 +1041,174 @@ public class LogicTest {
         Password.unprepareUpdatePassword();
     }
 
+    @Test
+    public void execute_updatePassword_wrongPassword() throws Exception{
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("thisiswrong", 5);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+                + "\n" + MESSAGE_ENTER_PASSWORD,result);
+        Password.lockIsHQP();
+    }
 
-//    @Test
-//    public void execute_updatePassword() throws Exception{
-//        Password.unlockHQP();
-//        Password.prepareUpdatePassword();
-//        String result = Password.updatePassword("thisiswrong", 5);
-//        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
-//                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
-//                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-//        Password.lockIsHQP();
-//    }
+    @Test
+    public void execute_updatePassword_correctHQPPassword() throws Exception{
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("papa123", 5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":" ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
 
+    @Test
+    public void execute_passwordValidityChecker_tooShort() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "po1";
+        int minNumPassword = 5;
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_PASSWORD_LENGTH, userInput.length())
+                + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
+                       + Password.MESSAGE_TRY_AGAIN
+        ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_missingAlphabet() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "123456";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
+                        + Password.MESSAGE_TRY_AGAIN ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_missingNumber() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "popopo";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
+                        + Password.MESSAGE_TRY_AGAIN
+                ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_missingNumberAndAlphabet() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "*********";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number.")
+                        + Password.MESSAGE_TRY_AGAIN
+                ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_alreadyExists() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "papa123";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(Password.MESSAGE_PASSWORD_EXISTS
+                        + Password.MESSAGE_TRY_AGAIN
+                ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_reenterPassword() throws Exception {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "mama123";
+        password.updatePassword("papa123",5);
+        String result = password.updatePassword(userInput,5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD_AGAIN,result);
+        assertTrue(Password.isUpdatePasswordConfirmNow());
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
+    }
+
+    @Test
+    public void execute_updatePasswordFinal_notSame() throws Exception {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        Password.setOTP("mama123");
+        String result = password.updatePasswordFinal("thisiswrong");
+        assertEquals(Password.MESSAGE_NOT_SAME
+                + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        assertFalse(isUpdatePasswordConfirmNow());
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
+    }
+
+    @Test
+    public void execute_updatePasswordFinal_success() throws Exception {
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        password.updatePassword("papa123", 5);
+        String userInput = "mama123";
+        Password.setOTP(userInput);
+        String result = password.updatePasswordFinal(userInput);
+        assertFalse(isUpdatePasswordConfirmNow());
+        assertFalse(getIsUpdatingPassword());
+        assertEquals(String.format(Password.MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP)
+                + "\n" + MESSAGE_ENTER_COMMAND, result);
+        password.updatePassword("mama123", 5);
+        userInput = "papa123";
+        Password.setOTP(userInput);
+        password.updatePasswordFinal(userInput);
+
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
+    }
+
+    @Test
+    public void execute_getFullID(){
+        String result = getFullID(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
+        assertEquals(Password.MESSAGE_HQP,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_1_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_ONE,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_2_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_TWO,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_3_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_THREE,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_4_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FOUR,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_5_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE,result);
+    }
+
+    @Test
+    public void execute_getFullID_ghost(){
+        String result = getFullID("nonsense");
+        assertEquals("Ghost",result);
+    }
 
     //@@author ongweekeong
     @Test
@@ -1499,7 +1655,7 @@ public class LogicTest {
                 "shutdoen",
                 "shutdowns"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
