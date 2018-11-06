@@ -15,6 +15,7 @@ import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
@@ -202,16 +204,16 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_lock() throws Exception {
+    public void execute_logout() throws Exception {
         assertCommandBehavior(LogoutCommand.COMMAND_WORD, LogoutCommand.MESSAGE_LOCK);
     }
 
-    //@@author
     @Test
-    public void execute_exit() throws Exception {
-        assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
+    public void execute_shutdown() throws Exception {
+        assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
     }
 
+    //@author
     @Test
     public void execute_clear() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -1035,17 +1037,27 @@ public class LogicTest {
         Password.unprepareUpdatePassword();
     }
 
+    @Test
+    public void execute_updatePassword_wrongPassword() throws Exception{
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("thisiswrong", 5);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+                + "\n" + MESSAGE_ENTER_PASSWORD,result);
+        Password.lockIsHQP();
+    }
 
-//    @Test
-//    public void execute_updatePassword() throws Exception{
-//        Password.unlockHQP();
-//        Password.prepareUpdatePassword();
-//        String result = Password.updatePassword("thisiswrong", 5);
-//        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
-//                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
-//                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-//        Password.lockIsHQP();
-//    }
+    @Test
+    public void execute_updatePassword_correctHQPPassword() throws Exception{
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("papa123", 5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":" ,result);
+        Password.lockIsHQP();
+    }
 
 
     //@@author ongweekeong

@@ -27,7 +27,7 @@ public class Password {
     public static final String MESSAGE_THREE = "Tango Hotel Romeo Echo Echo";
     public static final String MESSAGE_FOUR = "Foxtrot Oscar Uniform Romeo";
     public static final String MESSAGE_FIVE = "Foxtrot India Victor Echo";
-    private static final String MESSAGE_ENTER_NEW_PASSWORD = "Please enter new alphanumeric password for ";
+    public static final String MESSAGE_ENTER_NEW_PASSWORD = "Please enter new alphanumeric password for ";
     private static final String MESSAGE_ENTER_NEW_PASSWORD_AGAIN = "Please enter new alphanumeric password again: ";
     private static final String MESSAGE_UPDATED_PASSWORD = "You have updated %s password successfully. ";
     private static final String MESSAGE_NOT_SAME = "The password you entered is not the same. ";
