@@ -748,7 +748,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_find_nonExistantNric() throws Exception {
+    public void execute_find_nonExistentNric() throws Exception {
         String expected = MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
         assertCommandBehavior("find t4444844z", expected);
     }
