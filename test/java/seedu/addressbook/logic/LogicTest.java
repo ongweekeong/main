@@ -210,6 +210,7 @@ public class LogicTest {
         assertCommandBehavior(LogoutCommand.COMMAND_WORD, LogoutCommand.MESSAGE_LOCK);
     }
 
+    //@@iamputradanish - reused
     @Test
     public void execute_shutdown() throws Exception {
         assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
@@ -1279,6 +1280,14 @@ public class LogicTest {
         assertEquals(password.passwordLengthChecker(newEnteredPassword)
                 + "\n" + password.passwordAlphanumericChecker(newEnteredPassword)
                 + "\n" + MESSAGE_TRY_AGAIN, result);
+    }
+
+    @Test
+    public void execute_getID_HQP(){
+        Password.unlockHQP();
+        String result = getID();
+        assertEquals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID,result);
+        Password.lockIsHQP();
     }
 
     //@@author ongweekeong
