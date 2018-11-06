@@ -39,7 +39,7 @@ public class ShowUnreadCommand extends Command {
                 String fullPrintedMessage = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION + '\n';
                 for(int i=0; i<myUnreadMsgs; i++){
                     msgToPrint = allMsgs.pollFirst();
-                    fullPrintedMessage += concatenateMsg(messageNum, msgToPrint);
+                    fullPrintedMessage += InboxCommand.concatenateMsg(messageNum, msgToPrint);
                     messageNum++;
                 }
                 allMsgs.clear();
@@ -53,21 +53,6 @@ public class ShowUnreadCommand extends Command {
             e.printStackTrace();
             return new CommandResult("Error loading messages.");
         }
-    }
-
-    public static String concatenateMsg(int messageNum, Msg message) throws NullPointerException{
-        String concatenatedMsg;
-        TimeAndDate dateFormatter = new TimeAndDate();
-//        try{
-//            concatenatedMsg = String.valueOf(messageNum) + ".\t[UNREAD] Sender: " + message.getSenderId() + " Priority: " + message.getPriority() +
-//                    ", Sent: " + dateFormatter.outputDATHrs(message.getTime()) + ",\n\t\tMessage: " + message.getMsg() + ", Coordinates: " +
-//                    message.getLatitude() + ", " + message.getLongitude() + ", ETA: " + message.getEta() + ".\n";
-//        }
-//        catch(Exception e){
-            concatenatedMsg = String.valueOf(messageNum) + ". [UNREAD] Sender: " + message.getSenderId() + " Priority: " +
-                    message.getPriority() + ", Sent: " + dateFormatter.outputDATHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
-//        }
-        return concatenatedMsg;
     }
 
 }

@@ -160,7 +160,7 @@ public class LogicTest {
 
         testMsg.setTime(adjustExpectedTimestamp(r.feedbackToUser, msgIndex));
 
-        expectedResult += ShowUnreadCommand.concatenateMsg(msgIndex, testMsg);
+        expectedResult += InboxCommand.concatenateMsg(msgIndex, testMsg);
 
         assertEquals(String.format(expectedResult, msgIndex), r.feedbackToUser);
         return expectedResult;
@@ -168,7 +168,7 @@ public class LogicTest {
 
     private void assertCommandBehavior(String commandWord, String expectedResult, Msg testMsg) throws Exception {
         CommandResult r = logic.execute(commandWord);
-        expectedResult += ShowUnreadCommand.concatenateMsg(1, testMsg);
+        expectedResult += InboxCommand.concatenateMsg(1, testMsg);
         assertEquals(r.feedbackToUser, expectedResult);
     }
 
