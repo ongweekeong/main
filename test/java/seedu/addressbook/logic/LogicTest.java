@@ -1137,6 +1137,16 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_readMsg_veryLargeIndex() throws Exception {
+        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        Msg testMsg = generateMsgInInbox("This is a test message.");
+        CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
+        String inputCommand = ReadCommand.COMMAND_WORD + " 2147483648"; //Outside integer max value
+        String expected = ReadCommand.MESSAGE_INPUT_INDEX_TOO_LARGE;
+        assertCommandBehavior(inputCommand, expected);
+    }
+
+    @Test
     public void execute_readMsg_ValidIndex() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
