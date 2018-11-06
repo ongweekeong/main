@@ -19,8 +19,8 @@ public class FindCommand extends Command {
             + "Parameters: NRIC ...\n\t"
             + "Example: " + COMMAND_WORD + " s1234567a";
 
-    private String nric;
     private String FILE_NOT_FOUND_ERROR = "File not found";
+    private String nric;
     private String SCREENING_DATABASE = "ScreeningHistory.txt";
     private AddressBook addressBookForTest; //For testing
 
@@ -46,6 +46,10 @@ public class FindCommand extends Command {
             this.addressBook = storage.load();
         } catch(Exception e) {
         }
+    }
+
+    public String getDbName() {
+        return SCREENING_DATABASE;
     }
 
     @Override

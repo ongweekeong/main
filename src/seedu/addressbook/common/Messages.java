@@ -25,4 +25,5 @@ public class Messages {
     public static final String MESSAGE_SAVE_ERROR = "System could not save to storage";
     public static final String MESSAGE_ERROR = "An error has occurred.";
     public static final String MESSAGE_STORAGE_ERROR = "System could not load storage file.";
+    public static final String MESSAGE_FILE_NOT_FOUND = "File not found";
 }
