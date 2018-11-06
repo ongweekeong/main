@@ -704,7 +704,7 @@ public class LogicTest {
         TestDataHelper helper = new TestDataHelper();
         Person pTarget1 = helper.generatePersonWithNric("s1234567a");
         Person pTarget2 = helper.generatePersonWithNric("f1234567b");
-        String testFile = "TestScreen.txt";
+        String testFile = "testScreen.txt";
 
         List<Person> Persons = helper.generatePersonList(pTarget1,pTarget2);
         String nric = pTarget1.getNric().getIdentificationNumber();
