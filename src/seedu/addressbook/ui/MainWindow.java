@@ -141,7 +141,7 @@ public class MainWindow {
     //@@author
     /** Returns true if the result given is the result of an exit command */
     private boolean isExitCommand(String userCommandText) {
-        return userCommandText.equals(ExitCommand.COMMAND_WORD);
+        return userCommandText.equals(ShutdownCommand.COMMAND_WORD);
     }
 
     //@@author iamputradanish
@@ -154,7 +154,7 @@ public class MainWindow {
     }
 
     private boolean isLockCommand(String userCommandText) {
-        return userCommandText.equals(LockCommand.COMMAND_WORD);
+        return userCommandText.equals(LogoutCommand.COMMAND_WORD);
     }
 
     //@@author
@@ -195,18 +195,18 @@ public class MainWindow {
      * Private contact details are hidden.
      */
     private void display(List<? extends ReadOnlyPerson> persons) {
-        display(new Formatter().format(persons));
+        display(new UiFormatter().format(persons));
     }
 
     public void displayTimestamps(List<String> history){
-        display(new Formatter().formatForStrings(history));
+        display(new UiFormatter().formatForStrings(history));
     }
 
     /**
      * Displays the given messages on the output display area, after formatting appropriately.
      */
     private void display(String... messages) {
-        outputConsole.setText(outputConsole.getText() + new Formatter().format(messages));
+        outputConsole.setText(outputConsole.getText() + new UiFormatter().format(messages));
     }
 
 }

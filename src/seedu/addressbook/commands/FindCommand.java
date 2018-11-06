@@ -1,6 +1,8 @@
 package seedu.addressbook.commands;
 
+import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.storage.StorageFile;
 
 import java.io.IOException;
 
@@ -17,8 +19,10 @@ public class FindCommand extends Command {
             + "Parameters: NRIC ...\n\t"
             + "Example: " + COMMAND_WORD + " s1234567a";
 
+    private String FILE_NOT_FOUND_ERROR = "File not found";
     private String nric;
-    private  String FILE_NOT_FOUND_ERROR = "File not found";
+    private String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private AddressBook addressBookForTest; //For testing
 
     public FindCommand(String nricToFind) {
         this.nric = nricToFind;
@@ -26,6 +30,26 @@ public class FindCommand extends Command {
 
     public String getNric(){
         return nric;
+    }
+
+    public void setFile(String file) {
+        this.SCREENING_DATABASE = file;
+    }
+
+    /**
+     *  Used for testing purposes, especially for when testing for wrong file paths
+     */
+    public void setAddressBook(AddressBook addressBook) {
+        this.addressBookForTest = addressBook;
+        try {
+            StorageFile storage = new StorageFile();
+            this.addressBook = storage.load();
+        } catch(Exception e) {
+        }
+    }
+
+    public String getDbName() {
+        return SCREENING_DATABASE;
     }
 
     @Override
@@ -45,15 +69,27 @@ public class FindCommand extends Command {
      * @return Persons found, null if no person found
      */
     public ReadOnlyPerson getPersonWithNric() throws IOException {
-        for (ReadOnlyPerson person : relevantPersons) {
-            if (person.getNric().getIdentificationNumber().equals(nric)) {
-                addressBook.addPersonToDbAndUpdate(person);
-                addressBook.updateDatabase();
-                return person;
+        ReadOnlyPerson result = null;
+        if (this.addressBookForTest != null) {
+            for (ReadOnlyPerson person : this.addressBookForTest.getAllPersons().immutableListView()) {
+                if (person.getNric().getIdentificationNumber().equals(nric)) {
+                    this.addressBookForTest.addPersonToDbAndUpdate(person);
+                    this.addressBookForTest.updateDatabase(SCREENING_DATABASE);
+                    result = person;
+                    break;
+                }
+            }
+        } else {
+            for (ReadOnlyPerson person : relevantPersons) {
+                if (person.getNric().getIdentificationNumber().equals(nric)) {
+                    addressBook.addPersonToDbAndUpdate(person);
+                    addressBook.updateDatabase(SCREENING_DATABASE);
+                    result = person;
+                    break;
+                }
             }
         }
-
-        return null;
+        return result;
     }
 
 }
