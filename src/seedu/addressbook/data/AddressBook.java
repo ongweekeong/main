@@ -20,14 +20,12 @@ import java.util.*;
  */
 public class AddressBook {
 
-    public static final String SCREENING_DATABASE = "screeningHistory.txt";
     private String tempNric;
     private String tempTimestamp;
     private int counter = 0;
 
     private final UniquePersonList allPersons;
     private ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-    private File databaseFile = readerAndWriter.fileToUse(SCREENING_DATABASE);
 
     public static AddressBook empty() {
         return new AddressBook();
@@ -72,10 +70,10 @@ public class AddressBook {
      * Reads the txt file to get the timestamps for the specified NRIC
      */
 
-    public List<String> readDatabase(String nric) throws IOException {
+    public List<String> readDatabase(String nric, String file) throws IOException {
         List<String> data = new ArrayList<>();
         String line;
-        BufferedReader br = readerAndWriter.openReader(databaseFile);
+        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(file));
         line = br.readLine();
         while (line != null){
             String[] parts = line.split(" ", 3);
@@ -99,10 +97,10 @@ public class AddressBook {
      * Adds the timestamp, the respective NRIC and the PO who screened the person (using 'find' command)
      */
 
-    public void updateDatabase() throws IOException {
+    public void updateDatabase(String file) throws IOException {
         String line;
-        BufferedReader br = readerAndWriter.openReader(databaseFile);
-        FileWriter write = new FileWriter(SCREENING_DATABASE,true);
+        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(file));
+        FileWriter write = new FileWriter(file,true);
         PrintWriter myPrinter = new PrintWriter(write);
         try {
             while ((line = br.readLine()) !=  null){
