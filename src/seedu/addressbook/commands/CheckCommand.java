@@ -37,6 +37,7 @@ public class CheckCommand extends Command {
         this.SCREENING_DATABASE = file;
     }
 
+    
     public void setAddressBook(AddressBook addressBook) {
         this.addressBookForTest = addressBook;
         try {
