@@ -300,7 +300,7 @@ public class Logic {
             pw.close();
         }
         try{
-            File screeningHistoryFile = readerandwriter.fileToUse("screeningHistory.txt");
+            File screeningHistoryFile = readerandwriter.fileToUse("ScreeningHistory.txt");
             BufferedReader br = readerandwriter.openReader(screeningHistoryFile);
             try {
                 br.close();
@@ -308,7 +308,7 @@ public class Logic {
                 e.printStackTrace();
             }
         }catch(FileNotFoundException e){
-            File makeFile = readerandwriter.fileToUse("screeningHistory.txt");
+            File makeFile = readerandwriter.fileToUse("ScreeningHistory.txt");
             PrintWriter pw = null;
             try {
                 pw = readerandwriter.openTempWriter(makeFile);

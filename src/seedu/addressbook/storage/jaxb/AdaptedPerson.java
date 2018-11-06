@@ -103,7 +103,7 @@ public class AdaptedPerson {
         for (AdaptedTag tag : tagged) {
             tags.add(tag.toModelType());
         }
-        Set<String> screeningHistory = new HashSet<>();
+        Set<String> screeningHist = new HashSet<>();
 
         final Name name = new Name(this.name);
         final NRIC nric = new NRIC(this.nric.value);
