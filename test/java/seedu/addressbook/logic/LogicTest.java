@@ -1662,6 +1662,40 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_checkCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "chek",
+                "chick",
+                "checks"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_checkPOStatusCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "checkstats",
+                "chickstatus",
+                "checkstatuts"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
     public void execute_deleteCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
                 "delet",
@@ -1703,23 +1737,6 @@ public class LogicTest {
                 "edits"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
-    }
-
-    @Test
-    public void execute_checkCommand_wrongSpellingOfCommandWord() {
-        final String[] inputs = {
-                "chek",
-                "chick",
-                "checks"
-        };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
