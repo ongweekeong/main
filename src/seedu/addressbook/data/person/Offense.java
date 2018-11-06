@@ -12,7 +12,10 @@ import java.util.*;
 public class Offense {
     public static final String EXAMPLE = "theft";
     public static final String NULL_OFFENSE = "none";
-    public static final String MESSAGE_OFFENSE_INVALID = "Offense must be inside this list:\n";
+    public static final String MESSAGE_OFFENSE_INVALID = "%s is not a valid offense.\n"
+            + "Current command was not executed.\n"
+            + "Please try again.\n"
+            + "Offense must be inside this list:\n";
 
 //@@author andyrobert3
     private static HashMap<String, Msg.Priority> OFFENSE_LIST = new HashMap<>();
@@ -78,7 +81,7 @@ public class Offense {
         offense = offense.toLowerCase().trim();
 
         if (!isValidOffense(offense)) {
-            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences());
+            throw new IllegalValueException(String.format(MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), offense));
         }
 
         this.offense = offense;
@@ -105,7 +108,7 @@ public class Offense {
     public static Msg.Priority getPriority(String offense) throws IllegalValueException {
         offense = offense.toLowerCase();
         if (!OFFENSE_LIST.containsKey(offense)) {
-            throw new IllegalValueException(MESSAGE_OFFENSE_INVALID + "\n" + getListOfValidOffences());
+            throw new IllegalValueException(String.format(MESSAGE_OFFENSE_INVALID + "\n" + getListOfValidOffences(), offense));
         }
 
         return OFFENSE_LIST.get(offense);
