@@ -1157,7 +1157,8 @@ public class LogicTest {
         Password password = new Password();
         Password.setOTP("mama123");
         String result = password.updatePasswordFinal("thisiswrong");
-        assertEquals(Password.MESSAGE_NOT_SAME, result);
+        assertEquals(Password.MESSAGE_NOT_SAME
+                + "\n" + Password.MESSAGE_TRY_AGAIN, result);
         assertFalse(isUpdatePasswordConfirmNow());
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
