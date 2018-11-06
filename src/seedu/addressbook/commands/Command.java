@@ -6,7 +6,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.NRIC;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.person.UniquePersonList;
-import seedu.addressbook.ui.Formatter;
+import seedu.addressbook.ui.UiFormatter;
 
 import java.util.List;
 
@@ -68,7 +68,7 @@ public abstract class Command {
 
     public static String getMessageForScreeningHistoryShownSummary(List<String> timestampsDisplayed, String nric) {
 
-        Formatter formatter = new Formatter();
+        UiFormatter formatter = new UiFormatter();
         String result = formatter.formatForStrings(timestampsDisplayed);
 
         String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
@@ -77,7 +77,7 @@ public abstract class Command {
 
     public static String getMessage(List<String> args) {
 
-        Formatter formatter = new Formatter();
+        UiFormatter formatter = new UiFormatter();
         String result = formatter.formatForStrings(args);
 
         return result;
