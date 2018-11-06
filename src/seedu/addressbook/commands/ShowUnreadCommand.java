@@ -64,8 +64,8 @@ public class ShowUnreadCommand extends Command {
 //                    message.getLatitude() + ", " + message.getLongitude() + ", ETA: " + message.getEta() + ".\n";
 //        }
 //        catch(Exception e){
-            concatenatedMsg = String.valueOf(messageNum) + ".\t[UNREAD] Sender: " + message.getSenderId() + " Priority: " +
-                    message.getPriority() + ", Sent: " + dateFormatter.outputDATHrsForMain(message.getTime()) + ",\n\t\tMessage: " + message.getMsg() + "\n";
+            concatenatedMsg = String.valueOf(messageNum) + ". [UNREAD] Sender: " + message.getSenderId() + " Priority: " +
+                    message.getPriority() + ", Sent: " + dateFormatter.outputDATHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
 //        }
         return concatenatedMsg;
     }
