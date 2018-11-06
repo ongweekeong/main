@@ -12,7 +12,7 @@
 .text-field {
     -fx-font-size: 12pt;
     -fx-font-family: "fantasy";
-    -fx-text-fill: white;
-    -fx-control-inner-background: black;
+    -fx-text-fill: black;
+    -fx-control-inner-background: Gray;
     -fx-cursor: crosshair;
 }

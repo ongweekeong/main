@@ -37,7 +37,7 @@ image::Ui.png[width="790"]
 ====
 
 .	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
-.	Defaults passwords for the users:
+.	Defaults passwords for the users (Passwords are Case Sensitive):
 .. HQP: papa123
 .. PO1: popo1
 .. PO2: popo2

@@ -20,6 +20,7 @@ import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.storage.StorageFile;
+import seedu.addressbook.ui.UiFormatter;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -28,11 +29,11 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
-import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.addressbook.common.Messages.*;
 import static seedu.addressbook.password.Password.*;
 
 
@@ -204,16 +205,16 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_lock() throws Exception {
-        assertCommandBehavior(LockCommand.COMMAND_WORD, LockCommand.MESSAGE_LOCK);
+    public void execute_logout() throws Exception {
+        assertCommandBehavior(LogoutCommand.COMMAND_WORD, LogoutCommand.MESSAGE_LOCK);
     }
 
-    //@@author
     @Test
-    public void execute_exit() throws Exception {
-        assertCommandBehavior(ExitCommand.COMMAND_WORD, ExitCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
+    public void execute_shutdown() throws Exception {
+        assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
     }
 
+    //@author
     @Test
     public void execute_clear() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -552,12 +553,13 @@ public class LogicTest {
                                 lastShownList);
     }
 
-    /*@Test
+    @Test
     public void execute_delete_invalidArgsFormat() throws Exception {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
-        assertCommandBehavior("delete ", expectedMessage);
-        assertCommandBehavior("delete arg not number", expectedMessage);
-    }*/
+        String expectedMessage1 = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
+        String expectedMessage2 = NRIC.MESSAGE_NAME_CONSTRAINTS;
+        assertCommandBehavior("delete ", expectedMessage1);
+        assertCommandBehavior("delete arg not number", expectedMessage2);
+    }
 
     @Test
     public void execute_delete_invalidCommandFormat() throws Exception {
@@ -685,27 +687,81 @@ public class LogicTest {
     @Test
     public void execute_find_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE);
-        assertCommandBehavior("find S1234567A", expectedMessage);
+        assertCommandBehavior("find ", expectedMessage);
     }
 
+    //@@author muhdharun
+    @Test
+    public void execute_find_onlyMatchesFullNric() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
 
-//    @Test
-//    public void execute_find_onlyMatchesFullNric() throws Exception {
-//        TestDataHelper helper = new TestDataHelper();
-//
-//        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
-//        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
-//        Person p1 = helper.generatePersonWithNric("s1234567c");
-//        Person p2 = helper.generatePersonWithNric("s1234567d");
-//
-//        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
-//        Person expectedPerson = pTarget2;
-//        helper.addToAddressBook(addressBook, fourPersons);
-//        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
-//        CommandResult r = logic.execute(inputCommand);
-//
-//        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
-//    }
+        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
+        Person p1 = helper.generatePersonWithNric("s1234567c");
+        Person p2 = helper.generatePersonWithNric("s1234567d");
+
+        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
+        Person expectedPerson = pTarget2;
+        String nric = expectedPerson.getNric().getIdentificationNumber();
+        helper.addToAddressBook(addressBook, fourPersons);
+
+        assertCommandBehavior("find " + nric,
+                Command.getMessageForPersonShownSummary(expectedPerson),
+                addressBook,
+                false,
+                Collections.emptyList());
+
+    }
+
+    @Test
+    public void execute_find_differentButValidFile() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+        Person pTarget2 = helper.generatePersonWithNric("f1234567b");
+        String testFile = "TestScreen.txt";
+
+        List<Person> Persons = helper.generatePersonList(pTarget1,pTarget2);
+        String nric = pTarget1.getNric().getIdentificationNumber();
+        helper.addToAddressBook(addressBook, Persons);
+
+        FindCommand findCommand = new FindCommand(nric);
+        findCommand.setFile(testFile);
+        findCommand.setAddressBook(addressBook);
+
+        CommandResult r = findCommand.execute();
+
+        assertEquals(testFile,findCommand.getDbName());
+        assertEquals(Command.getMessageForPersonShownSummary(pTarget1), r.feedbackToUser);
+    }
+
+    @Test
+    public void execute_find_invalidFileName() throws Exception {
+
+        TestDataHelper helper = new TestDataHelper();
+        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+        String testFile = "invalidfile.txt";
+
+        List<Person> Persons = helper.generatePersonList(pTarget1);
+        String nric = pTarget1.getNric().getIdentificationNumber();
+        helper.addToAddressBook(addressBook, Persons);
+
+        FindCommand findCommand = new FindCommand(nric);
+        findCommand.setFile(testFile);
+        findCommand.setAddressBook(addressBook);
+
+        CommandResult r = findCommand.execute();
+        ExpectedException thrown = ExpectedException.none();
+        thrown.expect(IOException.class);
+
+        assertEquals(testFile,findCommand.getDbName());
+        assertEquals(MESSAGE_FILE_NOT_FOUND, r.feedbackToUser);
+    }
+
+    @Test
+    public void execute_find_nonExistantNric() throws Exception {
+        String expected = MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+        assertCommandBehavior("find t4444844z", expected);
+    }
 
     @Test
     public void execute_find_isCaseSensitive() throws Exception {
@@ -718,7 +774,7 @@ public class LogicTest {
         List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
         helper.addToAddressBook(addressBook, fourPersons);
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE);
-        assertCommandBehavior("find S1234567C",
+        assertCommandBehavior("find S1234567G",
                 expectedMessage,
                 addressBook,
                 false,
@@ -736,66 +792,44 @@ public class LogicTest {
     }
 
 
-//    @Test
-//    public void execute_check_validNric() throws Exception {
-//        TestDataHelper helper = new TestDataHelper();
-//        Person toBeAdded = helper.generateDummyPerson();
-//        String nric = toBeAdded.getNric().getIdentificationNumber();
-//
-//        List<String> emptyTimestamps = new ArrayList<>();
-//        Formatter formatter = new Formatter();
-//        String result = formatter.formatForStrings(emptyTimestamps);
-//
-//        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-//        addressBook.addPerson(toBeAdded);
-//        assertCommandBehavior("check " + nric,
-//                expectedMessage,
-//                addressBook,
-//                false,
-//                Collections.emptyList());
-//
-//    }
-//    //TODO Travis fails
+    @Test
+    public void execute_check_validNric() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person toBeAdded = helper.adam();
+        String nric = toBeAdded.getNric().getIdentificationNumber();
+        addressBook.addPerson(toBeAdded);
+        List<String> emptyTimestamps = new ArrayList<>();
+        UiFormatter formatter = new UiFormatter();
+        String result = formatter.formatForStrings(emptyTimestamps);
+        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
+        assertCommandBehavior("check " + nric,
+                                expectedMessage,
+                                addressBook,
+                                false,
+                                Collections.emptyList());
+    }
 
-//    @Test
-//    public void execute_check_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult("File not found");
-//            assertCommandBehavior("check s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
-//
-//    @Test
-//    public void execute_find_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult("File not found");
-//            assertCommandBehavior("find s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
+    @Test
+    public void execute_check_invalidFile() throws Exception {
+        String nric = "s1111111a";
+        CheckCommand toCheck = new CheckCommand(nric);
+        String invalid = "invalidfile.txt";
+        toCheck.setFile(invalid);
+        assertEquals(invalid, toCheck.getDbName());
+
+        toCheck.setAddressBook(addressBook);
+        toCheck.execute();
+        ExpectedException thrown = ExpectedException.none();
+        thrown.expect(IOException.class);
+
+    }
+
+    @Test
+    public void execute_Messages_Constructor() throws Exception {
+        Messages test = new Messages();
+        String testMessage = test.MESSAGE_WELCOME;
+        assertEquals(testMessage,"Welcome to the Police Records and Intelligent System.");
+    }
 
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {
@@ -1052,18 +1086,174 @@ public class LogicTest {
         Password.unprepareUpdatePassword();
     }
 
+    @Test
+    public void execute_updatePassword_wrongPassword() throws Exception{
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("thisiswrong", 5);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+                + "\n" + MESSAGE_ENTER_PASSWORD,result);
+        Password.lockIsHQP();
+    }
 
-//    @Test
-//    public void execute_updatePassword() throws Exception{
-//        Password.unlockHQP();
-//        Password.prepareUpdatePassword();
-//        String result = Password.updatePassword("thisiswrong", 5);
-//        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
-//                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
-//                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-//        Password.lockIsHQP();
-//    }
+    @Test
+    public void execute_updatePassword_correctHQPPassword() throws Exception{
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("papa123", 5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":" ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
 
+    @Test
+    public void execute_passwordValidityChecker_tooShort() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "po1";
+        int minNumPassword = 5;
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_PASSWORD_LENGTH, userInput.length())
+                + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
+                       + Password.MESSAGE_TRY_AGAIN
+        ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_missingAlphabet() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "123456";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
+                        + Password.MESSAGE_TRY_AGAIN ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_missingNumber() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "popopo";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
+                        + Password.MESSAGE_TRY_AGAIN
+                ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_missingNumberAndAlphabet() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "*********";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number.")
+                        + Password.MESSAGE_TRY_AGAIN
+                ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_alreadyExists() throws IOException {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "papa123";
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(Password.MESSAGE_PASSWORD_EXISTS
+                        + Password.MESSAGE_TRY_AGAIN
+                ,result);
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_reenterPassword() throws Exception {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        String userInput = "mama123";
+        password.updatePassword("papa123",5);
+        String result = password.updatePassword(userInput,5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD_AGAIN,result);
+        assertTrue(Password.isUpdatePasswordConfirmNow());
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
+    }
+
+    @Test
+    public void execute_updatePasswordFinal_notSame() throws Exception {
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        Password.setOTP("mama123");
+        String result = password.updatePasswordFinal("thisiswrong");
+        assertEquals(Password.MESSAGE_NOT_SAME
+                + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        assertFalse(isUpdatePasswordConfirmNow());
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
+    }
+
+    @Test
+    public void execute_updatePasswordFinal_success() throws Exception {
+        Password password = new Password();
+        Password.unlockHQP();
+        Password.prepareUpdatePassword();
+        password.updatePassword("papa123", 5);
+        String userInput = "mama123";
+        Password.setOTP(userInput);
+        String result = password.updatePasswordFinal(userInput);
+        assertFalse(isUpdatePasswordConfirmNow());
+        assertFalse(getIsUpdatingPassword());
+        assertEquals(String.format(Password.MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP)
+                + "\n" + MESSAGE_ENTER_COMMAND, result);
+        password.updatePassword("mama123", 5);
+        userInput = "papa123";
+        Password.setOTP(userInput);
+        password.updatePasswordFinal(userInput);
+
+        Password.lockIsHQP();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
+    }
+
+    @Test
+    public void execute_getFullID(){
+        String result = getFullID(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
+        assertEquals(Password.MESSAGE_HQP,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_1_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_ONE,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_2_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_TWO,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_3_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_THREE,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_4_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FOUR,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_5_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE,result);
+    }
+
+    @Test
+    public void execute_getFullID_ghost(){
+        String result = getFullID("nonsense");
+        assertEquals("Ghost",result);
+    }
 
     //@@author ongweekeong
     @Test
@@ -1510,7 +1700,7 @@ public class LogicTest {
                 "shutdoen",
                 "shutdowns"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
