@@ -20,6 +20,7 @@ import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.storage.StorageFile;
+import seedu.addressbook.ui.UiFormatter;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -33,6 +34,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
 import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
 import static seedu.addressbook.password.Password.*;
 
 
@@ -540,12 +542,13 @@ public class LogicTest {
                                 lastShownList);
     }
 
-    /*@Test
+    @Test
     public void execute_delete_invalidArgsFormat() throws Exception {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
-        assertCommandBehavior("delete ", expectedMessage);
-        assertCommandBehavior("delete arg not number", expectedMessage);
-    }*/
+        String expectedMessage1 = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
+        String expectedMessage2 = NRIC.MESSAGE_NAME_CONSTRAINTS;
+        assertCommandBehavior("delete ", expectedMessage1);
+        assertCommandBehavior("delete arg not number", expectedMessage2);
+    }
 
     @Test
     public void execute_delete_invalidCommandFormat() throws Exception {
@@ -674,23 +677,25 @@ public class LogicTest {
     }
 
 
-//    @Test
-//    public void execute_find_onlyMatchesFullNric() throws Exception {
-//        TestDataHelper helper = new TestDataHelper();
-//
-//        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
-//        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
-//        Person p1 = helper.generatePersonWithNric("s1234567c");
-//        Person p2 = helper.generatePersonWithNric("s1234567d");
-//
-//        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
-//        Person expectedPerson = pTarget2;
-//        helper.addToAddressBook(addressBook, fourPersons);
-//        String inputCommand = "find " + pTarget2.getNric().getIdentificationNumber();
-//        CommandResult r = logic.execute(inputCommand);
-//
-//        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
-//    }
+    @Test
+    public void execute_find_onlyMatchesFullNric() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+
+        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+        Person pTarget2 = helper.generatePersonWithNric("s1234567b");
+        Person p1 = helper.generatePersonWithNric("s1234567c");
+        Person p2 = helper.generatePersonWithNric("s1234567d");
+
+        List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
+        Person expectedPerson = pTarget2;
+        String nric = expectedPerson.getNric().getIdentificationNumber();
+        helper.addToAddressBook(addressBook, fourPersons);
+        FindCommand findCommand = new FindCommand(nric);
+        findCommand.setFile("TestScreen.txt");
+        findCommand.setAddressBook(addressBook);
+        CommandResult r = findCommand.execute();
+        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
+    }
 
     @Test
     public void execute_find_isCaseSensitive() throws Exception {
@@ -721,26 +726,25 @@ public class LogicTest {
     }
 
 
-//    @Test
-//    public void execute_check_validNric() throws Exception {
-//        TestDataHelper helper = new TestDataHelper();
-//        Person toBeAdded = helper.generateDummyPerson();
-//        String nric = toBeAdded.getNric().getIdentificationNumber();
-//
-//        List<String> emptyTimestamps = new ArrayList<>();
-//        Formatter formatter = new Formatter();
-//        String result = formatter.formatForStrings(emptyTimestamps);
-//
-//        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-//        addressBook.addPerson(toBeAdded);
-//        assertCommandBehavior("check " + nric,
-//                expectedMessage,
-//                addressBook,
-//                false,
-//                Collections.emptyList());
-//
-//    }
-//    //TODO Travis fails
+    @Test
+    public void execute_check_validNric() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person toBeAdded = helper.adam();
+        String nric = toBeAdded.getNric().getIdentificationNumber();
+        addressBook.addPerson(toBeAdded);
+        List<String> emptyTimestamps = new ArrayList<>();
+        UiFormatter formatter = new UiFormatter();
+        String result = formatter.formatForStrings(emptyTimestamps);
+        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
+        assertCommandBehavior("check " + nric,
+                                expectedMessage,
+                                addressBook,
+                                false,
+                                Collections.emptyList());
+    }
+
+
+
 
 //    @Test
 //    public void execute_check_fileNotFound() throws Exception {
