@@ -69,24 +69,27 @@ public class FindCommand extends Command {
      * @return Persons found, null if no person found
      */
     public ReadOnlyPerson getPersonWithNric() throws IOException {
+        ReadOnlyPerson result = null;
         if (this.addressBookForTest != null) {
             for (ReadOnlyPerson person : this.addressBookForTest.getAllPersons().immutableListView()) {
                 if (person.getNric().getIdentificationNumber().equals(nric)) {
                     this.addressBookForTest.addPersonToDbAndUpdate(person);
                     this.addressBookForTest.updateDatabase(SCREENING_DATABASE);
-                    return person;
+                    result = person;
+                    break;
+                }
+            }
+        } else {
+            for (ReadOnlyPerson person : relevantPersons) {
+                if (person.getNric().getIdentificationNumber().equals(nric)) {
+                    addressBook.addPersonToDbAndUpdate(person);
+                    addressBook.updateDatabase(SCREENING_DATABASE);
+                    result = person;
+                    break;
                 }
             }
         }
-        for (ReadOnlyPerson person : relevantPersons) {
-            if (person.getNric().getIdentificationNumber().equals(nric)) {
-                addressBook.addPersonToDbAndUpdate(person);
-                addressBook.updateDatabase(SCREENING_DATABASE);
-                return person;
-            }
-        }
-
-        return null;
+        return result;
     }
 
 }

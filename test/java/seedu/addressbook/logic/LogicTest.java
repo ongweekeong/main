@@ -794,7 +794,20 @@ public class LogicTest {
                                 Collections.emptyList());
     }
 
+    @Test
+    public void execute_check_invalidFile() throws Exception {
+        String nric = "s1111111a";
+        CheckCommand toCheck = new CheckCommand(nric);
+        String invalid = "invalidfile.txt";
+        toCheck.setFile(invalid);
+        assertEquals(invalid, toCheck.getDbName());
 
+        toCheck.setAddressBook(addressBook);
+        toCheck.execute();
+        ExpectedException thrown = ExpectedException.none();
+        thrown.expect(IOException.class);
+
+    }
 
 
 //    @Test
