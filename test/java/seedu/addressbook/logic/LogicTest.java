@@ -29,12 +29,11 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
-import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
-import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
+import static seedu.addressbook.common.Messages.*;
 import static seedu.addressbook.password.Password.*;
 
 
@@ -674,10 +673,10 @@ public class LogicTest {
     @Test
     public void execute_find_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE);
-        assertCommandBehavior("find S1234567A", expectedMessage);
+        assertCommandBehavior("find ", expectedMessage);
     }
 
-
+    //@@author muhdharun
     @Test
     public void execute_find_onlyMatchesFullNric() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -691,11 +690,63 @@ public class LogicTest {
         Person expectedPerson = pTarget2;
         String nric = expectedPerson.getNric().getIdentificationNumber();
         helper.addToAddressBook(addressBook, fourPersons);
+
+        assertCommandBehavior("find " + nric,
+                Command.getMessageForPersonShownSummary(expectedPerson),
+                addressBook,
+                false,
+                Collections.emptyList());
+
+    }
+
+    @Test
+    public void execute_find_differentButValidFile() throws Exception {
+        TestDataHelper helper = new TestDataHelper();
+        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+        Person pTarget2 = helper.generatePersonWithNric("f1234567b");
+        String testFile = "TestScreen.txt";
+
+        List<Person> Persons = helper.generatePersonList(pTarget1,pTarget2);
+        String nric = pTarget1.getNric().getIdentificationNumber();
+        helper.addToAddressBook(addressBook, Persons);
+
         FindCommand findCommand = new FindCommand(nric);
-        findCommand.setFile("TestScreen.txt");
+        findCommand.setFile(testFile);
         findCommand.setAddressBook(addressBook);
+
         CommandResult r = findCommand.execute();
-        assertEquals(Command.getMessageForPersonShownSummary(expectedPerson), r.feedbackToUser);
+
+        assertEquals(testFile,findCommand.getDbName());
+        assertEquals(Command.getMessageForPersonShownSummary(pTarget1), r.feedbackToUser);
+    }
+
+    @Test
+    public void execute_find_invalidFileName() throws Exception {
+
+        TestDataHelper helper = new TestDataHelper();
+        Person pTarget1 = helper.generatePersonWithNric("s1234567a");
+        String testFile = "invalidfile.txt";
+
+        List<Person> Persons = helper.generatePersonList(pTarget1);
+        String nric = pTarget1.getNric().getIdentificationNumber();
+        helper.addToAddressBook(addressBook, Persons);
+
+        FindCommand findCommand = new FindCommand(nric);
+        findCommand.setFile(testFile);
+        findCommand.setAddressBook(addressBook);
+
+        CommandResult r = findCommand.execute();
+        ExpectedException thrown = ExpectedException.none();
+        thrown.expect(IOException.class);
+
+        assertEquals(testFile,findCommand.getDbName());
+        assertEquals(MESSAGE_FILE_NOT_FOUND, r.feedbackToUser);
+    }
+
+    @Test
+    public void execute_find_nonExistantNric() throws Exception {
+        String expected = MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+        assertCommandBehavior("find t4444844z", expected);
     }
 
     @Test
@@ -709,7 +760,7 @@ public class LogicTest {
         List<Person> fourPersons = helper.generatePersonList(p1, pTarget1, p2, pTarget2);
         helper.addToAddressBook(addressBook, fourPersons);
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE);
-        assertCommandBehavior("find S1234567C",
+        assertCommandBehavior("find S1234567G",
                 expectedMessage,
                 addressBook,
                 false,
@@ -744,48 +795,27 @@ public class LogicTest {
                                 Collections.emptyList());
     }
 
+    @Test
+    public void execute_check_invalidFile() throws Exception {
+        String nric = "s1111111a";
+        CheckCommand toCheck = new CheckCommand(nric);
+        String invalid = "invalidfile.txt";
+        toCheck.setFile(invalid);
+        assertEquals(invalid, toCheck.getDbName());
 
+        toCheck.setAddressBook(addressBook);
+        toCheck.execute();
+        ExpectedException thrown = ExpectedException.none();
+        thrown.expect(IOException.class);
 
+    }
 
-//    @Test
-//    public void execute_check_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult("File not found");
-//            assertCommandBehavior("check s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
-//
-//    @Test
-//    public void execute_find_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult("File not found");
-//            assertCommandBehavior("find s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
+    @Test
+    public void execute_Messages_Constructor() throws Exception {
+        Messages test = new Messages();
+        String testMessage = test.MESSAGE_WELCOME;
+        assertEquals(testMessage,"Welcome to the Police Records and Intelligent System.");
+    }
 
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {

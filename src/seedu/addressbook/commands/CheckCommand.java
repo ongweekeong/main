@@ -1,6 +1,9 @@
 package seedu.addressbook.commands;
 
 //@@author muhdharun
+import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.storage.StorageFile;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,7 @@ public class CheckCommand extends Command {
     private String nricKeyword;
     private String FILE_NOT_FOUND_ERROR = "File not found";
     private String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private AddressBook addressBookForTest; //For testing
 
     public CheckCommand(String nricToFind)
     {
@@ -31,6 +35,20 @@ public class CheckCommand extends Command {
 
     public void setFile(String file) {
         this.SCREENING_DATABASE = file;
+    }
+
+
+    public void setAddressBook(AddressBook addressBook) {
+        this.addressBookForTest = addressBook;
+        try {
+            StorageFile storage = new StorageFile();
+            this.addressBook = storage.load();
+        } catch(Exception e) {
+        }
+    }
+
+    public String getDbName() {
+        return SCREENING_DATABASE;
     }
 
     @Override
@@ -57,5 +75,4 @@ public class CheckCommand extends Command {
 
         return screeningHistory;
     }
-
 }
