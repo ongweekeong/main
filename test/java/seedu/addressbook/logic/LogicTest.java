@@ -1696,6 +1696,25 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_clearInboxCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "clerinbox",
+                "cleerinbox",
+                "clearinbux",
+                "clearsinbox",
+                "clearinboox"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
     public void execute_deleteCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
                 "delet",
