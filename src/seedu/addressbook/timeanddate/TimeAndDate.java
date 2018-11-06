@@ -21,7 +21,11 @@ public class TimeAndDate {
     public static String outputDATHrs(Timestamp theTime){
         String outputDAT = timeStampFormatter.format(theTime);
         return outputDAT + "hrs";
+    }
 
+    public static String outputDATHrsForMain(Timestamp theTime){
+        String outputDAT = timeStampForMain.format(theTime);
+        return outputDAT + "hrs";
     }
 
     public String getOutputDAThrsForCheckCommand() {

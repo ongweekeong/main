@@ -65,7 +65,7 @@ public class ShowUnreadCommand extends Command {
 //        }
 //        catch(Exception e){
             concatenatedMsg = String.valueOf(messageNum) + ".\t[UNREAD] Sender: " + message.getSenderId() + " Priority: " +
-                    message.getPriority() + ", Sent: " + dateFormatter.outputDATHrs(message.getTime()) + ",\n\t\tMessage: " + message.getMsg() + "\n";
+                    message.getPriority() + ", Sent: " + dateFormatter.outputDATHrsForMain(message.getTime()) + ",\n\t\tMessage: " + message.getMsg() + "\n";
 //        }
         return concatenatedMsg;
     }

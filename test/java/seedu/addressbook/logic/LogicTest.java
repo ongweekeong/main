@@ -164,6 +164,12 @@ public class LogicTest {
         return expectedResult;
     }
 
+    private void assertCommandBehavior(String commandWord, String expectedResult, Msg testMsg) throws Exception {
+        CommandResult r = logic.execute(commandWord);
+        expectedResult += ShowUnreadCommand.concatenateMsg(1, testMsg);
+        assertEquals(r.feedbackToUser, expectedResult);
+    }
+
     //@@author iamputradanish
     @Test
     public void execute_unknownCommandWord_forHQP() throws Exception {
@@ -405,11 +411,11 @@ public class LogicTest {
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        Password.unlockHQP();
+        Password.unlockHQP(); Password.lockIsPO();
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
-        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg(), 1);
+        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg());
         Password.lockIsHQP();
     }
 
@@ -1085,18 +1091,20 @@ public class LogicTest {
 
     @Test
     public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
+        Password.lockIsHQP(); Password.lockIsPO();
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        String expectedResult = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n';
+        int messageNum = 1;
+        String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
         final String testMessage = "This is a test message.";
         Msg testMsg = generateMsgInInbox(testMessage);
-        int messageNum = 1;
 
-        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedResult, testMsg, messageNum);
+        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedResult, testMsg);
     }
 
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        Password.lockIsPO(); Password.lockIsHQP();
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
         String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
