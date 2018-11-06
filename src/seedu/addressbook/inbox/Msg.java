@@ -21,7 +21,7 @@ public class Msg implements Comparable <Msg> {
     private Location location;
     private int eta = -1;
 
-    protected boolean isRead;
+    public boolean isRead;
     protected boolean isLocationAvailable;
     private Timestamp time;
     public static final boolean MESSAGE_IS_READ = true;
