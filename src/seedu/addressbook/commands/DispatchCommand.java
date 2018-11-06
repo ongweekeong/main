@@ -92,7 +92,7 @@ public class DispatchCommand extends Command {
         } catch (JSONException jse) {
             return new CommandResult(Messages.MESSAGE_JSON_PARSE_ERROR);
         } catch (PatrolResourceUnavailableException prue) {
-            return new CommandResult(prue.getMessage() + "\n" + MESSAGE_OFFICER_UNAVAILABLE + "/" + " ");
+            return new CommandResult(prue.getMessage() + "\n" + MESSAGE_OFFICER_UNAVAILABLE);
         }
 
         return new CommandResult(String.format(MESSAGE_DISPATCH_SUCCESS, requester));
