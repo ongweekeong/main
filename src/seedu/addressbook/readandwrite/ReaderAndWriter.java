@@ -6,15 +6,18 @@ import java.io.*;
 public class ReaderAndWriter {
 
     public File fileToUse (String pathName){
-        return new File(pathName);
+        File file = new File(pathName);
+        return file;
     }
 
     public BufferedReader openReader (File file) throws FileNotFoundException {
-        return new BufferedReader(new FileReader(file));
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        return br;
     }
 
     public PrintWriter openTempWriter (File file) throws IOException {
-        return new PrintWriter(new FileWriter(file));
+        PrintWriter pw = new PrintWriter(new FileWriter(file));
+        return pw;
     }
 
 }
