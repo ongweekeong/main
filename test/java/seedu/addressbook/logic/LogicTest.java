@@ -20,6 +20,7 @@ import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.storage.StorageFile;
+import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -118,18 +119,20 @@ public class LogicTest {
      * Executes the command and confirms that the result message (Timestamp) is correct (within the given tolerance threshold)
      * @param inputCommand
      * @param expectedMessage
-     * @param tolerance
      * @throws Exception
      */
-    private void assertCommandBehavior(String inputCommand, String expectedMessage, int tolerance) throws Exception {
+    private void assertTimeCommandBehavior(String inputCommand, String expectedMessage) throws Exception {
         CommandResult r = logic.execute(inputCommand);
-        String[] parts = r.feedbackToUser.split("-", 2);
+        String[] parts = r.feedbackToUser.split(" ", 2);
+        parts[1] = parts[1].substring(0,4);
         String[] expected = expectedMessage.split("-", 2);
-        assertEqualsTimestamp(expected[1], parts[1], tolerance);
+        String[] expectedTime = expected[1].split(":", 3);
+        String expectedTimeFormatted = expectedTime[0] + expectedTime[1];
 
-        if(parts[0].equals(expected[0])){
-            expectedMessage = r.feedbackToUser;
-        }
+        assertEquals(parts[0], expected[0]);
+        assertEquals(parts[1], expectedTimeFormatted);
+        expectedMessage = r.feedbackToUser;
+
         assertEquals(expectedMessage, r.feedbackToUser);
     }
 
@@ -177,14 +180,13 @@ public class LogicTest {
         Password.lockIsHQP();
     }
 
-    //@@author ShreyasKp
-    //TODO - Fix execute_timeCommand
-    /*@Test
+    //@@author ongweekeong
+    @Test
     public void execute_timeCommand() throws Exception {
         String command = DateTimeCommand.COMMAND_WORD;
         TimeAndDate timeAndDate = new TimeAndDate();
-        assertCommandBehavior(command, timeAndDate.outputDATHrs(), 200);
-    }*/
+        assertTimeCommandBehavior(command, timeAndDate.outputDATHrs());
+    }
 
     //@@author iamputradanish
 
