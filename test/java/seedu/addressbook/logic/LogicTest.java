@@ -809,46 +809,12 @@ public class LogicTest {
 
     }
 
-
-//    @Test
-//    public void execute_check_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult("File not found");
-//            assertCommandBehavior("check s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
-//
-//    @Test
-//    public void execute_find_fileNotFound() throws Exception {
-//        ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-//        String actualFileName = AddressBook.SCREENING_DATABASE;
-//        String nameForTesting = "screeningTestCase.txt";
-//        File actualFile = new File(actualFileName);
-//        File testFile = new File(nameForTesting);
-//        BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(actualFileName));
-//
-//        boolean isChanged = actualFile.renameTo(testFile);
-//        if (isChanged) {
-//            ExpectedException thrown = ExpectedException.none();
-//            thrown.expect(IOException.class);
-//            CommandResult result = new CommandResult("File not found");
-//            assertCommandBehavior("find s1234567a", result.feedbackToUser);
-//            br.close();
-//            assertTrue(actualFile.renameTo(new File(actualFileName)));
-//        }
-//    }
+    @Test
+    public void execute_Messages_Constructor() throws Exception {
+        Messages test = new Messages();
+        String testMessage = test.MESSAGE_WELCOME;
+        assertEquals(testMessage,"Welcome to the Police Records and Intelligent System.");
+    }
 
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {
