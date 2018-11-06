@@ -373,7 +373,7 @@ public class Parser {
             return Integer.parseInt(matcher.group("targetIndex"));
         }
         catch (NumberFormatException nfe){
-            new BigInteger(matcher.group("targetIndex")); //If index is not numeric, throw NFE.
+            new BigInteger(matcher.group("targetIndex")); //Throws NFE if input index is not numeric.
             return Integer.MAX_VALUE;
         }
     }
