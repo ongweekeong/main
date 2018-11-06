@@ -37,7 +37,7 @@ image::Ui.png[width="790"]
 ====
 
 .	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
-.	Defaults passwords for the users:
+.	Defaults passwords for the users (Passwords are Case Sensitive):
 .. HQP: papa123
 .. PO1: popo1
 .. PO2: popo2
@@ -226,7 +226,7 @@ Examples:
 Generates message to dispatch an officer to backup a requesting officer
 Message would be sent to requester & backup officer which includes ETA(Real Time) & Location (Google Maps URL).
 
-Format: 'dispatch [BACKUP OFFICER] [OFFENSE] [REQUESTER OFFICER]'
+Format: 'dispatch (BACKUP OFFICER) (OFFENSE) (REQUESTER OFFICER)'
 
 *   dispatch po1 gun po3
 *   Sends a set of GPS coordinates, current case, ETA and Google Maps URL location of requester
