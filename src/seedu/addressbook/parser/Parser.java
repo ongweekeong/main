@@ -1,5 +1,6 @@
 package seedu.addressbook.parser;
 
+import org.apache.commons.codec.binary.StringUtils;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.data.exception.IllegalValueException;
@@ -8,6 +9,7 @@ import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.password.Password;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.Matcher;
@@ -162,6 +164,9 @@ public class Parser {
 
             case ListCommand.COMMAND_WORD:
                 return new ListCommand();
+
+            case ShowUnreadCommand.COMMAND_WORD:
+                return new ShowUnreadCommand();
 
             case InboxCommand.COMMAND_WORD:
                 return new InboxCommand();
@@ -374,7 +379,13 @@ public class Parser {
             logr.warning("Index number does not exist in argument");
             throw new ParseException("Could not find index number to parse");
         }
-        return Integer.parseInt(matcher.group("targetIndex"));
+        try {
+            return Integer.parseInt(matcher.group("targetIndex"));
+        }
+        catch (NumberFormatException nfe){
+            new BigInteger(matcher.group("targetIndex")); //Throws NFE if input index is not numeric.
+            return Integer.MAX_VALUE;
+        }
     }
 //@@author muhdharun
     /**
