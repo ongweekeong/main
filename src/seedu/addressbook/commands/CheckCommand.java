@@ -18,6 +18,7 @@ public class CheckCommand extends Command {
 
     private String nricKeyword;
     private String FILE_NOT_FOUND_ERROR = "File not found";
+    private String SCREENING_DATABASE = "ScreeningHistory.txt";
 
     public CheckCommand(String nricToFind)
     {
@@ -26,6 +27,10 @@ public class CheckCommand extends Command {
 
     public String getNricKeyword(){
         return nricKeyword;
+    }
+
+    public void setFile(String file) {
+        this.SCREENING_DATABASE = file;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class CheckCommand extends Command {
 
     private List<String> getPersonWithNric(String nric) throws IOException{
         List<String> screeningHistory;
-        screeningHistory = addressBook.readDatabase(nric);
+        screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
 
         return screeningHistory;
     }

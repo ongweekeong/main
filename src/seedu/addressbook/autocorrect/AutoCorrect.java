@@ -77,12 +77,12 @@ public class AutoCorrect {
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
-                case ExitCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE)).feedbackToUser;
+                case ShutdownCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
-                case LockCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LockCommand.MESSAGE_USAGE)).feedbackToUser;
+                case LogoutCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
                 case DispatchCommand.COMMAND_WORD:

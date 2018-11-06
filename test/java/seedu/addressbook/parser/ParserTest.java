@@ -69,7 +69,7 @@ public class ParserTest {
     @Test
     public void exitCommand_parsedCorrectly() {
         final String input = "shutdown";
-        parseAndAssertCommandType(input, ExitCommand.class);
+        parseAndAssertCommandType(input, ShutdownCommand.class);
     }
     //@@author muhdharun
     @Test

@@ -116,11 +116,11 @@ public class Parser {
                 case ViewAllCommand.COMMAND_WORD:
                     return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE));
 
-                case ExitCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ExitCommand.MESSAGE_USAGE));
+                case ShutdownCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE));
 
-                case LockCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LockCommand.MESSAGE_USAGE));
+                case LogoutCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE));
 
                 case HelpCommand.COMMAND_WORD: // Fallthrough
                 default:
@@ -186,11 +186,11 @@ public class Parser {
             case DispatchCommand.COMMAND_WORD:
                 return prepareDispatch(arguments);
 
-            case ExitCommand.COMMAND_WORD:
-                return new ExitCommand();
+            case ShutdownCommand.COMMAND_WORD:
+                return new ShutdownCommand();
 
-            case LockCommand.COMMAND_WORD:
-                return new LockCommand();
+            case LogoutCommand.COMMAND_WORD:
+                return new LogoutCommand();
 
             case HelpCommand.COMMAND_WORD: // Fallthrough
             default:

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Used for formatting text for display. e.g. for adding text decorations.
  */
-public class Formatter {
+public class UiFormatter {
 
     /** A decorative prefix added to the beginning of lines printed by AddressBook */
     private static final String LINE_PREFIX = " ";
