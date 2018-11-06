@@ -21,7 +21,7 @@ public class CheckCommand extends Command {
 
     private String nricKeyword;
     private String FILE_NOT_FOUND_ERROR = "File not found";
-    private String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private String SCREENING_DATABASE = "screeningHistory.txt";
     private AddressBook addressBookForTest; //For testing
 
     public CheckCommand(String nricToFind)
