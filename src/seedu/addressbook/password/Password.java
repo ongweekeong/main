@@ -9,7 +9,7 @@ import java.io.*;
 //@@author iamputradanish
 public class Password {
 
-    private static final String MESSAGE_TRY_AGAIN = "Please try again.";
+    public static final String MESSAGE_TRY_AGAIN = "Please try again.";
     public static final String MESSAGE_ENTER_PASSWORD = "Please enter password: ";
     public static final String MESSAGE_ENTER_COMMAND = "Please enter a command: ";
     public static final String MESSAGE_WELCOME = "Welcome %s.";
@@ -28,18 +28,17 @@ public class Password {
     public static final String MESSAGE_FOUR = "Foxtrot Oscar Uniform Romeo";
     public static final String MESSAGE_FIVE = "Foxtrot India Victor Echo";
     public static final String MESSAGE_ENTER_NEW_PASSWORD = "Please enter new alphanumeric password for ";
-    private static final String MESSAGE_ENTER_NEW_PASSWORD_AGAIN = "Please enter new alphanumeric password again: ";
-    private static final String MESSAGE_UPDATED_PASSWORD = "You have updated %s password successfully. ";
-    private static final String MESSAGE_NOT_SAME = "The password you entered is not the same. ";
-    private static final String MESSAGE_AT_LEAST_ONE = "Your new password must contain at least one %s. ";
-    private static final String MESSAGE_PASSWORD_EXISTS = "Your new password cannot be the same as an existing password. ";
+    public static final String MESSAGE_ENTER_NEW_PASSWORD_AGAIN = "Please enter new alphanumeric password again: ";
+    public static final String MESSAGE_UPDATED_PASSWORD = "You have updated %s password successfully. ";
+    public static final String MESSAGE_NOT_SAME = "The password you entered is not the same. ";
+    public static final String MESSAGE_AT_LEAST_ONE = "Your new password must contain at least one %s. ";
+    public static final String MESSAGE_PASSWORD_EXISTS = "Your new password cannot be the same as an existing password. ";
     private static final String MESSAGE_TRY_UNAUTHORIZED ="You are unauthorized to %s.\nPlease try a different command. ";
-    private static final String MESSAGE_PASSWORD_LENGTH = "Your new password is %1$d character(s) long. ";
-    private static final String MESSAGE_PASSWORD_MINIMUM_LENGTH = "Your new password must be at least %1$d characters long. ";
+    public static final String MESSAGE_PASSWORD_LENGTH = "Your new password is %1$d character(s) long. ";
+    public static final String MESSAGE_PASSWORD_MINIMUM_LENGTH = "Your new password must be at least %1$d characters long. ";
     public static final String UPDATE_PASSWORD_COMMAND_WORD = "update password";
     public static final String UPDATE_PASSWORD_MESSAGE_USAGE = UPDATE_PASSWORD_COMMAND_WORD + ":\n" + "Updates a password\n\t"
             + "Example: " + UPDATE_PASSWORD_COMMAND_WORD;
-    public static final String MESSAGE_CANCELLED = "Request to update password cancelled." + "\n" + MESSAGE_ENTER_COMMAND;
 
 
     public static int getWrongPasswordCounter() {
@@ -113,8 +112,14 @@ public class Password {
     public static void unprepareUpdatePassword(){
         isUpdatingPassword = false;
     }
-    public boolean isUpdatePasswordConfirmNow() {
+    public static boolean isUpdatePasswordConfirmNow() {
         return isUpdatePasswordConfirm;
+    }
+    public static void notUpdatingFinal(){
+        isUpdatePasswordConfirm = false;
+    }
+    public static void setUpdatingFinal(){
+        isUpdatePasswordConfirm = true;
     }
 
     private static boolean isUpdatePasswordConfirm = false;
@@ -137,7 +142,10 @@ public class Password {
     }
 
     private static boolean isShutDown= false;
-    private String oneTimePassword = null;
+    private static String oneTimePassword = null;
+    public static void setOTP(String input){
+        oneTimePassword = input;
+    }
 
     private static ReaderAndWriter readerandwriter = new ReaderAndWriter();
 
@@ -334,8 +342,8 @@ public class Password {
         else{
             result = passwordValidityChecker(userCommandText);
             if(result == null){
-                oneTimePassword = userCommandText;
-                isUpdatePasswordConfirm = true;
+                setOTP(userCommandText);
+                setUpdatingFinal();
                 result = MESSAGE_ENTER_NEW_PASSWORD_AGAIN;
             }
         }
@@ -391,8 +399,8 @@ public class Password {
                 isLoginPO5 = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_PO + MESSAGE_FIVE);
             }
-            isUpdatingPassword = false;
-            isUpdatePasswordConfirm = false;
+            unprepareUpdatePassword();
+            notUpdatingFinal();
             linesLeft = 5 - lineNumber;
             while (lineNumber > 0){
                 reprintLine(br,pw);
@@ -419,8 +427,9 @@ public class Password {
                     "\n" + MESSAGE_ENTER_COMMAND;
         }
         else{
-            isUpdatePasswordConfirm = false;
-            result = MESSAGE_NOT_SAME;
+            notUpdatingFinal();
+            result = MESSAGE_NOT_SAME
+            + "\n" + MESSAGE_TRY_AGAIN;
         }
         pw.close();
         br.close();
@@ -483,7 +492,7 @@ public class Password {
         return result;
     }
 
-    private String passwordValidityChecker(String newEnteredPassword) throws IOException {
+    public String passwordValidityChecker(String newEnteredPassword) throws IOException {
         String result = null;
         if(passwordExistsChecker(newEnteredPassword) != null){
             result = passwordExistsChecker(newEnteredPassword);
