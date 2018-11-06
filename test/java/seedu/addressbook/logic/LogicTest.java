@@ -1165,22 +1165,28 @@ public class LogicTest {
         Password.notUpdatingFinal();
     }
 
-    /*
     @Test
     public void execute_updatePasswordFinal_success() throws Exception {
+        Password password = new Password();
         Password.unlockHQP();
         Password.prepareUpdatePassword();
-        Password password = new Password();
+        password.updatePassword("papa123", 5);
         String userInput = "mama123";
         Password.setOTP(userInput);
         String result = password.updatePasswordFinal(userInput);
-        assertEquals(String.format(Password.MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP), result);
         assertFalse(isUpdatePasswordConfirmNow());
         assertFalse(getIsUpdatingPassword());
+        assertEquals(String.format(Password.MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP)
+                + "\n" + MESSAGE_ENTER_COMMAND, result);
+        password.updatePassword("mama123", 5);
+        userInput = "papa123";
+        Password.setOTP(userInput);
+        password.updatePasswordFinal(userInput);
+
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
-    } */ //TODO fix test
+    }
 
     @Test
     public void execute_getFullID(){
@@ -1198,7 +1204,11 @@ public class LogicTest {
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE,result);
     }
 
-
+    @Test
+    public void execute_getFullID_ghost(){
+        String result = getFullID("nonsense");
+        assertEquals("Ghost",result);
+    }
 
     //@@author ongweekeong
     @Test
