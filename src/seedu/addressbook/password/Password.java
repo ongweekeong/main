@@ -256,23 +256,23 @@ public class Password {
     }
 
     public static boolean correctHQP(String user, String storedCurrPassword, int hashedEnteredPassword){
-        return user.equals("hqp") && correctPassword(storedCurrPassword, hashedEnteredPassword);
+        return user.equals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID) && correctPassword(storedCurrPassword, hashedEnteredPassword);
     }
 
     public static boolean correctPO1(String user, String storedCurrPassword, int hashedEnteredPassword){
-        return user.equals("po1") && correctPassword(storedCurrPassword, hashedEnteredPassword);
+        return user.equals(PatrolResourceStatus.POLICE_OFFICER_1_ID) && correctPassword(storedCurrPassword, hashedEnteredPassword);
     }
     public static boolean correctPO2(String user, String storedCurrPassword, int hashedEnteredPassword){
-        return user.equals("po2") && correctPassword(storedCurrPassword, hashedEnteredPassword);
+        return user.equals(PatrolResourceStatus.POLICE_OFFICER_2_ID) && correctPassword(storedCurrPassword, hashedEnteredPassword);
     }
     public static boolean correctPO3(String user, String storedCurrPassword, int hashedEnteredPassword){
-        return user.equals("po3") && correctPassword(storedCurrPassword, hashedEnteredPassword);
+        return user.equals(PatrolResourceStatus.POLICE_OFFICER_3_ID) && correctPassword(storedCurrPassword, hashedEnteredPassword);
     }
     public static boolean correctPO4(String user, String storedCurrPassword, int hashedEnteredPassword){
-        return user.equals("po4") && correctPassword(storedCurrPassword, hashedEnteredPassword);
+        return user.equals(PatrolResourceStatus.POLICE_OFFICER_4_ID) && correctPassword(storedCurrPassword, hashedEnteredPassword);
     }
     public static boolean correctPO5(String user, String storedCurrPassword, int hashedEnteredPassword){
-        return user.equals("po5") && correctPassword(storedCurrPassword, hashedEnteredPassword);
+        return user.equals(PatrolResourceStatus.POLICE_OFFICER_5_ID) && correctPassword(storedCurrPassword, hashedEnteredPassword);
     }
 
     public static String prepareUpdatePassword(){
@@ -306,27 +306,27 @@ public class Password {
                     setWrongPasswordCounter(5);
 
                     switch (user) {
-                        case "hqp":
+                        case PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID:
                             isLoginHQP = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_HQP + ":";
                             break;
-                        case "po1":
+                        case PatrolResourceStatus.POLICE_OFFICER_1_ID:
                             isLoginPO1 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_ONE + ":";
                             break;
-                        case "po2":
+                        case PatrolResourceStatus.POLICE_OFFICER_2_ID:
                             isLoginPO2 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_TWO + ":";
                             break;
-                        case "po3":
+                        case PatrolResourceStatus.POLICE_OFFICER_3_ID:
                             isLoginPO3 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_THREE + ":";
                             break;
-                        case "po4":
+                        case PatrolResourceStatus.POLICE_OFFICER_4_ID:
                             isLoginPO4 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_FOUR + ":";
                             break;
-                        case "po5":
+                        case PatrolResourceStatus.POLICE_OFFICER_5_ID:
                             isLoginPO5 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_FIVE + ":";
                             break;
@@ -560,28 +560,27 @@ public class Password {
         } else if(isPO5){
             return PatrolResourceStatus.POLICE_OFFICER_5_ID;
         }
-
         return "Ghost";
     }
 
-    public static String getfullID(String ID){
+    public static String getFullID(String ID){
         String result = "Ghost";
-        if(ID.equals("hqp")){
+        if(ID.equals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID)){
             result = MESSAGE_HQP;
         }
-        else if(ID.equals("po1")){
+        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_1_ID)){
             result = MESSAGE_PO + MESSAGE_ONE;
         }
-        else if(ID.equals("po2")){
+        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_2_ID)){
             result = MESSAGE_PO + MESSAGE_TWO;
         }
-        else if(ID.equals("po3")){
+        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_3_ID)){
             result = MESSAGE_PO + MESSAGE_THREE;
         }
-        else if(ID.equals("po4")){
+        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_4_ID)){
             result = MESSAGE_PO + MESSAGE_FOUR;
         }
-        else if(ID.equals("po5")){
+        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_5_ID)){
             result = MESSAGE_PO + MESSAGE_FIVE;
         }
 

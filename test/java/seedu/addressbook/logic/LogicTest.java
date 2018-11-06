@@ -1182,6 +1182,23 @@ public class LogicTest {
         Password.notUpdatingFinal();
     } */ //TODO fix test
 
+    @Test
+    public void execute_getFullID(){
+        String result = getFullID(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
+        assertEquals(Password.MESSAGE_HQP,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_1_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_ONE,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_2_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_TWO,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_3_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_THREE,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_4_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FOUR,result);
+        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_5_ID);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE,result);
+    }
+
+
 
     //@@author ongweekeong
     @Test
