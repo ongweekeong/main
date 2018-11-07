@@ -91,6 +91,10 @@ public class EditCommand extends Command {
         if (offenses != null) {
             this.offenses = Offense.getOffenseSet(offenses);
         }
+
+        if (postalCode == null && status == null && wantedFor == null && offenses == null) {
+            throw new IllegalValueException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_USAGE));
+        }
     }
 
     @Override

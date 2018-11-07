@@ -17,6 +17,7 @@ public class ReadCommand extends Command {
             + "Example: " + COMMAND_WORD + " 1";
 
     public static final String MESSAGE_UPDATE_SUCCESS = "Message mark as read!";
+    public static final String MESSAGE_INPUT_INDEX_TOO_LARGE = "Index entered too large!";
 
     private int index;
 
@@ -27,6 +28,9 @@ public class ReadCommand extends Command {
     public Inbox myInbox = new Inbox(Password.getID());
 
     public CommandResult execute() {
+        if(index == Integer.MAX_VALUE){
+            return new CommandResult(MESSAGE_INPUT_INDEX_TOO_LARGE);
+        }
         String result = myInbox.markMsgAsRead(index);
         if(result.equals(myInbox.MESSAGE_READ_STATUS_UPDATED)) {
             return new CommandResult(MESSAGE_UPDATE_SUCCESS);

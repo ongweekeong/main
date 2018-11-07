@@ -1,5 +1,6 @@
 package seedu.addressbook.parser;
 
+import org.apache.commons.codec.binary.StringUtils;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.data.exception.IllegalValueException;
@@ -8,6 +9,7 @@ import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.password.Password;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.Matcher;
@@ -163,6 +165,9 @@ public class Parser {
             case ListCommand.COMMAND_WORD:
                 return new ListCommand();
 
+            case ShowUnreadCommand.COMMAND_WORD:
+                return new ShowUnreadCommand();
+
             case InboxCommand.COMMAND_WORD:
                 return new InboxCommand();
 
@@ -234,7 +239,7 @@ public class Parser {
      * Extracts the new person's tags from the add command's tag arguments string.
      * Merges duplicate tag strings.
      */
-    private static Set<String> getTagsFromArgs(String tagArguments) throws IllegalValueException {
+    private static Set<String> getTagsFromArgs(String tagArguments) {
         // no tags
         if (tagArguments.isEmpty()) {
             return Collections.emptySet();
@@ -286,15 +291,22 @@ public class Parser {
         };
 
         String userInputParameters[] = new String[editCommandIdentifiers.length];
+        String offenseString = "";
 
         for (int i = 0; i < editCommandIdentifiers.length; i++) {
             for (String argument : argParts) {
                 if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
-                    userInputParameters[i] = argument.substring(2);
-                    break;
+                    if (editCommandIdentifiers[i].equals(editCommandIdentifiers[4])) {
+                        offenseString += " " + argument;
+                    } else {
+                        userInputParameters[i] = argument.substring(2);
+                        break;
+                    }
                 }
             }
         }
+
+        userInputParameters[4] = (!offenseString.equals("")) ? offenseString : null;
 
         Set<String> offenses = null;
 
@@ -367,7 +379,13 @@ public class Parser {
             logr.warning("Index number does not exist in argument");
             throw new ParseException("Could not find index number to parse");
         }
-        return Integer.parseInt(matcher.group("targetIndex"));
+        try {
+            return Integer.parseInt(matcher.group("targetIndex"));
+        }
+        catch (NumberFormatException nfe){
+            new BigInteger(matcher.group("targetIndex")); //Throws NFE if input index is not numeric.
+            return Integer.MAX_VALUE;
+        }
     }
 //@@author muhdharun
     /**
@@ -477,7 +495,17 @@ public class Parser {
         caseName = argParts[1].toLowerCase();
         dispatchRequester = argParts[2].toLowerCase();
 
-        return new DispatchCommand(backupOfficer, dispatchRequester, caseName);
+        try {
+            if (backupOfficer.equalsIgnoreCase(dispatchRequester)) {
+                throw new IllegalValueException(String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME,
+                        backupOfficer));
+            }
+            return new DispatchCommand(backupOfficer, dispatchRequester, caseName);
+        } catch (IllegalValueException ive) {
+            return new IncorrectCommand(ive.getMessage());
+        }
+
+
     }
 
 }

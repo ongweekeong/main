@@ -40,5 +40,5 @@ http://code.makery.ch/library/javafx-8-tutorial/[Java FX tutorial] by Marco Jako
 
 == Contact Us
 
-* Regarding any bugs, please email to alexandermatthew12@gmail.com, with the subject headline of *Police Records System* issue.
+* Regarding any bugs, please email to alexandermatthew12@gmail.com, with the subject headline of *Police Records and Intelligent System* issue.
 * *Contributing* : We welcome pull requests. Follow the process described https://github.com/oss-generic/process[here]

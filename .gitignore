@@ -2,9 +2,9 @@
 *.class
 
 # Default data file
-notifications.txt
+notifications\.txt
 policeRecords.txt
-ScreeningHistory.txt
+screeningHistory.txt
 requestList.txt
 inboxMessages/
 
@@ -33,6 +33,4 @@ parserLog\.log\.1
 notifications\.txt
 
 Todo List\.txt
-
-inboxMessages/
 
