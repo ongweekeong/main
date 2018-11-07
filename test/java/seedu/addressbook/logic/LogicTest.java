@@ -1800,7 +1800,7 @@ public class LogicTest {
             assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
-    
+
     @Test
     public void execute_shutdownCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
