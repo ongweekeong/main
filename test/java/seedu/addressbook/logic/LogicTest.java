@@ -2012,6 +2012,93 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_listCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "lit",
+                "kist",
+                "lists"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_logoutCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "logot",
+                "logour",
+                "logoute"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_readCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "red",
+                "reed",
+                "bread"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_requestHelpCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "r",
+                "rh",
+                "rbp"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_showUnreadCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "shounread",
+                "showunreed",
+                "shiwunread",
+                "showsunread",
+                "showunbread"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
     public void execute_shutdownCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
                 "shutdon",
@@ -2028,5 +2115,39 @@ public class LogicTest {
         }
     }
 
+    @Test
+    public void execute_updateStatusCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "updatstatus",
+                "updatestats",
+                "updateststus",
+                "updatestattus",
+                "updatesstatus"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
 
+    @Test
+    public void execute_viewAllCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "vieall",
+                "veewall",
+                "viewalll"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
 }
