@@ -5,11 +5,13 @@ import org.junit.Test;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
+import seedu.addressbook.password.Password;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
@@ -175,6 +177,29 @@ public class ParserTest {
         final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE);
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
     }
+
+    //@@iamputradanish
+    @Test
+    public void execute_isRejectPO_allowed(){
+        Password password = new Password();
+        boolean result = password.isRejectPO("list");
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_isRejectPO(){
+        Password password = new Password();
+        boolean result = password.isRejectPO("add");
+        assertTrue(result);
+    }
+
+    @Test
+    public void execute_getUnauthorizedPOCommand_getAdd(){
+        Password password = new Password();
+        String result =  password.getUnauthorizedPOCommand("add 1");
+        assertEquals("add",result);
+    }
+
 
 
     //@@author

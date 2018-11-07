@@ -19,7 +19,7 @@ public class AddCommand extends Command {
             + " John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs";
 
     public static final String MESSAGE_SUCCESS = "New person added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
+    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the Police Records";
 
     private final Person toAdd;
 
