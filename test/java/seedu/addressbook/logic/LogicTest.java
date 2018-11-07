@@ -800,18 +800,23 @@ public class LogicTest {
     @Test
     public void execute_check_validNric() throws Exception {
         TestDataHelper helper = new TestDataHelper();
-        Person toBeAdded = helper.adam();
-        String nric = toBeAdded.getNric().getIdentificationNumber();
+        Person toBeAdded = helper.generatePersonWithNric("s1111111a");
+
         addressBook.addPerson(toBeAdded);
+
+        String nric = toBeAdded.getNric().getIdentificationNumber();
+        CheckCommand toCheck = new CheckCommand(nric);
+        String invalid = "testScreen.txt";
+        toCheck.setFile(invalid);
+        assertEquals(invalid, toCheck.getDbName());
+
+        toCheck.setAddressBook(addressBook);
+        CommandResult r = toCheck.execute();
         List<String> emptyTimestamps = new ArrayList<>();
         UiFormatter formatter = new UiFormatter();
         String result = formatter.formatForStrings(emptyTimestamps);
         String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-        assertCommandBehavior("check " + nric,
-                                expectedMessage,
-                                addressBook,
-                                false,
-                                Collections.emptyList());
+        assertEquals(expectedMessage,r.feedbackToUser);
     }
 
     @Test
