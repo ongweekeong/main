@@ -108,6 +108,7 @@ public class Logic {
         }
     }
 
+    //@@iamputradanish
     /** Initializes password, env , message inboxes and screening history text files upon start up of program.*/
     private void initializeTextFiles(){
         try{
