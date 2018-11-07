@@ -25,18 +25,18 @@ public class CheckCommand extends Command {
 
     @Override
     public CommandResult execute() {
-        final List<String> screeningHistory = getPersonWithNric(nricKeyword);
+        final List<String> screeningHist = getPersonWithNric(nricKeyword);
         return new CommandResult(getMessageForScreeningHistoryShownSummary(screeningHistory,nricKeyword));
     }
 
     private List<String> getPersonWithNric(String nric){
-        List<String> screeningHistory = new ArrayList<>();
+        List<String> screeningHist = new ArrayList<>();
         try {
-            screeningHistory = addressBook.readDatabase(nric);
+            screeningHist = addressBook.readDatabase(nric);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return screeningHistory;
+        return screeningHist;
     }
 
 }
