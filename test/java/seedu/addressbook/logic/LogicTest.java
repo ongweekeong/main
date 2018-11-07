@@ -1890,22 +1890,22 @@ public class LogicTest {
         }
     }
 
-//    @Test
-//    public void execute_datetimeCommand_wrongSpellingOfCommandWord() {
-//        final String[] inputs = {
-//                "tim",
-//                "toim",
-//                "times"
-//        };
-//        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
-//        expected = expected.substring(expected.indexOf("!") + 1);
-//        for (String input: inputs) {
-//            String output = checker.checkDistance(input);
-//            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-//            String displayCommand = correction.checkCommand(input);
-//            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
-//        }
-//    }
+    @Test
+    public void execute_datetimeCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "tim",
+                "rime",
+                "times"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
 
 
     @Test
@@ -1925,22 +1925,22 @@ public class LogicTest {
         }
     }
 
-//    @Test
-//    public void execute_dispatchCommand_wrongSpellingOfCommandWord() {
-//        final String[] inputs = {
-//                "dispach",
-//                "dispetch",
-//                "disphacth"
-//        };
-//        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
-//        expected = expected.substring(expected.indexOf("!") + 1);
-//        for (String input: inputs) {
-//            String output = checker.checkDistance(input);
-//            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-//            String displayCommand = correction.checkCommand(input);
-//            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
-//        }
-//    }
+    @Test
+    public void execute_dispatchCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "dispach",
+                "dispetch",
+                "disphatch"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
 
 
     @Test
@@ -1951,6 +1951,57 @@ public class LogicTest {
                 "edits"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_findCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "fid",
+                "bind",
+                "fhind"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_helpCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "hel",
+                "gelp",
+                "helpp"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_inboxCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "ibox",
+                "inbux",
+                "binbox"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
