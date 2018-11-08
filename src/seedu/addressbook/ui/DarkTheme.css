@@ -6,7 +6,7 @@
     -fx-font-size: 10pt;
     -fx-padding: 0 325 250 0;
     -fx-cursor: crosshair;
-    -fx-background-image: url("file:resources/PrismBackground.png");
+    -fx-background-image: url(http://www.simontuckett.com/_Portfolio/PortImages_Pres/P_Il_Prism.jpg);
 }
 
 .text-field {
