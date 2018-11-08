@@ -160,7 +160,7 @@ public class StorageFile {
                         Collections.singleton(new Offense("riot"))),
                 new Person(
                         new Name("Jane Doe"),
-                        new NRIC("s1234567b"),
+                        new NRIC("s9611234c"),
                         new DateOfBirth("1997"),
                         new PostalCode("510246"),
                         new Status("xc"),
