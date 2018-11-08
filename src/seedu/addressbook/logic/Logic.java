@@ -32,7 +32,6 @@ public class Logic {
         setStorage(initializeStorage());
         setAddressBook(storage.load());
         initializeTextFiles();
-        populatePoliceRecords();
     }
 
     public static AddressBook getAddressBook() {
@@ -324,9 +323,5 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-    }
-
-    private void populatePoliceRecords() throws IllegalValueException {
-
     }
 }

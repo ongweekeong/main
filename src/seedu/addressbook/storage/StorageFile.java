@@ -129,24 +129,7 @@ public class StorageFile {
         // create empty file if not found
         } catch (FileNotFoundException fnfe) {
             //final AddressBook empty = new AddressBook();
-            final AddressBook populated =
-                    new AddressBook(new UniquePersonList(
-                            new Person(
-                                    new Name("John Doe"),
-                                    new NRIC("s1234567a"),
-                                    new DateOfBirth("1996"),
-                                    new PostalCode("510246"),
-                                    new Status("xc"),
-                                    new Offense("none"),
-                                    Collections.singleton(new Offense("riot"))),
-                            new Person(
-                                    new Name("Jane Doe"),
-                                    new NRIC("s1234567b"),
-                                    new DateOfBirth("1997"),
-                                    new PostalCode("510246"),
-                                    new Status("xc"),
-                                    new Offense("none"),
-                                    Collections.singleton(new Offense("riot")))));
+            final AddressBook populated = populatedPoliceRecords();
             save(populated);
             return populated;
 
@@ -164,4 +147,23 @@ public class StorageFile {
         return path.toString();
     }
 
+    public AddressBook populatedPoliceRecords() throws IllegalValueException {
+        return new AddressBook(new UniquePersonList(
+                new Person(
+                        new Name("John Doe"),
+                        new NRIC("s1234567a"),
+                        new DateOfBirth("1996"),
+                        new PostalCode("510246"),
+                        new Status("xc"),
+                        new Offense("none"),
+                        Collections.singleton(new Offense("riot"))),
+                new Person(
+                        new Name("Jane Doe"),
+                        new NRIC("s1234567b"),
+                        new DateOfBirth("1997"),
+                        new PostalCode("510246"),
+                        new Status("xc"),
+                        new Offense("none"),
+                        Collections.singleton(new Offense("riot")))));
+    }
 }
