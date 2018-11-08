@@ -1,9 +1,6 @@
 = Putra Danish - Project Portfolio
 :site-section: AboutUs
-:imagesDir: ../images/
 :stylesDir: ../stylesheets
-
-image::iamputradanish.png[width="150", align="left"]
 
 == PROJECT: Police Records System
 
