@@ -1,6 +1,7 @@
 package seedu.addressbook.commands;
 
 //@@author muhdharun
+import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.storage.StorageFile;
 
@@ -70,9 +71,16 @@ public class CheckCommand extends Command {
      */
 
     private List<String> getPersonWithNric(String nric) throws IOException{
-        List<String> screeningHist;
-        screeningHist = addressBook.readDatabase(nric, SCREENING_DATABASE);
+        List<String> screeningHistory;
+        //@@author ShreyasKp
+        for(ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
+            if(person.getNric().getIdentificationNumber().equals(nric)) {
+                screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
+                return screeningHistory;
+            }
+        }
+        //screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
 
-        return screeningHist;
+        return null;
     }
 }
