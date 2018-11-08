@@ -1,5 +1,6 @@
 package seedu.addressbook.commands;
 
+import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.exception.IllegalValueException;
@@ -67,12 +68,30 @@ public abstract class Command {
      */
 
     public static String getMessageForScreeningHistoryShownSummary(List<String> timestampsDisplayed, String nric) {
+        if (timestampsDisplayed == null){
+            //@@author ShreyasKp
+            CheckDistance checker = new CheckDistance();
 
-        UiFormatter formatter = new UiFormatter();
-        String result = formatter.formatForStrings(timestampsDisplayed);
+            String prediction = checker.checkInputDistance(nric);
 
-        String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
-        return finalResult;
+            if(!prediction.equals("none")) {
+                return (Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                        + "\n"
+                        + "Did you mean to use "
+                        + prediction);
+            } else {
+                return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+            }
+            //@@author muhdharun
+        }
+        else {
+
+            UiFormatter formatter = new UiFormatter();
+            String result = formatter.formatForStrings(timestampsDisplayed);
+
+            String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
+            return finalResult;
+        }
     }
 
     public static String getMessage(List<String> args) {
