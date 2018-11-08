@@ -53,7 +53,7 @@ public class Inbox {
             }
             allMessages.writeToFile(notificationsToPrint);
         }
-        catch (IndexOutOfBoundsException e){
+        catch (IndexOutOfBoundsException | NullPointerException e){
             if(numUnreadMsgs>0) {
                 return INDEX_OUT_OF_BOUNDS;
             }
@@ -74,7 +74,8 @@ public class Inbox {
         return numUnreadMsgs;
     }
 
-    public static void clearRecordedMsgsWhenLogout(){
+    public static void resetInboxWhenLogout(){
+        numUnreadMsgs = -1;
         recordNotifications.clear();
     }
 

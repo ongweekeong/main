@@ -17,7 +17,7 @@ public class LogoutCommand extends Command {
 
     @Override
     public CommandResult execute() {
-        Inbox.clearRecordedMsgsWhenLogout();
+        Inbox.resetInboxWhenLogout();
         Password password  = new Password();
         password.lockDevice();
         return new CommandResult(MESSAGE_LOCK); }

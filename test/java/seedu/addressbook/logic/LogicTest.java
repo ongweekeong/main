@@ -1567,6 +1567,7 @@ public class LogicTest {
         assertFalse(Inbox.isRecordMsgsEmpty());
         logic.execute(LogoutCommand.COMMAND_WORD);
         assertTrue(Inbox.isRecordMsgsEmpty());
+        assertCommandBehavior(ReadCommand.COMMAND_WORD +" 1", Inbox.INBOX_NOT_READ_YET);
     }
     //@@author
 
