@@ -74,4 +74,8 @@ public class Inbox {
         return numUnreadMsgs;
     }
 
+    public static void clearRecordedMsgsWhenLogout(){
+        recordNotifications.clear();
+    }
+
 }

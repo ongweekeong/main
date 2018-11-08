@@ -1,5 +1,6 @@
 package seedu.addressbook.commands;
 
+import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.timeanddate.TimeAndDate;
 
@@ -16,6 +17,7 @@ public class LogoutCommand extends Command {
 
     @Override
     public CommandResult execute() {
+        Inbox.clearRecordedMsgsWhenLogout();
         Password password  = new Password();
         password.lockDevice();
         return new CommandResult(MESSAGE_LOCK); }
