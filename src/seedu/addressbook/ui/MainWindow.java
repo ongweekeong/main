@@ -61,6 +61,7 @@ public class MainWindow {
 
     //@@author iamputradanish
     private void decipherUserCommandText(String userCommandText) throws Exception {
+        Password.setupLogger();
         if(toCloseApp(userCommandText)){
             password.lockDevice();
             mainApp.stop();
