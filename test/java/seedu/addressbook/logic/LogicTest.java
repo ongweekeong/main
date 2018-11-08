@@ -34,6 +34,7 @@ import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static seedu.addressbook.common.Messages.*;
 import static seedu.addressbook.password.Password.*;
 
@@ -1558,6 +1559,16 @@ public class LogicTest {
         assertEquals(expected, r.feedbackToUser);
     }
 
+    @Test
+    public void execute_clearRecordedMsgWhenLogout() throws Exception{
+        Password.lockIsPO(); Password.lockIsHQP();
+        generateMsgInInbox("populate the inbox!");
+        logic.execute(ShowUnreadCommand.COMMAND_WORD);
+        assertFalse(Inbox.isRecordMsgsEmpty());
+        logic.execute(LogoutCommand.COMMAND_WORD);
+        assertTrue(Inbox.isRecordMsgsEmpty());
+        assertCommandBehavior(ReadCommand.COMMAND_WORD +" 1", Inbox.INBOX_NOT_READ_YET);
+    }
     //@@author
 
     /**
