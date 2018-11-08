@@ -327,51 +327,6 @@ public class Logic {
     }
 
     private void populatePoliceRecords() throws IllegalValueException {
-        try{
-            File screeningHistoryFile = readerandwriter.fileToUse("policeRecords.txt");
-            BufferedReader br = readerandwriter.openReader(screeningHistoryFile);
-            try {
-                br.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }catch(FileNotFoundException e){
-            File makeFile = readerandwriter.fileToUse("policeRecords.txt");
-            PrintWriter pw = null;
-            try {
-                pw = readerandwriter.openTempWriter(makeFile);
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
 
-            String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
-                    "<AddressBook>\n" +
-                    "    <persons>\n" +
-                    "        <name>John Doe</name>\n" +
-                    "        <nric isPrivate=\"false\">s1234567a</nric>\n" +
-                    "        <dateOfBirth isPrivate=\"false\">1996</dateOfBirth>\n" +
-                    "        <postalCode isPrivate=\"false\">510246</postalCode>\n" +
-                    "        <status isPrivate=\"false\">xc</status>\n" +
-                    "        <wantedFor isPrivate=\"false\">none</wantedFor>\n" +
-                    "        <tagged>drugs</tagged>\n" +
-                    "        <tagged>theft</tagged>\n" +
-                    "    </persons>\n" +
-                    "    <persons>\n" +
-                    "        <name>Jane Doe</name>\n" +
-                    "        <nric isPrivate=\"false\">s1234567b</nric>\n" +
-                    "        <dateOfBirth isPrivate=\"false\">1996</dateOfBirth>\n" +
-                    "        <postalCode isPrivate=\"false\">510246</postalCode>\n" +
-                    "        <status isPrivate=\"false\">xc</status>\n" +
-                    "        <wantedFor isPrivate=\"false\">none</wantedFor>\n" +
-                    "        <tagged>drugs</tagged>\n" +
-                    "        <tagged>theft</tagged>\n" +
-                    "    </persons>\n" +
-                    "</AddressBook>";
-
-            pw.println(xml);
-
-            pw.flush();
-            pw.close();
-        }
     }
 }
