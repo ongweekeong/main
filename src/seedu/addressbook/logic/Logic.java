@@ -4,7 +4,7 @@ import seedu.addressbook.commands.Command;
 import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.parser.Parser;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
@@ -32,7 +32,6 @@ public class Logic {
         setStorage(initializeStorage());
         setAddressBook(storage.load());
         initializeTextFiles();
-        populatePoliceRecords();
     }
 
     public static AddressBook getAddressBook() {
@@ -108,6 +107,7 @@ public class Logic {
         }
     }
 
+    //@@iamputradanish
     /** Initializes password, env , message inboxes and screening history text files upon start up of program.*/
     private void initializeTextFiles(){
         try{
@@ -323,8 +323,5 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-    }
-
-    private void populatePoliceRecords() throws IllegalValueException {
     }
 }

@@ -32,7 +32,6 @@ public class Offense {
         OFFENSE_LIST.put("outrage-of-modesty", Msg.Priority.MED);
         OFFENSE_LIST.put("murder", Msg.Priority.HIGH);
         OFFENSE_LIST.put("riot", Msg.Priority.HIGH);
-        OFFENSE_LIST.put("murder", Msg.Priority.MED);
         OFFENSE_LIST.put("suspect-loose", Msg.Priority.MED);
         OFFENSE_LIST.put("gun", Msg.Priority.HIGH);
         OFFENSE_LIST.put("gunman", Msg.Priority.HIGH);

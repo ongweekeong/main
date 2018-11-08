@@ -1,11 +1,12 @@
 
 .text-area {
     -fx-control-inner-background: black;
+    -fx-background-color: black;
     -fx-font-family: "monospace";
     -fx-font-size: 10pt;
     -fx-padding: 0 325 250 0;
     -fx-cursor: crosshair;
-    -fx-background-image: url("file:docs/images/PrismBackground.png");
+    -fx-background-image: url("file:resources/PrismBackground.png");
 }
 
 .text-field {
