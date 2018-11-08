@@ -82,7 +82,7 @@ public class MainWindow {
         }
         else if(password.isUpdatingPasswordNow()){
             String updatePasswordResult;
-            if(password.isUpdatePasswordConfirmNow()) {
+            if(Password.isUpdatePasswordConfirmNow()) {
                 updatePasswordResult = password.updatePasswordFinal(userCommandText);
             }
             else{
