@@ -78,4 +78,8 @@ public class Inbox {
         recordNotifications.clear();
     }
 
+    public static boolean isRecordMsgsEmpty(){
+        return recordNotifications.isEmpty();
+    }
+
 }
