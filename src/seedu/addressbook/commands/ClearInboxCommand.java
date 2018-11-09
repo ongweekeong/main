@@ -1,10 +1,7 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
-import seedu.addressbook.inbox.MessageFilePaths;
-import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.ReadNotification;
-import seedu.addressbook.inbox.WriteNotification;
+import seedu.addressbook.inbox.*;
 import seedu.addressbook.password.Password;
 
 import java.io.IOException;
@@ -43,6 +40,7 @@ public class ClearInboxCommand extends Command {
             ReadNotification dummyReader = new ReadNotification(myInbox);
             TreeSet<Msg> dummySet = dummyReader.ReadFromFile(); // Exception thrown if file does not exist
             WriteNotification.clearInbox(myInbox);
+            Inbox.clearInbox();
             return new CommandResult(MESSAGE_CLEARINBOX_SUCCESSFUL);
         }
         catch (IOException e){
