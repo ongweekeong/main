@@ -1,6 +1,7 @@
 package seedu.addressbook.commands;
 
 //@@author muhdharun
+import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.storage.StorageFile;
 
@@ -21,7 +22,7 @@ public class CheckCommand extends Command {
 
     private String nricKeyword;
     private String FILE_NOT_FOUND_ERROR = "File not found";
-    private String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private String SCREENING_DATABASE = "screeningHistory.txt";
     private AddressBook addressBookForTest; //For testing
 
     public CheckCommand(String nricToFind)
@@ -53,10 +54,10 @@ public class CheckCommand extends Command {
 
     @Override
     public CommandResult execute() {
-        final List<String> screeningHistory;
+        final List<String> screeningHist;
         try {
-            screeningHistory = getPersonWithNric(nricKeyword);
-            return new CommandResult(getMessageForScreeningHistoryShownSummary(screeningHistory,nricKeyword));
+            screeningHist = getPersonWithNric(nricKeyword);
+            return new CommandResult(getMessageForScreeningHistoryShownSummary(screeningHist,nricKeyword));
         } catch (IOException e) {
             return new CommandResult(FILE_NOT_FOUND_ERROR);
         }
@@ -71,8 +72,15 @@ public class CheckCommand extends Command {
 
     private List<String> getPersonWithNric(String nric) throws IOException{
         List<String> screeningHistory;
-        screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
+        //@@author ShreyasKp
+        for(ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
+            if(person.getNric().getIdentificationNumber().equals(nric)) {
+                screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
+                return screeningHistory;
+            }
+        }
+        //screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
 
-        return screeningHistory;
+        return null;
     }
 }

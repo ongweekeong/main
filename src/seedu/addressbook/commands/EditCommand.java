@@ -1,6 +1,7 @@
 //@@author andyrobert3
 package seedu.addressbook.commands;
 
+import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
@@ -102,7 +103,20 @@ public class EditCommand extends Command {
             this.updatePerson();
             return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, this.nric));
         } catch(UniquePersonList.PersonNotFoundException pnfe) {
-            return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK);
+            //@@author ShreyasKp
+            CheckDistance checker = new CheckDistance();
+
+            String nric = getNric().toString();
+            String prediction = checker.checkInputDistance(nric);
+
+            if(!prediction.equals("none")) {
+                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                        + "\n"
+                        + "Did you mean to use "
+                        + prediction);
+            } else {
+                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK );
+            }
         }
 
     }

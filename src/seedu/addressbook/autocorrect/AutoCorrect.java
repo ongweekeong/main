@@ -29,24 +29,12 @@ public class AutoCorrect {
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
+                case ClearCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
                 case ClearInboxCommand.COMMAND_WORD:
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
-                    break;
-
-                case ShowUnreadCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
-                    break;
-
-                case ReadCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
-                    break;
-
-                case RequestHelpCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
-                    break;
-
-                case UpdateStatusCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
                 case DateTimeCommand.COMMAND_WORD:
@@ -57,36 +45,52 @@ public class AutoCorrect {
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
-                case EditCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
+                case DispatchCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
-                case ClearCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE)).feedbackToUser;
+                case EditCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
                 case FindCommand.COMMAND_WORD:
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
+                case InboxCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
                 case ListCommand.COMMAND_WORD:
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE)).feedbackToUser;
-                    break;
-
-                case ViewAllCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
-                    break;
-
-                case ShutdownCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
                 case LogoutCommand.COMMAND_WORD:
                     displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
-                case DispatchCommand.COMMAND_WORD:
-                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
+                case ReadCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case RequestHelpCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case ShowUnreadCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case ShutdownCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case UpdateStatusCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+                    break;
+
+                case ViewAllCommand.COMMAND_WORD:
+                    displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
                     break;
 
                 case HelpCommand.COMMAND_WORD: // Fallthrough

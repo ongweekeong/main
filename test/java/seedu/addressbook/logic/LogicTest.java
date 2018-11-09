@@ -34,6 +34,7 @@ import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static seedu.addressbook.common.Messages.*;
 import static seedu.addressbook.password.Password.*;
 
@@ -213,6 +214,7 @@ public class LogicTest {
         assertCommandBehavior(LogoutCommand.COMMAND_WORD, LogoutCommand.MESSAGE_LOCK);
     }
 
+    //@@iamputradanish - reused
     @Test
     public void execute_shutdown() throws Exception {
         assertCommandBehavior(ShutdownCommand.COMMAND_WORD, ShutdownCommand.MESSAGE_EXIT_ACKNOWLEDGEMENT);
@@ -728,7 +730,7 @@ public class LogicTest {
         TestDataHelper helper = new TestDataHelper();
         Person pTarget1 = helper.generatePersonWithNric("s1234567a");
         Person pTarget2 = helper.generatePersonWithNric("f1234567b");
-        String testFile = "TestScreen.txt";
+        String testFile = "testScreen.txt";
 
         List<Person> Persons = helper.generatePersonList(pTarget1,pTarget2);
         String nric = pTarget1.getNric().getIdentificationNumber();
@@ -768,7 +770,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_find_nonExistantNric() throws Exception {
+    public void execute_find_nonExistentNric() throws Exception {
         String expected = MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
         assertCommandBehavior("find t4444844z", expected);
     }
@@ -805,18 +807,23 @@ public class LogicTest {
     @Test
     public void execute_check_validNric() throws Exception {
         TestDataHelper helper = new TestDataHelper();
-        Person toBeAdded = helper.adam();
-        String nric = toBeAdded.getNric().getIdentificationNumber();
+        Person toBeAdded = helper.generatePersonWithNric("s1111111a");
+
         addressBook.addPerson(toBeAdded);
+
+        String nric = toBeAdded.getNric().getIdentificationNumber();
+        CheckCommand toCheck = new CheckCommand(nric);
+        String invalid = "testScreen.txt";
+        toCheck.setFile(invalid);
+        assertEquals(invalid, toCheck.getDbName());
+
+        toCheck.setAddressBook(addressBook);
+        CommandResult r = toCheck.execute();
         List<String> emptyTimestamps = new ArrayList<>();
         UiFormatter formatter = new UiFormatter();
         String result = formatter.formatForStrings(emptyTimestamps);
         String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-        assertCommandBehavior("check " + nric,
-                                expectedMessage,
-                                addressBook,
-                                false,
-                                Collections.emptyList());
+        assertEquals(expectedMessage,r.feedbackToUser);
     }
 
     @Test
@@ -1129,7 +1136,7 @@ public class LogicTest {
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_PASSWORD_LENGTH, userInput.length())
                 + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
-                       + Password.MESSAGE_TRY_AGAIN
+                + "\n" + Password.MESSAGE_TRY_AGAIN
         ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1143,7 +1150,7 @@ public class LogicTest {
         String userInput = "123456";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
-                        + Password.MESSAGE_TRY_AGAIN ,result);
+                        + "\n" + Password.MESSAGE_TRY_AGAIN ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
     }
@@ -1156,7 +1163,7 @@ public class LogicTest {
         String userInput = "popopo";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
-                        + Password.MESSAGE_TRY_AGAIN
+                        + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1169,8 +1176,8 @@ public class LogicTest {
         Password password = new Password();
         String userInput = "*********";
         String result = password.passwordValidityChecker(userInput);
-        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number.")
-                        + Password.MESSAGE_TRY_AGAIN
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
+                        + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1184,7 +1191,7 @@ public class LogicTest {
         String userInput = "papa123";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(Password.MESSAGE_PASSWORD_EXISTS
-                        + Password.MESSAGE_TRY_AGAIN
+                        + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
@@ -1237,7 +1244,6 @@ public class LogicTest {
         userInput = "papa123";
         Password.setOTP(userInput);
         password.updatePasswordFinal(userInput);
-
         Password.lockIsHQP();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
@@ -1263,6 +1269,86 @@ public class LogicTest {
     public void execute_getFullID_ghost(){
         String result = getFullID("nonsense");
         assertEquals("Ghost",result);
+    }
+
+    @Test
+    public void execute_passwordExistsChecker_exists() throws IOException {
+        Password password = new Password();
+        String result = password.passwordExistsChecker("papa123");
+        assertEquals(Password.MESSAGE_PASSWORD_EXISTS,result);
+    }
+
+    @Test
+    public void execute_passwordExistsChecker_valid() throws IOException {
+        Password password = new Password();
+        String result = password.passwordExistsChecker("police123");
+        assertEquals(Password.MESSAGE_VALID,result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_missingAlphabet() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("123132442");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet"), result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_missingNumber() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("papapaapap");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number"), result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_notAlphanumeric() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("*******");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number"), result);
+    }
+
+    @Test
+    public void execute_alphanumericChecker_valid() {
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("papa123");
+        assertEquals(MESSAGE_VALID, result);
+    }
+
+    @Test
+    public void execute_LengthChecker_tooShort(){
+        Password password = new Password();
+        String newEnteredPassword = "";
+        int lengthPassword = newEnteredPassword.length();
+        int minNumPassword = 5;
+        String result = password.passwordLengthChecker(newEnteredPassword);
+        assertEquals(String.format(MESSAGE_PASSWORD_LENGTH, lengthPassword)
+                + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
+                , result);
+    }
+
+    @Test
+    public void execute_LengthChecker_valid(){
+        Password password = new Password();
+        String newEnteredPassword = "papa123";
+        String result = password.passwordLengthChecker(newEnteredPassword);
+        assertEquals(MESSAGE_VALID, result);
+    }
+
+    @Test
+    public void execute_passwordValidityChecker_tooShortAndMissingAlphabet() throws IOException {
+        Password password = new Password();
+        String newEnteredPassword = "p";
+        String result = password.passwordValidityChecker(newEnteredPassword);
+        assertEquals(password.passwordLengthChecker(newEnteredPassword)
+                + "\n" + password.passwordAlphanumericChecker(newEnteredPassword)
+                + "\n" + MESSAGE_TRY_AGAIN, result);
+    }
+
+    @Test
+    public void execute_getID_HQP(){
+        Password.unlockHQP();
+        String result = getID();
+        assertEquals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID,result);
+        Password.lockIsHQP();
     }
 
     //@@author ongweekeong
@@ -1479,6 +1565,16 @@ public class LogicTest {
         assertEquals(expected, r.feedbackToUser);
     }
 
+    @Test
+    public void execute_clearRecordedMsgWhenLogout() throws Exception{
+        Password.lockIsPO(); Password.lockIsHQP();
+        generateMsgInInbox("populate the inbox!");
+        logic.execute(ShowUnreadCommand.COMMAND_WORD);
+        assertFalse(Inbox.isRecordMsgsEmpty());
+        logic.execute(LogoutCommand.COMMAND_WORD);
+        assertTrue(Inbox.isRecordMsgsEmpty());
+        assertCommandBehavior(ReadCommand.COMMAND_WORD +" 1", Inbox.INBOX_NOT_READ_YET);
+    }
     //@@author
 
     /**
@@ -1742,6 +1838,94 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_checkCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "chek",
+                "chick",
+                "checks"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_checkPOStatusCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "checkstats",
+                "chickstatus",
+                "checkstatuts"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_clearCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "cler",
+                "cleer",
+                "clears"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_clearInboxCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "clerinbox",
+                "cleerinbox",
+                "clearinbux",
+                "clearsinbox",
+                "clearinboox"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_datetimeCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "tim",
+                "rime",
+                "times"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+
+    @Test
     public void execute_deleteCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
                 "delet",
@@ -1749,6 +1933,179 @@ public class LogicTest {
                 "deletes"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_dispatchCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "dispach",
+                "dispetch",
+                "disphatch"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+
+    @Test
+    public void execute_editCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "edt",
+                "exit",
+                "edits"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_findCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "fid",
+                "bind",
+                "fhind"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_helpCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "hel",
+                "gelp",
+                "helpp"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_inboxCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "ibox",
+                "inbux",
+                "binbox"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_listCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "lit",
+                "kist",
+                "lists"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_logoutCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "logot",
+                "logour",
+                "logoute"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_readCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "red",
+                "reed",
+                "bread"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_requestHelpCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "r",
+                "rh",
+                "rbp"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+        }
+    }
+
+    @Test
+    public void execute_showUnreadCommand_wrongSpellingOfCommandWord() {
+        final String[] inputs = {
+                "shounread",
+                "showunreed",
+                "shiwunread",
+                "showsunread",
+                "showunbread"
+        };
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
@@ -1776,13 +2133,15 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_editCommand_wrongSpellingOfCommandWord() {
+    public void execute_updateStatusCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
-                "edt",
-                "exit",
-                "edits"
+                "updatstatus",
+                "updatestats",
+                "updateststus",
+                "updatestattus",
+                "updatesstatus"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
@@ -1793,13 +2152,13 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_checkCommand_wrongSpellingOfCommandWord() {
+    public void execute_viewAllCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
-                "chek",
-                "chick",
-                "checks"
+                "vieall",
+                "veewall",
+                "viewalll"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
@@ -1808,21 +2167,4 @@ public class LogicTest {
             assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
-
-//    @Test
-//    public void execute_CheckPOStatusCommand_wrongSpellingOfCommandWord() {
-//        final String[] inputs = {
-//                "chekstatus",
-//                "checkstauts",
-//                "checkstatuts"
-//        };
-//        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
-//        expected = expected.substring(expected.indexOf("!") + 1);
-//        for (String input: inputs) {
-//            String output = checker.checkDistance(input);
-//            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-//            String displayCommand = correction.checkCommand(input);
-//            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
-//        }
-//    }
 }

@@ -4,7 +4,7 @@
 # Default data file
 notifications\.txt
 policeRecords.txt
-ScreeningHistory.txt
+screeningHistory.txt
 requestList.txt
 inboxMessages/
 

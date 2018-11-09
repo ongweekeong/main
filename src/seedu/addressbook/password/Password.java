@@ -5,9 +5,27 @@ import seedu.addressbook.common.Messages;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 
 import java.io.*;
+import java.util.logging.*;
 
 //@@author iamputradanish
 public class Password {
+    private final static Logger logr = Logger.getLogger( Password.class.getName() );
+    public static void setupLogger() {
+        LogManager.getLogManager().reset();
+        logr.setLevel(Level.ALL);
+
+        ConsoleHandler ch = new ConsoleHandler();
+        ch.setLevel(Level.INFO);
+        logr.addHandler(ch);
+
+        try {
+            FileHandler fh = new FileHandler("passwordLog.log");
+            fh.setLevel(Level.FINE);
+            logr.addHandler(fh);
+        } catch (IOException ioe) {
+            logr.log(Level.SEVERE, "File logger not working.", ioe);
+        }
+    }
 
     public static final String MESSAGE_TRY_AGAIN = "Please try again.";
     public static final String MESSAGE_ENTER_PASSWORD = "Please enter password: ";
@@ -39,6 +57,7 @@ public class Password {
     public static final String UPDATE_PASSWORD_COMMAND_WORD = "update password";
     public static final String UPDATE_PASSWORD_MESSAGE_USAGE = UPDATE_PASSWORD_COMMAND_WORD + ":\n" + "Updates a password\n\t"
             + "Example: " + UPDATE_PASSWORD_COMMAND_WORD;
+    public static final String MESSAGE_VALID = "valid";
 
 
     public static int getWrongPasswordCounter() {
@@ -150,7 +169,7 @@ public class Password {
     private static ReaderAndWriter readerandwriter = new ReaderAndWriter();
 
     public static String unlockDevice(String userCommandText, int number) throws IOException {
-
+        logr.info("Unlocking the system.");
         String result = null;
 
         File originalFile = readerandwriter.fileToUse("passwordStorage.txt");
@@ -171,6 +190,7 @@ public class Password {
                 isHQP = true;
                 result = String.format(MESSAGE_WELCOME, MESSAGE_HQP) + "\n"
                         + MESSAGE_ENTER_COMMAND;
+                logr.info("Logged in as HQP");
                 break;
             }
             else if (correctPO1(user,storedCurrPassword,hashedEnteredPassword)) {
@@ -178,6 +198,7 @@ public class Password {
                 result = String.format(MESSAGE_WELCOME, MESSAGE_PO + MESSAGE_ONE) + "\n"
                         + MESSAGE_UNAUTHORIZED + "\n"
                         + MESSAGE_ENTER_COMMAND;
+                logr.info("Logged in as PO1");
                 break;
             }
             else if (correctPO2(user,storedCurrPassword,hashedEnteredPassword)) {
@@ -185,6 +206,7 @@ public class Password {
                 result = String.format(MESSAGE_WELCOME, MESSAGE_PO + MESSAGE_TWO) + "\n"
                         + MESSAGE_UNAUTHORIZED + "\n"
                         + MESSAGE_ENTER_COMMAND;
+                logr.info("Logged in as PO2");
                 break;
             }
             else if (correctPO3(user,storedCurrPassword,hashedEnteredPassword)) {
@@ -192,6 +214,7 @@ public class Password {
                 result = String.format(MESSAGE_WELCOME, MESSAGE_PO + MESSAGE_THREE) + "\n"
                         + MESSAGE_UNAUTHORIZED + "\n"
                         + MESSAGE_ENTER_COMMAND;
+                logr.info("Logged in as PO3");
                 break;
             }
             else if (correctPO4(user,storedCurrPassword,hashedEnteredPassword)) {
@@ -199,6 +222,7 @@ public class Password {
                 result = String.format(MESSAGE_WELCOME, MESSAGE_PO + MESSAGE_FOUR) + "\n"
                         + MESSAGE_UNAUTHORIZED + "\n"
                         + MESSAGE_ENTER_COMMAND;
+                logr.info("Logged in as PO4");
                 break;
             }
             else if (correctPO5(user,storedCurrPassword,hashedEnteredPassword)) {
@@ -206,18 +230,22 @@ public class Password {
                 result = String.format(MESSAGE_WELCOME, MESSAGE_PO + MESSAGE_FIVE) + "\n"
                         + MESSAGE_UNAUTHORIZED + "\n"
                         + MESSAGE_ENTER_COMMAND;
+                logr.info("Logged in as PO5");
                 break;
             }
             else{
                 result = Messages.MESSAGE_ERROR;
+                logr.info("Error in logging in.");
             }
             numberOfPasswords--;
         }
         if(isLocked()){
             result = wrongPasswordShutDown(number);
+            logr.info("Shutdown sequence running.");
         }
         else{
             isShutDown = false;
+            logr.info("Shutdown sequence aborted.");
         }
         br.close();
         return result;
@@ -240,9 +268,11 @@ public class Password {
         else if(wrongPasswordCounter == 0){
             isShutDown = true;
             result = MESSAGE_SHUTDOWN;
+            logr.info("Shutdown imminent.");
         }
         else{
             result = Messages.MESSAGE_ERROR;
+            logr.info("Error in shutdown sequence");
         }
         return result;
     }
@@ -283,7 +313,7 @@ public class Password {
 
 
     public String updatePassword(String userCommandText, int number) throws Exception {
-
+        logr.info("Update sequence stage 1 initiated.");
         String result = null;
 
         File originalFile = readerandwriter.fileToUse("passwordStorage.txt");
@@ -309,26 +339,32 @@ public class Password {
                         case PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID:
                             isLoginHQP = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_HQP + ":";
+                            logr.info("Updating HQP password.");
                             break;
                         case PatrolResourceStatus.POLICE_OFFICER_1_ID:
                             isLoginPO1 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_ONE + ":";
+                            logr.info("Updating PO1 password.");
                             break;
                         case PatrolResourceStatus.POLICE_OFFICER_2_ID:
                             isLoginPO2 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_TWO + ":";
+                            logr.info("Updating PO2 password.");
                             break;
                         case PatrolResourceStatus.POLICE_OFFICER_3_ID:
                             isLoginPO3 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_THREE + ":";
+                            logr.info("Updating PO3 password.");
                             break;
                         case PatrolResourceStatus.POLICE_OFFICER_4_ID:
                             isLoginPO4 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_FOUR + ":";
+                            logr.info("Updating PO4 password.");
                             break;
                         case PatrolResourceStatus.POLICE_OFFICER_5_ID:
                             isLoginPO5 = true;
                             result = MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_PO + MESSAGE_FIVE + ":";
+                            logr.info("Updating PO5 password.");
                             break;
                     }
 
@@ -337,14 +373,16 @@ public class Password {
             }
             if(isNotLogin()){
                 result = wrongPasswordShutDown(number);
+                logr.info("Shutdown sequence running.");
             }
         }
         else{
             result = passwordValidityChecker(userCommandText);
-            if(result == null){
+            if(result.equals(MESSAGE_VALID)){
                 setOTP(userCommandText);
                 setUpdatingFinal();
                 result = MESSAGE_ENTER_NEW_PASSWORD_AGAIN;
+                logr.info("Prompting user to re-enter new password.");
             }
         }
         br.close();
@@ -356,7 +394,7 @@ public class Password {
     }
 
     public String updatePasswordFinal (String userCommandText) throws IOException {
-
+        logr.info("Update password sequence stage 2 initiated.");
         String result = null;
         int lineNumber = 0 , linesLeft;
 
@@ -373,31 +411,37 @@ public class Password {
             if(isLoginHQP){
                 isLoginHQP = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP);
+                logr.info("Updated HQP password.");
             }
             else if(isLoginPO1){
                 lineNumber = 1;
                 isLoginPO1 = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_PO + MESSAGE_ONE);
+                logr.info("Updated PO1 password.");
             }
             else if(isLoginPO2){
                 lineNumber = 2;
                 isLoginPO2 = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_PO + MESSAGE_TWO);
+                logr.info("Updated PO2 password.");
             }
             else if(isLoginPO3){
                 lineNumber = 3;
                 isLoginPO3 = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_PO + MESSAGE_THREE);
+                logr.info("Updated PO3 password.");
             }
             else if(isLoginPO4){
                 lineNumber = 4;
                 isLoginPO4 = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_PO + MESSAGE_FOUR);
+                logr.info("Updated PO4 password.");
             }
             else if(isLoginPO5){
                 lineNumber = 5;
                 isLoginPO5 = false;
                 result = String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_PO + MESSAGE_FIVE);
+                logr.info("Updated PO4 password.");
             }
             unprepareUpdatePassword();
             notUpdatingFinal();
@@ -419,9 +463,11 @@ public class Password {
 
             if (!originalFile.delete()) {
                 result = (Messages.MESSAGE_ERROR);
+                logr.info("Unable to locate file to delete.");
             }
             if (!tempFile.renameTo(originalFile)) {
                 result = (Messages.MESSAGE_ERROR);
+                logr.info("Unable to locate file to rename.");
             }
             result = result +
                     "\n" + MESSAGE_ENTER_COMMAND;
@@ -430,6 +476,7 @@ public class Password {
             notUpdatingFinal();
             result = MESSAGE_NOT_SAME
             + "\n" + MESSAGE_TRY_AGAIN;
+            logr.info("Update password stage 2 does not match stage 1.");
         }
         pw.close();
         br.close();
@@ -442,8 +489,9 @@ public class Password {
         pw.flush();
     }
 
-    private String passwordExistsChecker (String newEnteredPassword) throws IOException {
-        String result = null;
+    public String passwordExistsChecker(String newEnteredPassword) throws IOException {
+        logr.info("Checking password validity.");
+        String result = MESSAGE_VALID;
 
         File originalFile = readerandwriter.fileToUse("passwordStorage.txt");
         BufferedReader br = readerandwriter.openReader(originalFile);
@@ -458,59 +506,66 @@ public class Password {
             String storedCurrPassword = line.substring(line.lastIndexOf(" ") + 1);
             if (correctPassword(storedCurrPassword, hashedEnteredPassword)) {
                 result = MESSAGE_PASSWORD_EXISTS ;
+                logr.info("New password already exists in system.");
             }
             numberOfPasswords--;
         }
         br.close();
         return result;
     }
-    private String passwordAlphanumericChecker(String newEnteredPassword){
+    public String passwordAlphanumericChecker(String newEnteredPassword){
         String result;
         if (newEnteredPassword.matches(".*\\d+.*") && newEnteredPassword.matches(".*[a-zA-Z]+.*")) {
-            return null;
+            result = MESSAGE_VALID;
         }
         else if (newEnteredPassword.matches(".*\\d+.*") && !newEnteredPassword.matches(".*[a-zA-Z]+.*")) {
             result = String.format(MESSAGE_AT_LEAST_ONE, "alphabet");
+            logr.info("New password missing alphabet.");
         }
         else if (!newEnteredPassword.matches(".*\\d+.*") && newEnteredPassword.matches(".*[a-zA-Z]+.*")) {
             result = String.format(MESSAGE_AT_LEAST_ONE, "number");
+            logr.info("New password missing number.");
         }
         else {
-            result = String.format(MESSAGE_AT_LEAST_ONE, "alphabet and at least one number.");
+            result = String.format(MESSAGE_AT_LEAST_ONE, "alphabet and at least one number");
+            logr.info("New password missing alphabet and number.");
         }
         return result;
     }
 
-    private String passwordLengthChecker(String newEnteredPassword){
-        String result = null;
+    public String passwordLengthChecker(String newEnteredPassword){
+        String result = MESSAGE_VALID;
         int lengthPassword = newEnteredPassword.length();
         int minNumPassword = 5;
         if(lengthPassword < minNumPassword){
             result = String.format(MESSAGE_PASSWORD_LENGTH, lengthPassword)
                     + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword);
+            logr.info("New password too short.");
         }
         return result;
     }
 
     public String passwordValidityChecker(String newEnteredPassword) throws IOException {
-        String result = null;
-        if(passwordExistsChecker(newEnteredPassword) != null){
+        logr.info("New password checked for validity.");
+        String result = MESSAGE_VALID;
+        if(!passwordExistsChecker(newEnteredPassword).equals(MESSAGE_VALID)){
             result = passwordExistsChecker(newEnteredPassword);
         }
-        else if(passwordAlphanumericChecker(newEnteredPassword) != null && passwordLengthChecker(newEnteredPassword) != null){
-            result = passwordAlphanumericChecker(newEnteredPassword)
-                    + "\n" + passwordLengthChecker(newEnteredPassword);
+        else if(!passwordAlphanumericChecker(newEnteredPassword).equals(MESSAGE_VALID) && !passwordLengthChecker(newEnteredPassword).equals(MESSAGE_VALID)){
+            result = passwordLengthChecker(newEnteredPassword)
+                    + "\n" + passwordAlphanumericChecker(newEnteredPassword);
         }
-        else if(passwordAlphanumericChecker(newEnteredPassword) != null ){
+        else if(!passwordAlphanumericChecker(newEnteredPassword).equals(MESSAGE_VALID)){
             result = passwordAlphanumericChecker(newEnteredPassword);
         }
-        else if(passwordLengthChecker(newEnteredPassword) != null){
+        else if(!passwordLengthChecker(newEnteredPassword).equals(MESSAGE_VALID)){
             result = passwordLengthChecker(newEnteredPassword);
         }
-        return (result == null) ? null : result + MESSAGE_TRY_AGAIN ;
+        return (result.equals(MESSAGE_VALID)) ? MESSAGE_VALID : result + "\n" + MESSAGE_TRY_AGAIN ;
     }
 
-    private String getUnauthorizedPOCommand(String input){
+    public String getUnauthorizedPOCommand(String input){
+        logr.info("Checking if PO command is unauthorized.");
         String commandWord;
         if(isRejectPO(input)){
             commandWord = input;
@@ -531,7 +586,8 @@ public class Password {
         return isRejectPO(userCommandWord);
     }
 
-    private boolean isRejectPO(String userCommandWord){
+    public boolean isRejectPO(String userCommandWord){
+        logr.info("PO command unauthorized.");
         return (userCommandWord.equals("add") 
                 || userCommandWord.equals("check") 
                 || userCommandWord.equals("clear") 
@@ -547,6 +603,7 @@ public class Password {
     }
 
     public static String getID(){
+        logr.info("Obtained user ID");
         if (isHQP){
             return PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID;
         } else if(isPO1){
@@ -564,24 +621,27 @@ public class Password {
     }
 
     public static String getFullID(String ID){
+        logr.info("Obtained user full ID");
         String result = "Ghost";
-        if(ID.equals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID)){
-            result = MESSAGE_HQP;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_1_ID)){
-            result = MESSAGE_PO + MESSAGE_ONE;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_2_ID)){
-            result = MESSAGE_PO + MESSAGE_TWO;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_3_ID)){
-            result = MESSAGE_PO + MESSAGE_THREE;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_4_ID)){
-            result = MESSAGE_PO + MESSAGE_FOUR;
-        }
-        else if(ID.equals(PatrolResourceStatus.POLICE_OFFICER_5_ID)){
-            result = MESSAGE_PO + MESSAGE_FIVE;
+        switch (ID) {
+            case PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID:
+                result = MESSAGE_HQP;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_1_ID:
+                result = MESSAGE_PO + MESSAGE_ONE;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_2_ID:
+                result = MESSAGE_PO + MESSAGE_TWO;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_3_ID:
+                result = MESSAGE_PO + MESSAGE_THREE;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_4_ID:
+                result = MESSAGE_PO + MESSAGE_FOUR;
+                break;
+            case PatrolResourceStatus.POLICE_OFFICER_5_ID:
+                result = MESSAGE_PO + MESSAGE_FIVE;
+                break;
         }
 
         return result;

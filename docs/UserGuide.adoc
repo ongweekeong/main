@@ -22,8 +22,8 @@ The police database is for police officers(PO) and headquarter personnel(HQP). B
 == Quick Start
 
 .	Ensure that you have Java Version 9 installed on your device.
-.	Download the latest version of PRISM https://github.com/CS2113-AY1819S1-F10-3/main/releases/download/v1.3.1/F10-3.PRISM.jar[here].
-.	Copy the file to another folder (a clean one preferably).
+.	Download the latest version of PRISM https://github.com/CS2113-AY1819S1-F10-3/main/releases/download/v1.3%2C2/F10-3.PRISM.jar[here].
+.	Copy the jar file to a preferred folder (an empty folder).
 .	Double-click the file to start the app. The user interface should appear in a few seconds.
 .	NOTE: DO NOT edit the text files that comes with the PRISM jar file.
 +
@@ -256,15 +256,15 @@ Examples:
 
 === Update Password : `update password` (HQP)
 
-Updates password of user - only HQP can change the user's password
+Updates password of any existing user - only HQP can change the user's password
 
 Format: 'update password'
 
 Examples:
 
 *	update password
-*	Please select a password to change
-*   User then has to enter old password and new alphanumeric password of minimum length 5
+*	Please enter a password to change
+*   User then has to enter existing password and new alphanumeric password of minimum length 5
 
 === Check notifications: `showunread` (HQP & PO)
 

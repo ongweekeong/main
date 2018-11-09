@@ -21,7 +21,7 @@ public class FindCommand extends Command {
 
     private String FILE_NOT_FOUND_ERROR = "File not found";
     private String nric;
-    private String SCREENING_DATABASE = "ScreeningHistory.txt";
+    private String SCREENING_DATABASE = "screeningHistory.txt";
     private AddressBook addressBookForTest; //For testing
 
     public FindCommand(String nricToFind) {

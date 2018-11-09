@@ -1,7 +1,7 @@
 
 .text-area {
-    -fx-background-color: black;
     -fx-control-inner-background: black;
+    -fx-background-color: black;
     -fx-font-family: "monospace";
     -fx-font-size: 10pt;
     -fx-padding: 0 325 250 0;

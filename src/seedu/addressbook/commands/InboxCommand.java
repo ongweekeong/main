@@ -54,7 +54,7 @@ public class InboxCommand extends Command {
     }
 
     public static String concatenateMsg(int messageNum, Msg message) throws NullPointerException{
-        String concatenatedMsg;
+        String concatenatedMsg = null;
         TimeAndDate dateFormatter = new TimeAndDate();
 //        try{
 //            concatenatedMsg = String.valueOf(messageNum) + ".\t[UNREAD] Sender: " + message.getSenderId() + " Priority: " + message.getPriority() +
