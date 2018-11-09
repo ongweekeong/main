@@ -101,9 +101,11 @@ Examples:
 [TIP]
 A person can have 0 or more past offenses
 
+// tag::edit[]
+[[edit]]
 === Editing a person : `edit` (HQP only)
 
-Edit a specified parameter of an existing person in the Police Records - only by HQP
+Edit specified parameter(s) of an existing person in the Police Records - only by HQP.
 
 Format: 'edit n/NRIC p/[POSTAL_CODE] s/[STATUS] w/[WANTED_FOR] o/[PAST_OFFENCES]'
 
@@ -117,12 +119,14 @@ Format: 'edit n/NRIC p/[POSTAL_CODE] s/[STATUS] w/[WANTED_FOR] o/[PAST_OFFENCES]
 *	Edits the person with the specified NRIC.
 *	At least one of the optional fields must be provided.
 *	Existing values will be updated to the input values.
+*   Offenses can only be added not replaced.
 ****
 
 Examples:
 
 *	edit g1952866Q p/510246
 *	Edits the postal code of the person with the specified NRIC to be 510246
+// end::edit[]
 
 === Display a list of all persons : `list` (HQP & PO)
 
@@ -209,6 +213,8 @@ Example:
 *	clear
 *	Records will now be empty
 
+// tag::request[]
+[[request]]
 === Requesting for assistance : `rb` (HQP & PO)
 
 Generates GPS coordinates of current location with current case and sends it to HQP.
@@ -220,7 +226,10 @@ Examples:
 
 *	rb gun
 *   Sends a set of GPS coordinates, Current Case and Google Maps URL location to HQP.
+// end::request[]
 
+// tag::dispatch[]
+[[dispatch]]
 === Dispatch assistance for requester: `dispatch` (HQP only)
 
 Generates message to dispatch an officer to backup a requesting officer
@@ -231,7 +240,7 @@ Format: 'dispatch (BACKUP OFFICER) (OFFENSE) (REQUESTER OFFICER)'
 *   dispatch po1 gun po3
 *   Sends a set of GPS coordinates, current case, ETA and Google Maps URL location of requester
     to backup officer and vice-versa.
-
+// end::dispatch[]
 
 
 === Lock System : `lock` (HQP & PO)

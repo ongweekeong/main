@@ -2,13 +2,13 @@
 :site-section: AboutUs
 :stylesDir: ../stylesheets
 
-== PROJECT: Police Records System
+== PROJECT: Police Records and Intelligent System (PRISM)
 
 ---
 
 == Overview
 
-The Addressbook is morphed to a police records database with two types of users, Police Officers (PO) & Headquarter Personnel (HQP).
+The Addressbook is morphed to a police records system called PRISM with two types of users, Police Officers (PO) & Headquarter Personnel (HQP).
 Users have their own access levels with HQP having higher authorization compared to PO.
 Police officers can screen civilians during duty with their respective NRIC, their criminal history and status would be shown to the police officers.
 POs can also request for backup when needed, HQP would dispatch other POs at their discretion based on estimated time of arrival.
@@ -47,7 +47,8 @@ Location is important, so backup officer knows where to travel to & ETA is cruci
 * *Other contributions*:
 ** Project management:
 *** Guided team for proper coding standards and practices.
-*** Refactored teammates code
+*** Created sequence diagrams for the product's features.
+*** Refactored teammates code that did not follow OOP style.
 
 ** Community:
 *** PRs reviewed (with non-trivial review comments):
@@ -67,10 +68,20 @@ https://github.com/CS2113-AY1819S1-F10-3/main/pull/25[#25]
 
 == Contributions to the User Guide
 |===
-|For the https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/docs/UserGuide.adoc[User Guide], I added the content that were relevant for me which included Edit Command, Request Command & Dispatch Command.
+|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-== Contributions to the
+include::../UserGuide.adoc[tag=edit]
+include::../UserGuide.adoc[tag=request]
+include::../UserGuide.adoc[tag=dispatch]
+
+== Contributions to the Developer GUide
 |===
-|For the https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/docs/DeveloperGuide.adoc[Developer Guide], I added the commands that were relevant for me which included Edit Command, Request Command & Dispatch Command.
+|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
+
+include::../DeveloperGuide.adoc[tag=edit]
+
+include::../DeveloperGuide.adoc[tag=request]
+
+include::../DeveloperGuide.adoc[tag=dispatch]

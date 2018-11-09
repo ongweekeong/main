@@ -500,6 +500,12 @@ public class LogicTest {
         RequestHelpCommand.getRecentMsg();
     }
 
+    @Test
+    public void execute_request_invalidPatrolResourceId() throws Exception {
+        assertCommandBehavior("rb cheating", Messages.MESSAGE_PO_NOT_FOUND);
+        assertCommandBehavior("rb gun", Messages.MESSAGE_PO_NOT_FOUND);
+    }
+
     //@@author
     @Test
     public void execute_viewAll_invalidArgsFormat() throws Exception {

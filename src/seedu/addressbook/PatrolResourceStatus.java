@@ -82,6 +82,13 @@ public class PatrolResourceStatus {
         }
     }
 
+    /**
+     * Sets engagement status of a selected police officer
+     *
+     * @param policeOfficerId
+     * @param status
+     * @throws IllegalValueException if policeOfficerId is not valid
+     */
     public static void setStatus(String policeOfficerId, Boolean status) throws IllegalValueException {
         int index = 0;
         for (Triplet<String, Location, Boolean> policeOfficer : patrolResourceStatus) {
