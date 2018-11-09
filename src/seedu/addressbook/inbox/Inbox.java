@@ -16,7 +16,7 @@ public class Inbox {
     public static final String MESSAGE_STORAGE_PATH_NOT_FOUND = "Cannot find file to write to.";
     public static final String MESSAGE_READ_STATUS_UPDATED = "Successful update";
     public static int numUnreadMsgs = -1;
-    protected static TreeSet<Msg> notificationsToPrint = new TreeSet<>();
+    protected TreeSet<Msg> notificationsToPrint = new TreeSet<>();
     protected static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
     protected static ReadNotification readNotification;
     protected static WriteNotification allMessages;
@@ -79,7 +79,7 @@ public class Inbox {
         recordNotifications.clear();
     }
 
-    public static void clearInbox(){
+    public static void clearInboxRecords (){
         numUnreadMsgs = 0;
         recordNotifications.clear();
     }

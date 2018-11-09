@@ -40,7 +40,7 @@ public class ClearInboxCommand extends Command {
             ReadNotification dummyReader = new ReadNotification(myInbox);
             TreeSet<Msg> dummySet = dummyReader.ReadFromFile(); // Exception thrown if file does not exist
             WriteNotification.clearInbox(myInbox);
-            Inbox.clearInbox();
+            Inbox.clearInboxRecords();
             return new CommandResult(MESSAGE_CLEARINBOX_SUCCESSFUL);
         }
         catch (IOException e){

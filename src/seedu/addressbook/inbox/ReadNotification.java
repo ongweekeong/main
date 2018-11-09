@@ -16,7 +16,7 @@ public class ReadNotification {
     private static String path;
     private Msg returnMsg;
     private int unreadMsgs = 0;
-    protected static TreeSet<Msg> sortedMsgs = new TreeSet<>();
+    private TreeSet<Msg> sortedMsgs = new TreeSet<>();
 
     public ReadNotification(String filePath) {
         path = filePath;

@@ -1407,6 +1407,17 @@ public class LogicTest {
     }
 
     @Test
+    public void execute_checkEmptyInbox_afterClearInbox() throws Exception {
+        CommandResult r = logic.execute(ClearInboxCommand.COMMAND_WORD);
+        final String input = InboxCommand.COMMAND_WORD;
+        final String input1 = ShowUnreadCommand.COMMAND_WORD;
+        final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION,0,0);
+        final String expected1 = Messages.MESSAGE_NO_UNREAD_MSGS; //TODO: Refactor all message strings
+        assertCommandBehavior(input, expected);
+        assertCommandBehavior(input1, expected1);
+    }
+
+    @Test
     public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
         Password.lockIsHQP(); Password.lockIsPO();
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
@@ -1426,8 +1437,11 @@ public class LogicTest {
         Password.lockIsPO(); Password.lockIsHQP();
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
-        String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
+        final String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
         assertCommandBehavior(inputCommand, expected);
+        CommandResult r1 = logic.execute(InboxCommand.COMMAND_WORD);
+        final String expected1 = String.format(Inbox.INBOX_NO_UNREAD_MESSAGES,0,0);
+        assertCommandBehavior(inputCommand, expected1);
     }
 
     @Test
@@ -1568,6 +1582,16 @@ public class LogicTest {
         logic.execute(LogoutCommand.COMMAND_WORD);
         assertTrue(Inbox.isRecordMsgsEmpty());
         assertCommandBehavior(ReadCommand.COMMAND_WORD +" 1", Inbox.INBOX_NOT_READ_YET);
+    }
+
+    @Test
+    public void execute_clearInbox_thenCheckInbox() throws Exception {
+        Password.lockIsHQP(); Password.lockIsPO();
+        generateMsgInInbox("populate the inbox!");
+        logic.execute(ClearInboxCommand.COMMAND_WORD);
+        assertTrue(Inbox.isRecordMsgsEmpty());
+        assertCommandBehavior(InboxCommand.COMMAND_WORD, String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION,0,0));
+
     }
     //@@author
 
