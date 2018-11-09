@@ -71,16 +71,26 @@ public class CheckCommand extends Command {
      */
 
     private List<String> getPersonWithNric(String nric) throws IOException{
-        List<String> screeningHistory;
+        List<String> screeningHistory = null;
+        if (this.addressBookForTest != null) {
+            for(ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
+                if(person.getNric().getIdentificationNumber().equals(nric)) {
+                    screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
+                    break;
+
+                }
+            }
+        }
         //@@author ShreyasKp
-        for(ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
+        for(ReadOnlyPerson person : relevantPersons) {
             if(person.getNric().getIdentificationNumber().equals(nric)) {
                 screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
-                return screeningHistory;
+                break;
+
             }
         }
         //screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
 
-        return null;
+        return screeningHistory;
     }
 }
