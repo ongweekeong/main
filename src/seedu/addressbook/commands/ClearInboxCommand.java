@@ -19,7 +19,7 @@ public class ClearInboxCommand extends Command {
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_CLEARINBOX_SUCCESSFUL = "Inbox cleared!";
-    public static final String MESSAGE_CLEARINBOX_UNSUCCESSFUL = "Unable to clear inbox. Ensure that the file exists.";
+    public static final String MESSAGE_CLEARINBOX_UNSUCCESSFUL = "Unable to clear inbox. Missing inbox storage file.";
 
     private String myInbox;
 
