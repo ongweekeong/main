@@ -25,13 +25,8 @@ public class NotificationWriter {
         isAppend = appendValue;
     }
 
-    /**	Message format should look like this
-     *	Read/Unread (1 or 0)
-     *	Priority of Message
-     *	Timestamp of message
-     *	Message
-     *  ETA, if applicable
-     *  Location, if available
+    /**
+     * Writes message sent by user in a specific format in the inbox storage text file of the recipient.
      */
     public void writeToFile(Msg message) throws IOException{
         TimeAndDate dateFormatter = new TimeAndDate();
@@ -59,7 +54,7 @@ public class NotificationWriter {
     }
 
     // Create overload function for write to file to write a set of notifications.
-    public void writeToFile(TreeSet<Msg> msgSet) throws IOException {
+    void writeToFile(TreeSet<Msg> msgSet) throws IOException {
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
         int numMsg = msgSet.size();
