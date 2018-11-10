@@ -14,7 +14,7 @@ public class NotificationWriter {
 
     public NotificationWriter(String userId){
         path = MessageFilePaths.getFilePathFromUserId(userId);
-        this.isAppend = true;
+        isAppend = true;
     }
 
     public NotificationWriter(String filePath, boolean appendValue){

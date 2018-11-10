@@ -71,15 +71,15 @@ public class NotificationReader {
     }
 
     int getNumUnreadMsgs(){
-        return this.unreadMsgs;
+        return unreadMsgs;
     }
 
     private void readMsgSenderId(String userId){
-        this.returnMsg.setSenderId(userId);
+        returnMsg.setSenderId(userId);
     }
 
     private void readMsgReadStatus(String readStatus) {
-        this.returnMsg.setReadStatus(Boolean.parseBoolean(readStatus));
+        returnMsg.setReadStatus(Boolean.parseBoolean(readStatus));
     }
 
     private void readMsgPriority(String priority){
@@ -96,7 +96,7 @@ public class NotificationReader {
                 break;
         }
 
-        this.returnMsg.setPriority(msgPriority);
+        returnMsg.setPriority(msgPriority);
     }
 
 
@@ -113,14 +113,14 @@ public class NotificationReader {
     }
 
     private void readMsgMessage(String message){
-        this.returnMsg.setMsg(message);
+        returnMsg.setMsg(message);
     }
 
     private void readMsgLocation(String xyValue){
         String[] coordinates = xyValue.split(",", 2);
         Location myLocation = new Location(Double.parseDouble(coordinates[0]),
                 Double.parseDouble(coordinates[1]));
-        this.returnMsg.setLocation(myLocation);
+        returnMsg.setLocation(myLocation);
     }
 
 }

@@ -1,7 +1,6 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
-import seedu.addressbook.common.Messages;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
@@ -24,7 +23,7 @@ public class InboxCommand extends Command {
             + "Displays all messages in the application starting from the unread and most urgent.\n\t"
             + "Example: " + COMMAND_WORD;
     public static final String MESSAGE_TOTAL_MESSAGE_NOTIFICATION = "You have %d total messages, %d unread.\n";
-    public static final String MESSAGE_UNKNOWN_ERROR = "Error loading messages. Check that %s exists.\n";
+    public static final String MESSAGE_UNKNOWN_ERROR = "Error loading messages. %s cannot be found.\n";
 
     @Override
     public CommandResult execute() {
