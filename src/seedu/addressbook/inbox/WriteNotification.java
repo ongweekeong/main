@@ -105,7 +105,6 @@ public class WriteNotification {
     private static void clearInboxFromPath(String myPath) throws IOException {
         FileWriter write = new FileWriter(myPath, false);
         PrintWriter myPrinter = new PrintWriter(write);
-        myPrinter.print("");
         myPrinter.close();
     }
 }
