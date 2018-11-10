@@ -37,7 +37,7 @@ public class NotificationWriter {
         PrintWriter myPrinter = new PrintWriter(write);
         myPrinter.println("> START OF MESSAGE <");
         myPrinter.println("Sender ID:" + message.getSenderId());
-        myPrinter.println("Read status:" + message.isRead);
+        myPrinter.println("Read status:" + message.hasBeenRead());
         myPrinter.println("Priority:" + message.getPriority());
         myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs());
         myPrinter.println("Message:" + message.getMsg());
@@ -66,7 +66,7 @@ public class NotificationWriter {
             msg = msgSet.pollFirst();
             myPrinter.println("> START OF MESSAGE <");
             myPrinter.println("Sender ID:" + msg.getSenderId());
-            myPrinter.println("Read status:" + msg.isRead);
+            myPrinter.println("Read status:" + msg.hasBeenRead());
             myPrinter.println("Priority:" + msg.getPriority());
             myPrinter.println("Timestamp:" + TimeAndDate.outputDATHrs(msg.getTime()));
             myPrinter.println("Message:" + msg.getMsg());

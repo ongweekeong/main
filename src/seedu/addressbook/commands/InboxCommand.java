@@ -48,19 +48,22 @@ public class InboxCommand extends Command {
 
         } catch (IOException e) {
             e.printStackTrace();
-            return new CommandResult(String.format(MESSAGE_UNKNOWN_ERROR, MessageFilePaths.getFilePathFromUserId(Password.getID())));
+            return new CommandResult(String.format(MESSAGE_UNKNOWN_ERROR,
+                                        MessageFilePaths.getFilePathFromUserId(Password.getID())));
         }
     }
 
     public static String concatenateMsg(int messageNum, Msg message) throws NullPointerException{
         String concatenatedMsg;
-        if (!message.isRead) {
-            concatenatedMsg = String.valueOf(messageNum) + ". [UNREAD] Sender: " + message.getSenderId() + " Priority: " +
-                    message.getPriority() + ", Sent: " + TimeAndDate.outputDATHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
+        if (!message.hasBeenRead()) {
+            concatenatedMsg = String.valueOf(messageNum) + ". [UNREAD] Sender: " + message.getSenderId() +
+                    " Priority: " + message.getPriority() + ", Sent: " +
+                    TimeAndDate.outputDATHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
         }
         else{
             concatenatedMsg = String.valueOf(messageNum) + ".\tSender: " + message.getSenderId() + " Priority: " +
-                    message.getPriority() + ", Sent: " + TimeAndDate.outputDATHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
+                    message.getPriority() + ", Sent: " + TimeAndDate.outputDATHrsForMain(message.getTime()) +
+                    ",\n\tMessage: " + message.getMsg() + "\n\n";
         }
 
         return concatenatedMsg;

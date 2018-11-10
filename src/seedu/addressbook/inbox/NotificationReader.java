@@ -46,7 +46,7 @@ public class NotificationReader {
                                 break;
                             case "Read status":
                                 readMsgReadStatus(parts[1]);
-                                if (!returnMsg.isRead)
+                                if (!returnMsg.hasBeenRead())
                                     unreadMsgs += 1;
                                 break;
                             case "Priority":
@@ -79,7 +79,7 @@ public class NotificationReader {
     }
 
     private void readMsgReadStatus(String readStatus) {
-        this.returnMsg.isRead = Boolean.parseBoolean(readStatus);
+        this.returnMsg.setReadStatus(Boolean.parseBoolean(readStatus));
     }
 
     private void readMsgPriority(String priority){

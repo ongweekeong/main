@@ -8,33 +8,29 @@ import java.util.TreeSet;
 
 public class Inbox {
     // all messages will be stored here, notifications will appear based on severity and timestamp.
-    public static String MESSAGE_STORAGE_FILEPATH;
+    private static String MESSAGE_STORAGE_FILEPATH;
     public static final String INBOX_NOT_READ_YET = "You have not read your inbox! \n\t" +
             "Type \"showunread\" to view your unread messages.";
     public static final String INBOX_NO_UNREAD_MESSAGES = "You have no unread messages in your inbox.";
-    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. Enter message number from 1 to %1$d.";
+    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. " +
+            "                                           Enter message number from 1 to %1$d.";
     public static final String MESSAGE_STORAGE_PATH_NOT_FOUND = "Cannot find file to write to.";
     public static final String MESSAGE_READ_STATUS_UPDATED = "Successful update";
     public static int numUnreadMsgs = -1;
-    protected TreeSet<Msg> notificationsToPrint = new TreeSet<>();
-    protected static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
-    protected static NotificationReader notificationReader;
-    protected static NotificationWriter allMessages;
-    int messageIndex = 1;
-
-    static NotificationWriter newMessages;
-
+    private TreeSet<Msg> notificationsToPrint = new TreeSet<>();
+    private static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
+    private static NotificationReader notificationReader;
+    private static NotificationWriter allMessages;
 
     public Inbox(String policeOfficerId) {
         MESSAGE_STORAGE_FILEPATH = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
         notificationReader = new NotificationReader(MESSAGE_STORAGE_FILEPATH);
-        newMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, true);
         allMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, false);
     }
 
     public TreeSet<Msg> loadMsgs() throws IOException {
         notificationsToPrint = notificationReader.ReadFromFile();
-        messageIndex = 1;
+        int messageIndex = 1;
         for (Msg message : notificationsToPrint){
             recordNotifications.put(messageIndex++, message);
         }
