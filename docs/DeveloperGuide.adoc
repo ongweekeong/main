@@ -734,8 +734,8 @@ Use case ends.
 . System prompts user to enter his password.
 . User enters password.
 . System prompts user to enter his command.
-. User requests to display messages in inbox.
-. System prints the number of unread messages and list of messages.
+. User requests to display unread messages in inbox.
+. System prints the number of unread messages and list of unread messages.
 +
 Use case ends.
 
@@ -747,7 +747,62 @@ Use case ends.
 Use case ends.
 
 * 5b. There are no unread messages.
-** 5b1. System informs user that there are no unread messages and prints the last 5 messages stored.
+** 5b1. System informs user that there are no unread messages.
++
+Use case ends.
+
+* 5c. File containing user's inbox messages is missing.
+** 5c1. System informs user that there was an error loading messages.
++
+Use case ends.
+
+=== Use case: Show all messages
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User requests to display all messages in inbox.
+. System prints the total number of messages, number of unread messages and full list of messages.
++
+Use case ends.
+
+*Extensions*
+
+* 5a. There are no messages.
+** 5a1. System informs user that there are no messages available.
++
+Use case ends.
+
+* 5b. There are no unread messages.
+** 5b1. System informs user of his total number of messages, that there are 0 unread messages and the full list of messages.
++
+Use case ends.
+
+=== Use case: Clear Inbox
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User enters command to clear his inbox.
+. System informs user that his inbox has been cleared.
++
+Use case ends.
+
+*Extensions*
+
+* 5a. There are no messages.
+** 5a1. System informs user that inbox has been cleared.
++
+Use case ends.
+
+* 6a. File storing user's inbox messages cannot be found.
+** 6a1. System informs user that inbox clearance has been unsuccessful and that the storage file is missing.
 +
 Use case ends.
 
@@ -768,13 +823,16 @@ Use case ends.
 
 *Extensions*
 
-* 7a. User enters an invalid message number.
-** 7a1. System shows an error message and informs user of the valid number range.
+* 7a. User enters an invalid index.
+** 7a1. System shows an error message and informs user of the valid index range.
 +
 Use case ends.
 
-* 7b. There are no unread messages.
-** 7b1. System informs user that there are no unread messages.
+* 7b. User enters an extremely large number for the index.
+** 7b1. System informs user that the index entered is too large.
+
+* 7c. There are no unread messages.
+** 7c1. System informs user that there are no unread messages.
 +
 Use case ends.
 
