@@ -1,10 +1,9 @@
-= EX-SI-53 Police Record Database
+= Police Records and Intelligence Syetem (PRISM)
 ifdef::env-github,env-browser[:relfileprefix: docs/]
 ifdef::env-github,env-browser[:imagesDir: docs/images]
 
-https://travis-ci.org/se-edu/addressbook-level3[image:https://travis-ci.org/se-edu/addressbook-level3.svg?branch=master[Build Status]]
-https://www.codacy.com/app/se-edu/addressbook-level3?utm_source=github.com&utm_medium=referral&utm_content=se-edu/addressbook-level3&utm_campaign=Badge_Grade[image:https://api.codacy.com/project/badge/Grade/d4a0954383444a8db8cb26e5f5b7302c[Codacy Badge]]
-
+https://travis-ci.com/CS2113-AY1819S1-F10-3/main[image:https://travis-ci.com/CS2113-AY1819S1-F10-3/main.svg?branch=master[Build Status]]
+https://codecov.io/gh/CS2113-AY1819S1-F10-3/main?utm_source=github.com&utm_medium=referral&utm_content=CS2113-AY1819S1-F10-3/main&utm_campaign=Badge_Grade[image:https://api.codacy.com/project/badge/Grade/d4a0954383444a8db8cb26e5f5b7302c[Codacy Badge]]
 
 Source code was built on top of https://github.com/se-edu/
 
@@ -28,9 +27,11 @@ HQ personnel also have less administrative workload to deal with. Now, they focu
 
 == Contributors
 
-The full list of contributors for EX-SI-53 can be found link:docs/AboutUs.adoc[here]
+The full list of contributors for Police Records and Intelligence Syetem can be found link:docs/AboutUs.adoc[here]
 
 == Acknowledgements
+
+The original source of the code is https://github.com/nusCS2113-AY1819S1/addressbook-level3/[AddressBook-Level-3] project created by the SE-EDU initiative.
 
 Listening to users and their pain points allowed us to develop this application that solved the problems faced by police officers and headquarter personnel.
 
@@ -39,5 +40,5 @@ http://code.makery.ch/library/javafx-8-tutorial/[Java FX tutorial] by Marco Jako
 
 == Contact Us
 
-* Regarding any bugs, please email to alexandermatthew12@gmail.com, with the subject headline of *EX-SI-53* issue.
+* Regarding any bugs, please email to alexandermatthew12@gmail.com, with the subject headline of *Police Records and Intelligent System* issue.
 * *Contributing* : We welcome pull requests. Follow the process described https://github.com/oss-generic/process[here]

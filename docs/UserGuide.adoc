@@ -1,271 +1,365 @@
-Police Database - User Guide
+= Police Records and Intelligence Syetem - User Guide
+:site-section: UserGuide
+:toc:
+:toc-title:
+:toc-placement: preamble
+:sectnums:
+:imagesDir: images
+:stylesDir: stylesheets
+:experimental:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+endif::[]
+:repoURL: https://github.com/CS2113-AY1819S1-F10-3/main
 
-1. Introduction
+By: `Team F10-3`      Since: `Aug 2018'
 
-The police database is for police officers(PO) and headquarters personnel(HQP). Both groups will have varying access and authorization levels to this database. POs would be able to read from the database after screening someone while on patrol and choose his course of action base on the status/threat level of subject. HQP would have the added functions of adding and removing people from the database. Refer to quick start to get started 
+== Introduction
 
-2. Quick Start 
+The police database is for police officers(PO) and headquarter personnel(HQP). Both groups will have varying access and authorization levels to this database. POs would be able to read from the database after screening someone while on patrol and choose his course of action base on the status/threat level of subject. HQP would have the added functions of adding and removing people from the database. Refer to quick start to get started 
 
-1.	Ensure that you have Java Version 9 installed on your device.
-2.	Download the latest version of EX-SI-53 here.
-3.	Copy the file to the folder you want to use as the home folder for your Address Book.
-4.	Double-click the file to start the app. The user interface should appear in a few seconds.
-5.	Type the command in the command box and press “Enter” to execute it. 
-E.g. Typing ‘undo’ into the command box will restore the address book to its state before the previous undoable command.
-6.	To display the full list of commands and a summary of their functions in the application, type ‘help’ and press “Enter”.
-7.	Refer to Section 3, “Features” for details of each command.
+== Quick Start
+
+.	Ensure that you have Java Version 9 installed on your device.
+.	Download the latest version of PRISM https://github.com/CS2113-AY1819S1-F10-3/main/releases/download/v1.3.1/F10-3.PRISM.jar[here].
+.	Copy the file to another folder (a clean one preferably).
+.	Double-click the file to start the app. The user interface should appear in a few seconds.
+.	NOTE: DO NOT edit the text files that comes with the PRISM jar file.
++
+image::Ui.png[width="790"]
++
+
+[NOTE]
+====
+*   The text box is located at the bottom of the screen, and is grey in colour
+*   Throughout the list of features, each command will indicate if its available for HQP, PO or both
+====
+
+.	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
+.	Defaults passwords for the users (Passwords are Case Sensitive):
+.. HQP: papa123
+.. PO1: popo1
+.. PO2: popo2
+.. PO3: popo3
+.. PO4: popo4
+.. PO5: popo5
+.	Type a command in the same text box and press kbd:[Enter] to excecute it.
+.	To display the full list of commands and a summary of their functions in the application, type 'help' and press kbd:[Enter].
+.	Refer to Section 3, “Features” for details of each command.
 
 
+[[Features]]
+== Features
 
-3. Features
+====
+*Command Format*
+
+* Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`
+* Items in the `WANTEDFOR` parameter must be given if `STATUS` is "wanted"
+*  Items in square brackets are optional e.g `n/NAME [p/POSTALCODE] [s/STATUS]` can be used as `n/John Doe p/510246 s/xc` or `n/John Doe s/xc`
+* Items with `…`​ after them can be used multiple times including zero times e.g. `o/OFFENSE...` can be used as `{nbsp}` (i.e. 0 times), `o/theft`, `o/riot o/drugs` etc
+====
 	
-3.1. help
-Format: help
+=== Viewing help : `help` (HQP & PO)
 
-●	Lists all the features in a user friendly format for users and how to use them
+Lists all the features in a user friendly format for users and how to use them.
 
-3.2. Adding a new person: add
-Adds a criminal to the database- only by Admin.
-Format: add i/NRIC n/NAME p/PHONE_NUMBER d/DATE_OF_BIRTH s/STATUS a/ADDRESS 
+[NOTE]
+====
+*   You will be unable to see the list of available commands until logged in, due to the sensitivity of the data
+====
+
+Format: 'help'
+
+=== Display date and time : `time` (HQP & PO)
+
+Shows the current date and time.
+
+Format: 'time'
+
+=== Adding a person: `add` (HQP only)
+
+Adds a criminal to the database.
+
+Format: 'add NAME n/NRIC d/YEAROFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]'
+
 Examples:
-●	add i/G1978411Q n/John Doe p/98765432 d/03-April-1972 s/Wanted a/John street, block 123, #01-01
-3.3. Editing a person : edit
-Edits an existing person in the address book.
-Format: edit NRIC [n/NAME] [p/PHONE] [d/DATE_OF_BIRTH] [s/STATUS] [a/ADDRESS] 
-●	Edits the person with the specified NRIC.
-●	At least one of the optional fields must be provided.
-●	Existing values will be updated to the input values.
+
+
+*	add John Doe n/f1234567p d/1996 p/510246 s/xc w/none o/theft o/drugs"
+*   Displays a message stating the new person being added
+
+
+[NOTE]
+====
+*   If a person's STATUS is "wanted", the WANTEDFOR parameter has to be filled
+*   No two persons can have the same NRICs, the other parameters such as NAME, POSTALCODE, etc, can be the same
+*   Date of birth here only refers to the year
+====
+
+[TIP]
+A person can have 0 or more past offenses
+
+=== Editing a person : `edit` (HQP only)
+
+Edit a specified parameter of an existing person in the Police Records - only by HQP
+
+Format: 'edit n/NRIC p/[POSTAL_CODE] s/[STATUS] w/[WANTED_FOR] o/[PAST_OFFENCES]'
+
+[NOTE]
+====
+*   The NRIC tag 'n/' is required
+*   The other tags are optional, but at least one of them must be filled
+====
+
+****
+*	Edits the person with the specified NRIC.
+*	At least one of the optional fields must be provided.
+*	Existing values will be updated to the input values.
+****
+
 Examples:
-●	edit G1952866Q p/91234567
-●	Edits the phone number of the person with the specified NRIC to be 91234567
-3.4. Deleting a person : delete
-Deletes the specified person from the database- only by Admin.
-Format: delete NRIC
-●	Deletes the person with the specifies NRIC.
-●	Deleting can be only done by an Administrator.
-Examples:
-●	delete G1952866Q
-●	Deletes the person with the specified NRIC from the database.
 
+*	edit g1952866Q p/510246
+*	Edits the postal code of the person with the specified NRIC to be 510246
 
-3.5. Requesting for assistance : RA (ambulance) or RB (Backup)
-Format: RA (to call for ambulance) or RB (to call for backup)
+=== Display a list of all persons : `list` (HQP & PO)
 
-●	Generates GPS coordinates of current location and sends it to HQ. 
-●	Depending on type of assistance requested, either an ambulance or another patrol resource will be dispatched to said location
+Shows a list of every person in the Police Records
 
-
-
-	3.6. Undo command: undo
-	It erases the last change done to the document reverting it to an older state.
-Only works if previous command exists, commands that can be undo are add and delete. 
-
-Format: undo
+Format: 'list'
 
 Examples:
-●	add i/G1978411Q n/John Doe p/98765432 d/03-April-1972 s/Wanted a/John street, block 123, #01-01
-●	undo
-		Deletes John Doe from the database
 
-●	undo
-●	Output: ‘It looks like you haven’t entered any previous command, please enter one.’
-	
-●	help
-●	Output: ‘Your previous command cannot be undone’
-
-	
+*	list
+*	Displays list of all persons
 
 
+=== Find a person by NRIC : `find` (HQP & PO)
+
+Finds a person in the Police Records by the specified NRIC
+
+Format: 'find NRIC'
+
+Examples:
+
+*	find s1234567a
+*	Returns person with 's1234567a'
 
 
-3.7. Repeat command: redo
-	Repeats the previous command, commands include help, battery check, serial number check, battery check, date time, inbox, list. 
+[NOTE]
+====
+*   A timestamp and current ID is stored whenever this command is used
+====
 
-	Format: redo
-	
-	Examples:
-●	RA
-●	redo
-		Requests another ambulance
+=== Get screening history of a person: `check` (HQP)
 
-●	redo
-●	Output: ‘It looks like you haven’t entered any previous command, please enter one.’
-	
-●	add i/G1978411Q n/John Doe p/98765432 d/03-April-1972 s/Wanted a/John street, block 123, #01-01
-●	Output: ‘Your previous command cannot be repeated. Please access the help page for a list of repeatable command’
+Displays all the times a person was screened in the form of timestamps (using 'find' command) - Only by HQP
 
-	
+Format: 'check s1234567a'
+
+*	Returns an indexed list of timestamps for specified person, as well as corresponding PO ID nuber
 
 
+Examples:
+
+*	check s1234567a
+*	Shows an indexed list of timestamps for when person with s1234567a was screened by any POs
 
 
+=== Get status of POs: `checkstatus` (HQP & PO)
 
+Shows all POs and their current engagement statuses
 
+Format: 'checkstatus'
 
+=== Update status of PO: `updatestatus` (HQP only)
 
+Updates the PO so that it is not engaged anymore
 
+Format: 'updatestatus PO(ID)'
 
+Examples:
 
+*  updatestatus po2
+*  po2 is now free for dispatch
 
+=== Deleting a person : `delete` (HQP only)
 
+Deletes the specified person from the database.
 
+Format: 'delete NRIC'
 
+*	Deletes the person with the specifies NRIC.
 
+Examples:
 
+*	delete g1952866q
+*	Deletes the person with the specified NRIC from the records.
 
+=== Clear records : `clear` (HQP only)
 
+Clears all records of people in the Police Records.
 
+Format: 'clear'
 
+Example:
 
+*	clear
+*	Records will now be empty
 
+=== Requesting for assistance : `rb` (HQP & PO)
 
+Generates GPS coordinates of current location with current case and sends it to HQP.
+HQP would receive message in inbox.
 
+Format: 'rb OFFENSE'
 
+Examples:
 
+*	rb gun
+*   Sends a set of GPS coordinates, Current Case and Google Maps URL location to HQP.
 
-3.8. Check notifications: inbox
-	For HQPs: Check inbox to see a list of dispatch requests made by POs, and are sorted based on severity first, and then time stamp.
-	For POs: Check inbox to see who is responding to request for backup/ambulance/fire truck or to see if have any dispatch orders
-	
-	Format: inbox
+=== Dispatch assistance for requester: `dispatch` (HQP only)
 
-	Examples (as a HQP):
-●	inbox
-●	Output: Shows a list of dispatch requests (sorted by severity then timestamp) made by POs on the ground:
-○	PO1: Gunman, (location in form of GPS coordinates) , 1030 hrs
-○	PO3: Gunman, (location in form of GPS coordinates), 1033 hrs
-○	PO4: Ambulance, car accident, (location in form of GPS coordinates) , 1028 hrs
-○	PO5: Firetruck, small fire, (location in form of GPS coordinates) , 1048 hrs
-Examples (as a PO requesting for assistance):
-●	inbox
-●	Output - for less serious cases - shows who is responding :
-○	 PO3 is dispatched and on the way
-●	Output (for severe cases):
-○	SWAT team is dispatched and on the way
-	Examples (as a PO that is dispatched by HQ):
-●	inbox
-●	Output:
-○	Dispatch message: Case of dispute, [location in form of GPS coordinates]
+Generates message to dispatch an officer to backup a requesting officer
+Message would be sent to requester & backup officer which includes ETA(Real Time) & Location (Google Maps URL).
 
+Format: 'dispatch (BACKUP OFFICER) (OFFENSE) (REQUESTER OFFICER)'
 
-
-3.9. Dispatch resource: dispatch (HQ Only)
-	HQ is able to dispatch officers to assign them to tasks. Only free officers are able to be dispatched. A warning would presented to HQ when they try to assign an occupied officer.
-
-	Format: dispatch [insert patrol number]
-
-	Example:
-●	dispatch PO2
-
-Output: Dispatch message sent to PO2
-	
-
-
-
-
+*   dispatch po1 gun po3
+*   Sends a set of GPS coordinates, current case, ETA and Google Maps URL location of requester
+    to backup officer and vice-versa.
 
 
 
-4. Commands List
+=== Lock System : `lock` (HQP & PO)
+
+Locks the system and unlocks with password input
+
+Format: 'lock'
+
+Examples:
+
+*	lock
+*	Any user must enter their respective password to unlock
+
+=== Update Password : `update password` (HQP)
+
+Updates password of user - only HQP can change the user's password
+
+Format: 'update password'
+
+Examples:
+
+*	update password
+*	Please select a password to change
+*   User then has to enter old password and new alphanumeric password of minimum length 5
+
+=== Check notifications: `showunread` (HQP & PO)
+
+For HQPs: Check inbox to see a list of dispatch requests made by POs, and are sorted based on severity first, and then time stamp.
+For POs: Check inbox to see who is responding to request for backup/ambulance/fire truck or to see if have any dispatch orders
+
+Format: 'showunread'
+
+
+Examples (as a HQP):
+
+*	'showunread'
+*	Shows a list of dispatch requests (sorted by severity then timestamp) made by POs on the ground:
+
+Examples (as a PO):
+*	'showunread'
+*	Shows any dispatch messages by HQ or response for backup if any
+
+=== Read message : `read`(HQP & PO)
+
+Updates the status of unread messages to read. Command to be used after `showunread` command
+
+Format: 'read index'
+
+Examples:
+*  read 1
+
+=== Clear inbox: `clearinbox`
+
+Clears the text file containing all the messages (both read and unread) for the user.
+
+Format: 'clearinbox'
+
+=== Shutdown program : `shutdown` (HQP & PO)
+
+Shutdown the system
+
+Format: 'shutdown'
+
+Examples:
+*   shutdown
+*   Police Records shuts down
+
+=== AutoCorrect feature
+
+AutoCorrect feature predicts expected input when the user enters invalid input.
+Currently all commands are covered by the feature.
+
+== Commands List
  
-●	Help 
-Format - help
+*	*Help* : 'help'
 
-●	Add 
-Format - add i/[NRIC] n/[NAME] p/[PHONE_NUMBER] d/[DATE_OF_BIRTH] s/[STATUS] a/[ADDRESS]
+*   *Show time* : 'time'
 
-E.g. add i/G1978411Q n/John Doe p/98765432 d/03-April-1972 s/Wanted a/John street, block 123, #01-01
+*	*Add*  : 'add n/NAME n/NRIC d/YEAR_OF_BIRTH p/POSTAL_CODE s/STATUS w/WANTED_FOR o/PAST OFFENCES...'
 
-●	Edit
-Format- edit NRIC [n/NAME] [p/PHONE] [d/DATE_OF_BIRTH] [s/STATUS] [a/ADDRESS] 
+E.g. add John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs
+E.g. add Bob n/g1234567a d/1996 p/111111 s/clear w/none
 
-E.g. edit G1952866Q p/91234567
+*	*Edit* : 'edit NRIC n/[NAME] p/[POSTAL_CODE] s/[STATUS] w/WANTED_FOR o/PAST_OFFENCES'
 
-●	Delete 
-Format- delete NRIC
+E.g. edit g1952866q p/510246
 
-E.g. delete G1952866Q
+*	*List* : 'list'
 
-	
-●	Repeat
-Performs previous run command 
+*	*Find* : 'find NRIC'
 
-Format - redo 
+E.g. find s1234567a
 
-E.g. redo
+*	*Check* : 'check NRIC'
 
-●	Undo
-Format - undo
+E.g. check s1234567a
 
-E.g. undo
+*   *Get status of POs* : 'checkstatus'
 
+*   *Update status of PO* : 'updatestatus'
 
+E.g  updatestatus po2
 
+*	*Delete* : 'delete NRIC'
 
+E.g. delete g1952866q
 
+*	*Clear* : 'clear'
 
-●	RA (Ambulance) or RF(Fire Brigade) or RB (Backup)
-RA Calls for ambulance, RF calls for Fire Brigade while RB calls for backup to current location
+*	*Request for backup* : 'RB'
 
-Format: RA or RB or RF
+*	*Dispatch* : 'dispatch PO(ID)'
 
-E.g: RB  
+E.g. dispatch PO2
 
+*	*Lock* : 'lock'
 
+*	*Update Password* : 'update password'
 
+*	*Check notifications* : 'showunread'
 
-●	Battery Check
-Checks the battery percentage left currently
+*   *Read message* : 'read index'
+*   *Clear Inbox*  : 'clearinbox'
 
-Format: battery check
+E.g  read 1
 
-E.g. battery check
+*	*Shutdown* : 'shutdown'
 
-●	Serial Number Check 
-Checks the serial number of device against database
-
-Format: *#06# p/[PHONE_NUMBER]
-
-E.g. *#06# p/86781234
-
-●	Vehicle Number Check 
-Checks the serial number of device against database
-
-Format: *#06# v/[VEHICLE_NUMBER]
-
-E.g. *#06# v/SGP0884S
-
-
-●	Date and Time Check
-Returns the date and time currently
-
-Format: date time
-
-E.g. date time
-
-●	Lock System : lock
-Locks the system and unlocks only with password
-
-Format: lock
-
-E.g. lock
-
-
-●	Check notifications: inbox
-Checks for list of dispatch requests (for HQP), status of request (for requesting POs) or dispatch messages (for free POs or POs not engaged with anything)
-
-Format: inbox
-
-E.g inbox
-
-
-
-●	Dispatch resource: dispatch (HQ Only)
-Dispatches resources (PO)
-
-Format: dispatch PO[id] 
-
-E.g. dispatch PO1 
 	
 
 

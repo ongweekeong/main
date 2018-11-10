@@ -1,15 +1,20 @@
+//@@author ongweekeong
 package seedu.addressbook.inbox;
+
+import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.TreeSet;
 
 public class WriteNotification {
     private String path;
-    private boolean isAppend = false;
+    private boolean isAppend;
 
-    public WriteNotification(String filePath){
-        path = filePath;
+    public WriteNotification(String userId){
+        path = MessageFilePaths.getFilePathFromUserId(userId);
+        this.isAppend = true;
     }
 
     public WriteNotification(String filePath, boolean appendValue){
@@ -17,9 +22,8 @@ public class WriteNotification {
         isAppend = appendValue;
     }
 
-
     /**	Message format should look like this
-     *	Read/Unread (1 or 0) --> for writeToFile function, messages are entered as unread.
+     *	Read/Unread (1 or 0)
      *	Priority of Message
      *	Timestamp of message
      *	Message
@@ -28,23 +32,80 @@ public class WriteNotification {
      */
 
     public void writeToFile(Msg message) throws IOException{
-
+        TimeAndDate dateFormatter = new TimeAndDate();
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
         myPrinter.println("> START OF MESSAGE <");
+        myPrinter.println("Sender ID:" + message.getSenderId());
         myPrinter.println("Read status:" + message.isRead);
         myPrinter.println("Priority:" + message.getPriority());
-        myPrinter.println("Timestamp:" + message.getTime());
+        myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs());
         myPrinter.println("Message:" + message.getMsg());
+
         if(message.hasEta())
             myPrinter.println("ETA:" + message.getEta());
         else myPrinter.println('-');
+
         if(message.isLocationAvailable) {
             myPrinter.println("Location:" + message.getLatitude() + "," + message.getLongitude());
         }
         else myPrinter.println('-');
+
         myPrinter.println("> END OF MESSAGE <");   // Notate the end of 1 message entry with "---"
+
         myPrinter.close();
     }
 
+    // Create overload function for write to file to write a set of notifications.
+    public void writeToFile(TreeSet<Msg> msgSet) throws IOException {
+        TimeAndDate dateFormatter = new TimeAndDate();
+        FileWriter write = new FileWriter (path, isAppend);
+        PrintWriter myPrinter = new PrintWriter(write);
+        int numMsg = msgSet.size();
+        Msg msg;
+        for(int i = 0; i< numMsg; i++) {
+            msg = msgSet.pollFirst();
+            myPrinter.println("> START OF MESSAGE <");
+            myPrinter.println("Sender ID:" + msg.getSenderId());
+            myPrinter.println("Read status:" + msg.isRead);
+            myPrinter.println("Priority:" + msg.getPriority());
+            myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs(msg.getTime()));
+            myPrinter.println("Message:" + msg.getMsg());
+            if (msg.hasEta())
+                myPrinter.println("ETA:" + msg.getEta());
+            else myPrinter.println('-');
+            if (msg.isLocationAvailable) {
+                myPrinter.println("Location:" + msg.getLatitude() + "," + msg.getLongitude());
+            } else myPrinter.println('-');
+
+            myPrinter.println("> END OF MESSAGE <");
+        }
+
+        myPrinter.close();
+    }
+
+    public static void clearInbox(String path) throws IOException {
+        clearInboxFromPath(path);
+    }
+    public static void clearAllInbox() throws IOException {
+        String[] paths = {
+                MessageFilePaths.FILEPATH_HQP_INBOX,
+                MessageFilePaths.FILEPATH_PO1_INBOX,
+                MessageFilePaths.FILEPATH_PO2_INBOX,
+                MessageFilePaths.FILEPATH_PO3_INBOX,
+                MessageFilePaths.FILEPATH_PO4_INBOX,
+                MessageFilePaths.FILEPATH_PO5_INBOX,
+                MessageFilePaths.FILEPATH_DEFAULT
+        };
+        for (String myPath : paths) {
+            clearInboxFromPath(myPath);
+        }
+    }
+
+    private static void clearInboxFromPath(String myPath) throws IOException {
+        FileWriter write = new FileWriter(myPath, false);
+        PrintWriter myPrinter = new PrintWriter(write);
+        myPrinter.print("");
+        myPrinter.close();
+    }
 }

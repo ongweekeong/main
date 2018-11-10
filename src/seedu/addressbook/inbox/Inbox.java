@@ -1,62 +1,77 @@
+//@@author ongweekeong
 package seedu.addressbook.inbox;
 
-import org.javatuples.Triplet;
-import seedu.addressbook.Location;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 public class Inbox {
     // all messages will be stored here, notifications will appear based on severity and timestamp.
-    public static final String MESSAGE_STORAGE_FILEPATH = "notifications.txt";
-    public static final String COMMAND_WORD = "inbox";
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Opens up list of unread notifications. \n\t"
-            + "Example: " + COMMAND_WORD;
-    public static final String MESSAGE_PROMPT = "Press 'Enter' to take action for Message 1";
-    public static int unreadMsgs = 0;
-    private Msg message;
-    private static ReadNotification nw = new ReadNotification(MESSAGE_STORAGE_FILEPATH);
-    static WriteNotification myMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, true);
+    public static String MESSAGE_STORAGE_FILEPATH;
+    public static final String INBOX_NOT_READ_YET = "You have not read your inbox! \n\t" +
+            "Type \"showunread\" to view your unread messages.";
+    public static final String INBOX_NO_UNREAD_MESSAGES = "You have no unread messages in your inbox.";
+    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. Enter message number from 1 to %1$d.";
+    public static final String MESSAGE_STORAGE_PATH_NOT_FOUND = "Cannot find file to write to.";
+    public static final String MESSAGE_READ_STATUS_UPDATED = "Successful update";
+    public static int numUnreadMsgs = -1;
+    protected static TreeSet<Msg> notificationsToPrint = new TreeSet<>();
+    protected static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
+    protected static ReadNotification readNotification;
+    protected static WriteNotification allMessages;
+    int messageIndex = 1;
 
-    protected static HashMap<Triplet<Boolean, Msg.Priority, Timestamp>, Triplet<String, Integer, Location>> notificationsToPrint = new HashMap<>();
+    static WriteNotification newMessages;
 
 
-    public Inbox(){
-        Inbox inbox = new Inbox();
+    public Inbox(String policeOfficerId) {
+        MESSAGE_STORAGE_FILEPATH = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
+        readNotification = new ReadNotification(MESSAGE_STORAGE_FILEPATH);
+        newMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, true);
+        allMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, false);
     }
 
-    public static void loadMsgs() throws IOException {
-        notificationsToPrint = nw.ReadFromFile();
-        unreadMsgs = nw.getUnreadMsgs();
+    public TreeSet<Msg> loadMsgs() throws IOException {
+        notificationsToPrint = readNotification.ReadFromFile();
+        messageIndex = 1;
+        for (Msg message : notificationsToPrint){
+            recordNotifications.put(messageIndex++, message);
+        }
+        numUnreadMsgs = readNotification.getNumUnreadMsgs();
+        return notificationsToPrint;
     }
 
-    /** Prints out all unread notifications ordered by priority, then timestamp (earlier first).
-     *
-     * @return messages to be printed out on the main window.
-     */
-
-    public int checkNumUnreadMessages(HashMap notificationsToPrint){
-
-        return unreadMsgs;
+    public String markMsgAsRead(int index) throws NullPointerException, IndexOutOfBoundsException {
+        try{
+            if((index < 1) || (index > numUnreadMsgs)){
+                throw new IndexOutOfBoundsException();
+            }
+            recordNotifications.get(index).setMsgAsRead();
+            for(int i = 1; i <= recordNotifications.size(); i++) {
+                notificationsToPrint.add(recordNotifications.get(i));
+            }
+            allMessages.writeToFile(notificationsToPrint);
+        }
+        catch (IndexOutOfBoundsException e){
+            if(numUnreadMsgs>0) {
+                return INDEX_OUT_OF_BOUNDS;
+            }
+            else if(numUnreadMsgs == -1){
+                return INBOX_NOT_READ_YET;
+            }
+            else if(numUnreadMsgs == 0) {
+                return INBOX_NO_UNREAD_MESSAGES;
+            }
+        }
+        catch (IOException e){
+            return MESSAGE_STORAGE_PATH_NOT_FOUND;
+        }
+        return MESSAGE_READ_STATUS_UPDATED;
     }
 
-    public static void printMsg(){
-        if(unreadMsgs > 0)
-            System.out.println("You have " + unreadMsgs + " unread message" + ((unreadMsgs == 1) ? "." : "s."));
-        else System.out.println(unreadMsgs);
-
+    public int checkNumUnreadMessages(){
+        return numUnreadMsgs;
     }
 
-    public static void main(String[] args) throws IOException {
-        /*Msg newMsg = new Msg();
-        Location location = new Location(-6.206968,106.751365);
-        newMsg.addMsg("Backup requested");
-        newMsg.setLocation(location);
-        newMsg.setPriority(Msg.Priority.HIGH);
-        newMsg.setTime();
-        myMessages.writeToFile(newMsg);*/
-        loadMsgs();
-        printMsg();
-    }
 }

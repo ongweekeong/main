@@ -1,59 +1,123 @@
+//@@author andyrobert3
 package seedu.addressbook.commands;
 
+import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
-import seedu.addressbook.data.tag.Tag;
 
-import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Edits existing person in police records.
+ */
 public class EditCommand extends Command {
-    private final Person afterEdited;
+    private NRIC nric;
+    private PostalCode postalCode;
+    private Status status;
+
+    public NRIC getNric() {
+        return nric;
+    }
+
+    public PostalCode getPostalCode() {
+        return postalCode;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public Offense getWantedFor() {
+        return wantedFor;
+    }
+
+    private Offense wantedFor;
+    private Set<Offense> offenses;
 
     public static final String COMMAND_WORD = "edit";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
             + "Edits the person identified by the NRIC number.\n\t"
-            + "Contact details can be marked private by prepending 'p' to the prefix.\n\t"
-            + "Parameters: NAME [p]p/PHONE [p]e/EMAIL [p]a/ADDRESS  [t/TAG]...\n\t"
+            + "Parameters: n/NRIC [p/POSTALCODE] [s/STATUS] [w/WANTEDFOR] [o/PASTOFFENSES]...\n\t"
+            + "At least one optional tag must be filled.\n\t"
             + "Example: " + COMMAND_WORD
-            + " John Doe p/987654321 e/johndoe@gmail.com a/311, Clementi Ave 3, #02-25 t/enemies t/paysOnTime";
+            + " n/s1234567a p/510247 s/wanted w/murder o/gun";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the addressbook";
 
-    // TODO: Matthew clean code, refactor edit and add command constructor
-    public EditCommand(String name,
-                       String phone, boolean isPhonePrivate,
-                       String email, boolean isEmailPrivate,
-                       String address, boolean isAddressPrivate,
-                       Set<String> tags) throws IllegalValueException {
-
-        final Set<Tag> tagSet = new HashSet<>();
-        for (String tagName : tags) {
-            tagSet.add(new Tag(tagName));
+    private void updatePerson() throws UniquePersonList.PersonNotFoundException {
+        for (Person person : addressBook.getAllPersons()) {
+            if (person.getNric().equals(this.nric)) {
+                if (postalCode != null) {
+                    person.setPostalCode(postalCode);
+                }
+                if (wantedFor != null) {
+                    person.setWantedFor(wantedFor);
+                }
+                if (status != null) {
+                    person.setStatus(status);
+                }
+                if (offenses != null) {
+                    person.addPastOffenses(offenses);
+                }
+                return;
+            }
         }
-        this.afterEdited = new Person(
-                new Name(name),
-                new Phone(phone, isPhonePrivate),
-                new Email(email, isEmailPrivate),
-                new Address(address, isAddressPrivate),
-                tagSet
-        );
 
+        throw new UniquePersonList.PersonNotFoundException();
+    }
+
+    public EditCommand(String nric,
+                       String postalCode,
+                       String status,
+                       String wantedFor,
+                       Set<String> offenses) throws IllegalValueException {
+
+        this.nric = new NRIC(nric);
+
+        if (postalCode != null) {
+            this.postalCode = new PostalCode(postalCode);
+        }
+
+        if (status != null) {
+            this.status = new Status(status);
+        }
+
+        if (wantedFor != null) {
+            this.wantedFor = new Offense(wantedFor);
+        }
+
+        if (offenses != null) {
+            this.offenses = Offense.getOffenseSet(offenses);
+        }
+
+        if (postalCode == null && status == null && wantedFor == null && offenses == null) {
+            throw new IllegalValueException(String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_USAGE));
+        }
     }
 
     @Override
     public CommandResult execute() {
         try {
-            final ReadOnlyPerson target = getTargetPerson(afterEdited.getName());
-            addressBook.editPerson(target, afterEdited);
-            return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, afterEdited.getName().toString()));
-        } catch (UniquePersonList.PersonNotFoundException nfe) {
-            return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK);
-        } catch (UniquePersonList.DuplicatePersonException dpe) {
-            return new CommandResult(MESSAGE_DUPLICATE_PERSON);
+            this.updatePerson();
+            return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, this.nric));
+        } catch(UniquePersonList.PersonNotFoundException pnfe) {
+            //@@author ShreyasKp
+            CheckDistance checker = new CheckDistance();
+
+            String nric = getNric().toString();
+            String prediction = checker.checkInputDistance(nric);
+
+            if(!prediction.equals("none")) {
+                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                        + "\n"
+                        + "Did you mean to use "
+                        + prediction);
+            } else {
+                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK );
+            }
         }
+
     }
 }

@@ -1,22 +1,19 @@
 package seedu.addressbook.data.person;
-
+//@@author muhdharun
 import seedu.addressbook.data.exception.IllegalValueException;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Represents a Person's identification number(NRIC or FIN) in the address book.
+ * Represents a Person's identification number(NRIC or FIN).
  * Guarantees: immutable; is valid as declared in {@link #isValidNRIC(String)}
  */
 
 public class NRIC {
     public static final String EXAMPLE = "s1234567a";
-    public static final String MESSAGE_NAME_CONSTRAINTS = "NRIC/FIN should start with 's'/'t'/'g'/'f' and end with a letter and " +
+    public static final String MESSAGE_NAME_CONSTRAINTS = "NRIC/FIN should start with 's'/'t'/'g'/'f'(lower case) and end with a letter and " +
             "must have 7 digits in between, no spaces";
-    public static final String NAME_VALIDATION_REGEX = "[sStTgGfF][0-9]{7}[a-zA-Z]";
+    private static final String NAME_VALIDATION_REGEX = "[stgf][0-9]{7}[a-z]";
 
-    public final String identificationNumber;
+    private final String identificationNumber;
 
     /**
      * Validates given nric.
@@ -29,6 +26,10 @@ public class NRIC {
             throw new IllegalValueException(MESSAGE_NAME_CONSTRAINTS);
         }
         this.identificationNumber = nric;
+    }
+
+    public String getIdentificationNumber() {
+        return identificationNumber;
     }
 
     /**

@@ -1,11 +1,15 @@
 package seedu.addressbook.parser;
 
+import org.apache.commons.codec.binary.StringUtils;
+import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.*;
-import seedu.addressbook.common.Utils;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.password.Password;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.*;
 import java.util.regex.Matcher;
@@ -23,15 +27,26 @@ public class Parser {
 
     public static final Pattern KEYWORDS_ARGS_FORMAT =
             Pattern.compile("(?<keywords>\\S+(?:\\s+\\S+)*)"); // one or more keywords separated by whitespace
-
+//@@author muhdharun -reused
     public static final Pattern PERSON_DATA_ARGS_FORMAT = // '/' forward slashes are reserved for delimiter prefixes
             Pattern.compile("(?<name>[^/]+)"
-                    + " (?<isPhonePrivate>p?)p/(?<phone>[^/]+)"
-                    + " (?<isEmailPrivate>p?)e/(?<email>[^/]+)"
-                    + " (?<isAddressPrivate>p?)a/(?<address>[^/]+)"
-                    + "(?<tagArguments>(?: t/[^/]+)*)"); // variable number of tags
+                    + " n/(?<nric>[^/]+)"
+                    + " d/(?<dateOfBirth>[^/]+)"
+                    + " p/(?<postalCode>[^/]+)"
+                    + " s/(?<status>[^/]+)"
+                    + " w/(?<wantedFor>[^/]+)"
+                    + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
+//@@author
+    public static final Pattern EDIT_DATA_ARGS_FORMAT =
+            Pattern.compile("n/(?<nric>[^/]+)"
+                    + " p/(?<postalCode>[^/]+)"
+                    + " s/(?<status>[^/]+)"
+                    + " w/(?<wantedFor>[^/]+)"
+                    + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
 
     public static final Pattern PERSON_NAME_FORMAT = Pattern.compile("(?<name>[^/]+)");
+    public static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
+    public static final String PO_REGEX = "[Pp][Oo][0-9]+";
 
     /**
      * Signals that the user input could not be parsed.
@@ -73,6 +88,46 @@ public class Parser {
     public Command parseCommand(String userInput) {
         setupLogger();
         final Matcher matcher = BASIC_COMMAND_FORMAT.matcher(userInput.trim());
+
+        // TODO: Delete this if not used
+        /*if (!matcher.matches()) {
+            switch (result) {
+                case AddCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
+
+                case DeleteCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+
+                case EditCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+
+                case ClearCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE));
+
+                case FindCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+
+                case ListCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
+
+                case ViewCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewCommand.MESSAGE_USAGE));
+
+                case ViewAllCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE));
+
+                case ShutdownCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE));
+
+                case LogoutCommand.COMMAND_WORD:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE));
+
+                case HelpCommand.COMMAND_WORD: // Fallthrough
+                default:
+                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
+            }
+        }*/
+
         if (!matcher.matches()) {
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         }
@@ -83,9 +138,11 @@ public class Parser {
         logr.info("Parsed the user input and matching commands.");
 
         switch (commandWord) {
-
             case AddCommand.COMMAND_WORD:
                 return prepareAdd(arguments);
+
+            case DateTimeCommand.COMMAND_WORD:
+                return new DateTimeCommand();
 
             case DeleteCommand.COMMAND_WORD:
                 return prepareDelete(arguments);
@@ -99,33 +156,51 @@ public class Parser {
             case FindCommand.COMMAND_WORD:
                 return prepareFind(arguments);
 
+            case CheckCommand.COMMAND_WORD:
+                return prepareCheck(arguments);
+
+            case CheckPOStatusCommand.COMMAND_WORD:
+                return new CheckPOStatusCommand();
+
             case ListCommand.COMMAND_WORD:
                 return new ListCommand();
 
-            case ViewCommand.COMMAND_WORD:
-                return prepareView(arguments);
+            case ShowUnreadCommand.COMMAND_WORD:
+                return new ShowUnreadCommand();
+
+            case InboxCommand.COMMAND_WORD:
+                return new InboxCommand();
+
+            case ClearInboxCommand.COMMAND_WORD:
+                return new ClearInboxCommand();
+
+            case UpdateStatusCommand.COMMAND_WORD:
+                return prepareUpdateStatus(arguments);
+
+            case ReadCommand.COMMAND_WORD:
+                return prepareRead(arguments);
 
             case ViewAllCommand.COMMAND_WORD:
                 return prepareViewAll(arguments);
 
-            case ExitCommand.COMMAND_WORD:
-                return new ExitCommand();
+            case RequestHelpCommand.COMMAND_WORD:
+                return prepareRequest(arguments);
 
-            case HQPPasswordCommand.COMMAND_WORD:
-                return new HQPPasswordCommand();
+            case DispatchCommand.COMMAND_WORD:
+                return prepareDispatch(arguments);
 
-            case POPasswordCommand.COMMAND_WORD:
-                return new POPasswordCommand();
+            case ShutdownCommand.COMMAND_WORD:
+                return new ShutdownCommand();
 
-            case LockCommand.COMMAND_WORD:
-                return new LockCommand();
+            case LogoutCommand.COMMAND_WORD:
+                return new LogoutCommand();
 
             case HelpCommand.COMMAND_WORD: // Fallthrough
             default:
                 return new HelpCommand();
         }
     }
-
+//@@author muhdharun -reused
     /**
      * Parses arguments in the context of the add person command.
      *
@@ -141,23 +216,18 @@ public class Parser {
         try {
             return new AddCommand(
                     matcher.group("name"),
-
-                    matcher.group("phone"),
-                    isPrivatePrefixPresent(matcher.group("isPhonePrivate")),
-
-                    matcher.group("email"),
-                    isPrivatePrefixPresent(matcher.group("isEmailPrivate")),
-
-                    matcher.group("address"),
-                    isPrivatePrefixPresent(matcher.group("isAddressPrivate")),
-
-                    getTagsFromArgs(matcher.group("tagArguments"))
+                    matcher.group("nric"),
+                    matcher.group("dateOfBirth"),
+                    matcher.group("postalCode"),
+                    matcher.group("status"),
+                    matcher.group("wantedFor"),
+                    getTagsFromArgs(matcher.group("pastOffenseArguments"))
             );
         } catch (IllegalValueException ive) {
             return new IncorrectCommand(ive.getMessage());
         }
     }
-
+//@@author
     /**
      * Checks whether the private prefix of a contact detail in the add command's arguments string is present.
      */
@@ -169,16 +239,18 @@ public class Parser {
      * Extracts the new person's tags from the add command's tag arguments string.
      * Merges duplicate tag strings.
      */
-    private static Set<String> getTagsFromArgs(String tagArguments) throws IllegalValueException {
+    private static Set<String> getTagsFromArgs(String tagArguments) {
         // no tags
         if (tagArguments.isEmpty()) {
             return Collections.emptySet();
         }
         // replace first delimiter prefix, then split
-        final Collection<String> tagStrings = Arrays.asList(tagArguments.replaceFirst(" t/", "").split(" t/"));
+        final Collection<String> tagStrings = Arrays.asList(tagArguments.replaceFirst(" o/", "").split(" o/"));
         return new HashSet<>(tagStrings);
     }
 
+
+//@@author muhdharun -reused
 
     /**
      * Parses arguments in the context of the delete person command.
@@ -186,23 +258,23 @@ public class Parser {
      * @param args full command args string
      * @return the prepared command
      */
-    private Command prepareDelete(String args) {
+    private Command prepareDelete(String args){
         try {
-            final String name = parseArgsAsName(args);
-            if (Utils.isStringInteger(name)) {
-                final int targetIndex = parseArgsAsDisplayedIndex(args);
-                return new DeleteCommand(targetIndex);
-            }
+            final String nric = parseArgsAsNric(args);
 
-            return new DeleteCommand(new Name(name));
+            return new DeleteCommand(new NRIC(nric));
         } catch (ParseException e) {
             logr.log(Level.WARNING, "Invalid delete command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+
         } catch (IllegalValueException ive) {
             logr.log(Level.WARNING, "Invalid name/id inputted.", ive);
             return new IncorrectCommand(ive.getMessage());
         }
     }
+
+
+    //@@author andyrobert3
 
     /**
      * Parses arguments in the context of the edit person command.
@@ -210,51 +282,71 @@ public class Parser {
      * @param args full command args string
      * @return the prepared command
      */
-    // TODO: Refactor prepareEdit and prepareAdd
     private Command prepareEdit(String args) {
-        final Matcher matcher = PERSON_DATA_ARGS_FORMAT.matcher(args.trim());
-        // Validate arg string format
-        if (!matcher.matches()) {
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        args = args.trim();
+
+        String argParts[] = args.split("\\s");
+        String editCommandIdentifiers[] = {
+            "n/", "p/", "s/", "w/", "o/"
+        };
+
+        String userInputParameters[] = new String[editCommandIdentifiers.length];
+        String offenseString = "";
+
+        for (int i = 0; i < editCommandIdentifiers.length; i++) {
+            for (String argument : argParts) {
+                if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
+                    if (editCommandIdentifiers[i].equals(editCommandIdentifiers[4])) {
+                        offenseString += " " + argument;
+                    } else {
+                        userInputParameters[i] = argument.substring(2);
+                        break;
+                    }
+                }
+            }
         }
+
+        userInputParameters[4] = (!offenseString.equals("")) ? offenseString : null;
+
+        Set<String> offenses = null;
+
         try {
+            if (userInputParameters[0] == null) {
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+            }
+
+            if (userInputParameters[4] != null) {
+                offenses = getTagsFromArgs(userInputParameters[4]);
+            }
+
             return new EditCommand(
-                    matcher.group("name"),
-
-                    matcher.group("phone"),
-                    isPrivatePrefixPresent(matcher.group("isPhonePrivate")),
-
-                    matcher.group("email"),
-                    isPrivatePrefixPresent(matcher.group("isEmailPrivate")),
-
-                    matcher.group("address"),
-                    isPrivatePrefixPresent(matcher.group("isAddressPrivate")),
-
-                    getTagsFromArgs(matcher.group("tagArguments"))
+                    userInputParameters[0],
+                    userInputParameters[1],
+                    userInputParameters[2],
+                    userInputParameters[3],
+                    offenses
             );
+
         } catch (IllegalValueException ive) {
             logr.log(Level.WARNING, "Invalid edit command format.", ive);
             return new IncorrectCommand(ive.getMessage());
         }
     }
 
-    /**
-     * Parses arguments in the context of the view command.
-     *
-     * @param args full command args string
-     * @return the prepared command
-     */
-    private Command prepareView(String args) {
-        try {
+//@@author ongweekeong
+    private Command prepareRead(String args){
+        try{
             final int targetIndex = parseArgsAsDisplayedIndex(args);
-            return new ViewCommand(targetIndex);
-        } catch (ParseException | NumberFormatException e) {
-            logr.log(Level.WARNING, "Invalid view command format.", e);
+            return new ReadCommand(targetIndex);
+        }
+        catch (ParseException | NumberFormatException e){
+            logr.log(Level.WARNING, "Invalid read command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    ViewCommand.MESSAGE_USAGE));
+                    ReadCommand.MESSAGE_USAGE));
         }
     }
 
+    //@@author
     /**
      * Parses arguments in the context of the view all command.
      *
@@ -272,6 +364,7 @@ public class Parser {
         }
     }
 
+    //@@author
     /**
      * Parses the given arguments string as a single index number.
      *
@@ -286,37 +379,133 @@ public class Parser {
             logr.warning("Index number does not exist in argument");
             throw new ParseException("Could not find index number to parse");
         }
-        return Integer.parseInt(matcher.group("targetIndex"));
+        try {
+            return Integer.parseInt(matcher.group("targetIndex"));
+        }
+        catch (NumberFormatException nfe){
+            new BigInteger(matcher.group("targetIndex")); //Throws NFE if input index is not numeric.
+            return Integer.MAX_VALUE;
+        }
     }
+//@@author muhdharun
+    /**
+     * Parses argument string as an NRIC
+     *
+     * @param args argument string to parse as NRIC
+     * @return the prepared NRIC
+     */
 
-    private String parseArgsAsName(String args) throws ParseException {
-        final Matcher matcher = PERSON_NAME_FORMAT.matcher(args.trim());
+    private String parseArgsAsNric(String args) throws ParseException {
+        final Matcher matcher = PERSON_NRIC_FORMAT.matcher(args.trim());
         if (!matcher.matches()) {
-            logr.warning("Name does not exist in argument");
-            throw new ParseException("Could not find name to parse");
+            logr.warning("NRIC does not exist in argument");
+            throw new ParseException("Could not find NRIC to parse");
         }
         return matcher.group(0);
     }
 
     /**
-     * Parses arguments in the context of the find person command.
+     * Parses arguments in the context of the check or find person command.
      *
      * @param args full command args string
      * @return the prepared command
      */
-    private Command prepareFind(String args) {
-        final Matcher matcher = KEYWORDS_ARGS_FORMAT.matcher(args.trim());
-        if (!matcher.matches()) {
-            logr.warning("Argument for finding NRIC is invalid");
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    FindCommand.MESSAGE_USAGE));
-        }
 
-        // keywords delimited by whitespace
-        final String[] keywords = matcher.group("keywords").split("\\s+");
-        final Set<String> keywordSet = new HashSet<>(Arrays.asList(keywords));
-        return new FindCommand(keywordSet);
+    private Command prepareCheck(String args) {
+        args = args.trim();
+        if (NRIC.isValidNRIC(args)) {
+            return new CheckCommand(args);
+        } else {
+            logr.warning("NRIC argument is invalid");
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,CheckCommand.MESSAGE_USAGE));
+        }
     }
 
+    private Command prepareFind(String args) {
+        args = args.trim();
+        if (NRIC.isValidNRIC(args)) {
+            return new FindCommand(args);
+        } else {
+            logr.warning("NRIC argument is invalid");
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+        }
+    }
+
+    /**
+     * Parses arguments in the context of updating a PO's status.
+     *
+     * @param args full command args string
+     * @return the prepared command
+     */
+
+    private Command prepareUpdateStatus(String args) {
+        args = args.trim();
+        if (args.matches(PO_REGEX)) {
+            return new UpdateStatusCommand(args);
+        } else{
+            logr.warning("an existing or valid PO must be stated");
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE));
+        }
+
+    }
+
+//@@author andyrobert3
+
+    /**
+     * Parses arguments in context of request help command.
+     *
+     * @param args full command args string
+     * @return the prepared request command
+     */
+    private Command prepareRequest(String args) {
+        String message, caseName = args.trim();
+
+        if (caseName.length() == 0) {
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    RequestHelpCommand.MESSAGE_USAGE));
+        }
+
+        message = Password.getID().toUpperCase() + " needs help with " + caseName + " at location "  +
+                        PatrolResourceStatus.getLocation(Password.getID()).getGoogleMapsURL();
+
+        try {
+            return new RequestHelpCommand(caseName, message);
+        } catch (IllegalValueException ive) {
+            return new IncorrectCommand(Offense.MESSAGE_OFFENSE_INVALID + Offense.getListOfValidOffences());
+        }
+    }
+
+    //@@author andyrobert3
+    /**
+     * Parses arguments in context of dispatch command
+     *
+     * @params args full command args string
+     * @return the prepared request command
+     */
+    private Command prepareDispatch(String args) {
+        String backupOfficer, dispatchRequester, caseName;
+        String[] argParts = args.trim().split("\\s+",  3);
+
+        if (argParts.length < 3) {
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    DispatchCommand.MESSAGE_USAGE));
+        }
+
+        backupOfficer = argParts[0].toLowerCase();
+        caseName = argParts[1].toLowerCase();
+        dispatchRequester = argParts[2].toLowerCase();
+
+        try {
+            if (backupOfficer.equalsIgnoreCase(dispatchRequester)) {
+                throw new IllegalValueException(String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME,
+                        backupOfficer));
+            }
+            return new DispatchCommand(backupOfficer, dispatchRequester, caseName);
+        } catch (IllegalValueException ive) {
+            return new IncorrectCommand(ive.getMessage());
+        }
+
+
+    }
 
 }

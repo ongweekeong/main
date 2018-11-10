@@ -1,13 +1,15 @@
 package seedu.addressbook.commands;
 
+import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.person.*;
-import seedu.addressbook.data.tag.Tag;
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.UniquePersonList;
+import seedu.addressbook.ui.UiFormatter;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
 
 import static seedu.addressbook.ui.Gui.DISPLAYED_INDEX_OFFSET;
 
@@ -36,13 +38,76 @@ public abstract class Command {
      * @return summary message for persons displayed
      */
     public static String getMessageForPersonListShownSummary(List<? extends ReadOnlyPerson> personsDisplayed) {
-        return String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, personsDisplayed.size());
+
+        return "\n\n" + String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, personsDisplayed.size());
     }
 
     /**
+     * Constructs a feedback message to summarise an operation that displayed a listing of a person.
+     *
+     * @param personDisplayed used to generate summary
+     * @return summary message for person displayed
+     */
+    //@@author muhdharun
+    public static String getMessageForPersonShownSummary(ReadOnlyPerson personDisplayed) {
+        if (personDisplayed == null){
+            return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+        }
+        else{
+            String result = personDisplayed.getAsTextShowAllInVerticalMode();
+            return result + "\n\n" + String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
+        }
+    }
+
+    /**
+     * Constructs a feedback message to summarise an operation that displayed a listing of timestamps.
+     *
+     * @param timestampsDisplayed used to generate summary
+     * @param nric to print the specified nric
+     * @return summary message for timestamps displayed
+     */
+
+    public static String getMessageForScreeningHistoryShownSummary(List<String> timestampsDisplayed, String nric) {
+        if (timestampsDisplayed == null){
+            //@@author ShreyasKp
+            CheckDistance checker = new CheckDistance();
+
+            String prediction = checker.checkInputDistance(nric);
+
+            if(!prediction.equals("none")) {
+                return (Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                        + "\n"
+                        + "Did you mean to use "
+                        + prediction);
+            } else {
+                return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+            }
+            //@@author muhdharun
+        }
+        else {
+
+            UiFormatter formatter = new UiFormatter();
+            String result = formatter.formatForStrings(timestampsDisplayed);
+
+            String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
+            return finalResult;
+        }
+    }
+
+    public static String getMessage(List<String> args) {
+
+        UiFormatter formatter = new UiFormatter();
+        String result = formatter.formatForStrings(args);
+
+        return result;
+
+    }
+
+    //@@ author
+    /**
      * Executes the command and returns the result.
      */
-    public CommandResult execute(){
+    public CommandResult execute() {
         throw new UnsupportedOperationException("This method should be implement in child classes");
     }
 
@@ -66,14 +131,16 @@ public abstract class Command {
         return relevantPersons.get(getTargetIndex() - DISPLAYED_INDEX_OFFSET);
     }
 
-    protected ReadOnlyPerson getTargetPerson(Name name) throws UniquePersonList.PersonNotFoundException {
+    //@@author andyrobert3
+    protected ReadOnlyPerson getTargetPerson(NRIC nric) throws UniquePersonList.PersonNotFoundException {
         for (ReadOnlyPerson person: relevantPersons) {
-            if (person.getName().toString().equalsIgnoreCase(name.toString())) {
+            if (person.getNric().getIdentificationNumber().equals(nric.getIdentificationNumber())) {
                 return person;
             }
         }
         throw new UniquePersonList.PersonNotFoundException();
     }
+
 
     public int getTargetIndex() {
         return targetIndex;

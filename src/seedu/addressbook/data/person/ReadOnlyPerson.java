@@ -2,24 +2,27 @@ package seedu.addressbook.data.person;
 
 import java.util.Set;
 
-import seedu.addressbook.data.tag.Tag;
 
 /**
- * A read-only immutable interface for a Person in the addressbook.
+ * A read-only immutable interface for a Person in the records.
  * Implementations should guarantee: details are present and not null, field values are validated.
  */
 public interface ReadOnlyPerson {
-
+//@@author muhdharun
     Name getName();
-    Phone getPhone();
-    Email getEmail();
-    Address getAddress();
+    NRIC getNric();
+    DateOfBirth getDateOfBirth();
+    PostalCode getPostalCode();
+    Status getStatus();
+    Offense getWantedFor();
 
     /**
      * The returned {@code Set} is a deep copy of the internal {@code Set},
      * changes on the returned list will not affect the person's internal tags.
      */
-    Set<Tag> getTags();
+    Set<Offense> getPastOffenses();
+
+
 
     /**
      * Returns true if the values inside this object is same as those of the other (Note: interfaces cannot override .equals)
@@ -27,10 +30,12 @@ public interface ReadOnlyPerson {
     default boolean isSameStateAs(ReadOnlyPerson other) {
         return other == this // short circuit if same object
                 || (other != null // this is first to avoid NPE below
-                && other.getName().equals(this.getName()) // state checks here onwards
-                && other.getPhone().equals(this.getPhone())
-                && other.getEmail().equals(this.getEmail())
-                && other.getAddress().equals(this.getAddress()));
+                && other.getName().fullName.equals(this.getName().fullName) // state checks here onwards
+                && other.getNric().getIdentificationNumber().equals(this.getNric().getIdentificationNumber())
+                && other.getDateOfBirth().getDOB().equals((this.getDateOfBirth().getDOB()))
+                && other.getPostalCode().getPostalCode().equals(this.getPostalCode().getPostalCode())
+                && other.getStatus().getCurrentStatus().equals(this.getStatus().getCurrentStatus())
+                && other.getWantedFor().getOffense().equals(this.getWantedFor().getOffense()));
     }
 
     /**
@@ -38,49 +43,54 @@ public interface ReadOnlyPerson {
      */
     default String getAsTextShowAll() {
         final StringBuilder builder = new StringBuilder();
-        final String detailIsPrivate = "(private) ";
         builder.append(getName())
-                .append(" Phone: ");
-        if (getPhone().isPrivate()) {
-            builder.append(detailIsPrivate);
+                .append(" NRIC: ");
+        builder.append(getNric())
+                .append(" DateOfBirth: ");
+        builder.append(getDateOfBirth().getDOB())
+                .append(" Postal Code: ");
+        builder.append(getPostalCode())
+                .append(" Status: ");
+        builder.append(getStatus())
+                .append(" Wanted For: ");
+        builder.append(getWantedFor())
+                .append(" Past Offences:");
+        for (Offense offense : getPastOffenses()) {
+            builder.append(offense);
         }
-        builder.append(getPhone())
-                .append(" Email: ");
-        if (getEmail().isPrivate()) {
-            builder.append(detailIsPrivate);
-        }
-        builder.append(getEmail())
-                .append(" Address: ");
-        if (getAddress().isPrivate()) {
-            builder.append(detailIsPrivate);
-        }
-        builder.append(getAddress())
-                .append(" Tags: ");
-        for (Tag tag : getTags()) {
-            builder.append(tag);
+        return builder.toString();
+    }
+//@@author muhdharun
+    /**
+     * Formats the person as text, showing all details vertically for better readability.
+     */
+    default String getAsTextShowAllInVerticalMode() {
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append(getName())
+                .append("\n")
+                .append(" NRIC: ");
+        builder.append(getNric())
+                .append("\n")
+                .append(" DateOfBirth: ");
+        builder.append(getDateOfBirth().getDOB())
+                .append("\n")
+                .append(" Postal Code: ");
+        builder.append(getPostalCode())
+                .append("\n")
+                .append(" Status: ");
+        builder.append(getStatus())
+                .append("\n")
+                .append(" Wanted For: ");
+        builder.append(getWantedFor())
+                .append("\n")
+                .append(" Past Offences:");
+        for (Offense offense : getPastOffenses()) {
+            builder.append(offense);
         }
         return builder.toString();
     }
 
-    /**
-     * Formats a person as text, showing only non-private contact details.
-     */
-    default String getAsTextHidePrivate() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(getName());
-        if (!getPhone().isPrivate()) {
-            builder.append(" Phone: ").append(getPhone());
-        }
-        if (!getEmail().isPrivate()) {
-            builder.append(" Email: ").append(getEmail());
-        }
-        if (!getAddress().isPrivate()) {
-            builder.append(" Address: ").append(getAddress());
-        }
-        builder.append(" Tags: ");
-        for (Tag tag : getTags()) {
-            builder.append(tag);
-        }
-        return builder.toString();
-    }
+
+
 }

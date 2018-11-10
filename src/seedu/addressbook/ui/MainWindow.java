@@ -5,17 +5,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import seedu.addressbook.commands.ExitCommand;
-import seedu.addressbook.commands.HQPPasswordCommand;
-import seedu.addressbook.commands.POPasswordCommand;
-import seedu.addressbook.commands.LockCommand;
-import seedu.addressbook.commands.AddCommand;
-import seedu.addressbook.commands.DeleteCommand;
-import seedu.addressbook.commands.ClearCommand;
-import seedu.addressbook.common.Messages;
+import seedu.addressbook.autocorrect.AutoCorrect;
+import seedu.addressbook.autocorrect.CheckDistance;
+import seedu.addressbook.commands.*;
 import seedu.addressbook.logic.Logic;
-import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.commands.Dictionary;
+import seedu.addressbook.password.Password;
+import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +38,9 @@ public class MainWindow {
         this.mainApp = mainApp;
     }
 
+    private Password password = new Password();
+    private TimeAndDate tad = new TimeAndDate();
+
     @FXML
     private TextArea outputConsole;
 
@@ -51,63 +51,7 @@ public class MainWindow {
     void onCommand(ActionEvent event) {
         try {
             String userCommandText = commandInput.getText();
-            CommandResult result = logic.execute(userCommandText);
-            if(isExitCommand(result)){
-                exitApp();
-            }
-            else if(isLockCommand(result) && isUnlocked()){
-                isHQP = false;
-                isPO = false;
-                wrongPasswordCounter = 6;
-                clearOutputConsole();
-                display(LockCommand.MESSAGE_LOCK);
-                clearCommandInput();
-            }
-            else if(isHQP && !isPOPasswordCommand(result)){
-                displayResult(result);
-                clearCommandInput();
-            }
-            else if(isPO && !isHQPPasswordCommand(result)){
-                if(isUnauthorizedPOCommand(result)){
-                    clearOutputConsole();
-                    display(MESSAGE_UNAUTHORIZED + userCommandText);
-                    clearCommandInput();
-                }
-                else {
-                    displayResult(result);
-                    clearCommandInput();
-                }
-            }
-
-            else if (isInvalidPasswordCommand(result)){
-                displayResult(logic.execute("akshay")); //TODO EDIT THIS
-                clearCommandInput();
-            }
-
-            else if(isHQPPasswordCommand(result) && !isUnlocked()){
-                isHQP = true;
-                clearOutputConsole();
-                display(HQPPasswordCommand.MESSAGE_CORRECT_PASSWORD);
-                clearCommandInput();
-            }
-            else if(isPOPasswordCommand(result) && !isUnlocked()){
-                isPO = true;
-                clearOutputConsole();
-                display(POPasswordCommand.MESSAGE_CORRECT_PASSWORD);
-                clearCommandInput();
-            }
-            else if(!isUnlocked()){
-                wrongPasswordCounter--;
-                clearOutputConsole();
-                display(MESSAGE_INCORRECT_PASSWORD,"You have " + wrongPasswordCounter + "" + " attempts left");
-                clearCommandInput();
-                if(wrongPasswordCounter==1) {
-                    display("System will shut down if password is incorrect");
-                }
-                if(wrongPasswordCounter==0){
-                    exitApp();
-                }
-            }
+            decipherUserCommandText(userCommandText);
         } catch (Exception e) {
             e.printStackTrace();
             display(e.getMessage());
@@ -115,71 +59,124 @@ public class MainWindow {
         }
     }
 
-    private void exitApp() throws Exception {
-        mainApp.stop();
+    //@@author iamputradanish
+    private void decipherUserCommandText(String userCommandText) throws Exception {
+        if(toCloseApp(userCommandText)){
+            password.lockDevice();
+            mainApp.stop();
+        }
+        else if(isLockCommand(userCommandText)){
+            CommandResult result = logic.execute(userCommandText);
+            clearScreen();
+            displayResult(result);
+        }
+        else if(Password.isLocked()) {
+            String unlockDeviceResult = Password.unlockDevice(userCommandText, Password.getWrongPasswordCounter());
+            clearScreen();
+            display(unlockDeviceResult);
+        }
+        else if(canUpdatePassword(userCommandText)){
+            String prepareUpdatePasswordResult = Password.prepareUpdatePassword();
+            clearScreen();
+            display(prepareUpdatePasswordResult);
+        }
+        else if(password.isUpdatingPasswordNow()){
+            String updatePasswordResult;
+            if(password.isUpdatePasswordConfirmNow()) {
+                updatePasswordResult = password.updatePasswordFinal(userCommandText);
+            }
+            else{
+                updatePasswordResult = password.updatePassword(userCommandText, Password.getWrongPasswordCounter());
+            }
+            clearScreen();
+            display(updatePasswordResult);
+        }
+
+        else if(password.isUnauthorizedAccess(userCommandText)){
+            clearScreen();
+            String unauthorizedCommandResult = password.invalidPOResult(userCommandText);
+            display(unauthorizedCommandResult);
+        }
+        //@@author ShreyasKp
+        else {
+            userCommandText = userCommandText.trim();
+            CheckDistance checker = new CheckDistance();
+            Dictionary dict = new Dictionary();
+            String arr[] = userCommandText.split(" ", 2);
+            String commandWordInput = arr[0];
+            if((checker.checkCommandDistance(commandWordInput)).equals(0)) {
+                AutoCorrect correction = new AutoCorrect();
+                String displayCommand = correction.checkCommand(commandWordInput);
+                String output = checker.checkDistance(commandWordInput);
+                clearScreen();
+                if(!(output.equals("none"))) {
+                    display(String.format(dict.getCommandErrorMessage(), output));
+                    display(displayCommand);
+                }
+                else {
+                    boolean isHQPFlag = password.isHQPUser();
+                    if(isHQPFlag) {
+                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
+                    }
+                    else {
+                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_PO_USAGES)).feedbackToUser;
+                    }
+                    display(displayCommand);
+                }
+            }
+            else{
+                clearScreen();
+                CommandResult result = logic.execute(userCommandText);
+                displayResult(result);
+                clearCommandInput();
+            }
+        }
     }
 
-    private boolean isHQP = false;
-    private boolean isPO = false;
-    private int wrongPasswordCounter = 6;
-
-    private boolean isUnlocked() {
-        return (isPO || isHQP) ;
+    //@@author iamputradanish
+    private boolean canUpdatePassword(String userCommandText){
+        return Password.isHQPUser() && isUpdatePasswordCommand(userCommandText);
     }
 
+    //@@author
     /** Returns true if the result given is the result of an exit command */
-    private boolean isExitCommand(CommandResult result) {
-        return result.feedbackToUser.equals(ExitCommand.MESSAGE_EXIT_ACKNOWEDGEMENT);
+    private boolean isExitCommand(String userCommandText) {
+        return userCommandText.equals(ShutdownCommand.COMMAND_WORD);
     }
 
-    private boolean isHQPPasswordCommand(CommandResult result) {
-        return result.feedbackToUser.equals(HQPPasswordCommand.MESSAGE_CORRECT_PASSWORD);
+    //@@author iamputradanish
+    private boolean isUpdatePasswordCommand(String userCommandText) {
+        return userCommandText.equals(Password.UPDATE_PASSWORD_COMMAND_WORD);
     }
 
-    private boolean isPOPasswordCommand(CommandResult result) {
-        return result.feedbackToUser.equals(POPasswordCommand.MESSAGE_CORRECT_PASSWORD);
+    private boolean toCloseApp(String userCommandText){
+        return isExitCommand(userCommandText) || password.isShutDown();
     }
 
-    private boolean isLockCommand(CommandResult result) {
-        return result.feedbackToUser.equals(LockCommand.MESSAGE_LOCK);
+    private boolean isLockCommand(String userCommandText) {
+        return userCommandText.equals(LogoutCommand.COMMAND_WORD);
     }
 
-    private boolean isAddCommand(CommandResult result) {
-        return (result.feedbackToUser.equals(AddCommand.MESSAGE_SUCCESS)
-                || result.feedbackToUser.equals(AddCommand.MESSAGE_DUPLICATE_PERSON));
-    }
-
-    private boolean isDeleteCommand(CommandResult result) {
-        return (result.feedbackToUser.equals(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS)
-                || result.feedbackToUser.equals(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX)
-                || result.feedbackToUser.equals(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK));
-    }
-
-    private boolean isClearCommand(CommandResult result) {
-        return result.feedbackToUser.equals(ClearCommand.MESSAGE_SUCCESS);
-    }
-
-    private boolean isUnauthorizedPOCommand(CommandResult result) {
-        return (isAddCommand(result) || isClearCommand(result) || isDeleteCommand(result));
-    }
-
-    private boolean isInvalidPasswordCommand(CommandResult result) {
-        return ((isHQP && isPOPasswordCommand(result)) || (isPO && isHQPPasswordCommand(result)));
-    }
-
-
+    //@@author
     /** Clears the command input box */
     private void clearCommandInput() {
         commandInput.setText("");
     }
 
     /** Clears the output display area */
-    public void clearOutputConsole(){
+    private void clearOutputConsole(){
         outputConsole.clear();
     }
 
+    //@@author iamputradanish
+    private void clearScreen(){
+        clearCommandInput();
+        clearOutputConsole();
+    }
+
+    //@@author
     /** Displays the result of a command execution to the user. */
-    public void displayResult(CommandResult result) {
+    private void displayResult(CommandResult result) {
         clearOutputConsole();
         final Optional<List<? extends ReadOnlyPerson>> resultPersons = result.getRelevantPersons();
         if(resultPersons.isPresent()) {
@@ -188,9 +185,9 @@ public class MainWindow {
         display(result.feedbackToUser);
     }
 
-    public void displayWelcomeMessage(String version, String storageFilePath) {
+    void displayWelcomeMessage(String version, String storageFilePath) {
         String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
-        display(MESSAGE_WELCOME, version, MESSAGE_PROGRAM_LAUNCH_ARGS_USAGE, storageFileInfo, "\n", MESSAGE_ENTER_PASSWORD, "\n");
+        display(MESSAGE_WELCOME, version, storageFileInfo, tad.outputDatMainHrs() + "\n" , Password.MESSAGE_ENTER_PASSWORD);
     }
 
     /**
@@ -198,14 +195,18 @@ public class MainWindow {
      * Private contact details are hidden.
      */
     private void display(List<? extends ReadOnlyPerson> persons) {
-        display(new Formatter().format(persons));
+        display(new UiFormatter().format(persons));
+    }
+
+    public void displayTimestamps(List<String> history){
+        display(new UiFormatter().formatForStrings(history));
     }
 
     /**
      * Displays the given messages on the output display area, after formatting appropriately.
      */
     private void display(String... messages) {
-        outputConsole.setText(outputConsole.getText() + new Formatter().format(messages));
+        outputConsole.setText(outputConsole.getText() + new UiFormatter().format(messages));
     }
 
 }

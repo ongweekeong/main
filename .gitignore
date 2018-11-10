@@ -2,7 +2,14 @@
 *.class
 
 # Default data file
-addressbook.txt
+notifications\.txt
+policeRecords.txt
+screeningHistory.txt
+requestList.txt
+inboxMessages/
+
+# Logger files
+/config.json
 
 # Package Files #
 *.jar
@@ -21,4 +28,9 @@ publish.sh
 # Gradle build files
 .gradle/
 build/
+parserLog\.log\.1
+
+notifications\.txt
+
+Todo List\.txt
 

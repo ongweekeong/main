@@ -3,6 +3,8 @@ package seedu.addressbook.data.person;
 import seedu.addressbook.common.Utils;
 import seedu.addressbook.data.exception.DuplicateDataException;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -16,12 +18,26 @@ public class UniquePersonList implements Iterable<Person> {
     /**
      * Signals that an operation would have violated the 'no duplicates' property of the list.
      */
+    public static Timestamp screeningTimeStamp;
+    private static final SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
     public static class DuplicatePersonException extends DuplicateDataException {
         protected DuplicatePersonException() {
             super("Operation would result in duplicate persons");
         }
     }
+//@@author muhdharun
+    /**
+     * Signals that an operation adding a person in the list would fail because
+     * it would result in duplicate NRICs.
+     */
 
+    public static class DuplicateNricException extends DuplicateDataException {
+        protected DuplicateNricException() {
+            super("Operation would result in duplicate NRIC");
+        }
+    }
+//@@author
     /**
      * Signals that an operation targeting a specified person in the list would fail because
      * there is no such matching person in the list.
@@ -35,6 +51,21 @@ public class UniquePersonList implements Iterable<Person> {
      */
     public UniquePersonList() {}
 
+    /**
+     * Checks if a person in the records has the specified NRIC
+     *
+     */
+
+//@@author muhdharun
+    public boolean containNric(Person toCheck) {
+        for ( Person person : internalList){
+            if (person.getNric().getIdentificationNumber().equals(toCheck.getNric().getIdentificationNumber())){
+                return true;
+            }
+        }
+        return false;
+    }
+//@@author
     /**
      * Constructs a person list with the given persons.
      */
@@ -82,14 +113,16 @@ public class UniquePersonList implements Iterable<Person> {
         return internalList.contains(toCheck);
     }
 
+
+
     /**
      * Adds a person to the list.
      *
      * @throws DuplicatePersonException if the person to add is a duplicate of an existing person in the list.
      */
-    public void add(Person toAdd) throws DuplicatePersonException {
-        if (contains(toAdd)) {
-            throw new DuplicatePersonException();
+    public void add(Person toAdd) throws DuplicateNricException {
+        if (contains(toAdd) || containNric(toAdd)) {
+            throw new DuplicateNricException();
         }
         internalList.add(toAdd);
     }

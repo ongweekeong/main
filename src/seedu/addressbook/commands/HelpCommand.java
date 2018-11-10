@@ -1,6 +1,8 @@
 package seedu.addressbook.commands;
 
 
+import seedu.addressbook.password.Password;
+
 /**
  * Shows help instructions.
  */
@@ -15,16 +17,45 @@ public class HelpCommand extends Command {
             + "\n" + DeleteCommand.MESSAGE_USAGE
             + "\n" + ClearCommand.MESSAGE_USAGE
             + "\n" + EditCommand.MESSAGE_USAGE
+            + "\n" + CheckCommand.MESSAGE_USAGE
+            + "\n" + CheckPOStatusCommand.MESSAGE_USAGE
+            + "\n" + UpdateStatusCommand.MESSAGE_USAGE
             + "\n" + FindCommand.MESSAGE_USAGE
+            + "\n" + ShowUnreadCommand.MESSAGE_USAGE
+            + "\n" + InboxCommand.MESSAGE_USAGE
+            + "\n" + RequestHelpCommand.MESSAGE_USAGE
+            + "\n" + DispatchCommand.MESSAGE_USAGE
+            + "\n" + ReadCommand.MESSAGE_USAGE
             + "\n" + ListCommand.MESSAGE_USAGE
-            + "\n" + ViewCommand.MESSAGE_USAGE
+            + "\n" + ViewAllCommand.MESSAGE_USAGE
+            + "\n" + Password.UPDATE_PASSWORD_MESSAGE_USAGE
+            + "\n" + HelpCommand.MESSAGE_USAGE
+            + "\n" + LogoutCommand.MESSAGE_USAGE
+            + "\n" + ShutdownCommand.MESSAGE_USAGE;
+
+    public static final String MESSAGE_PO_USAGES = FindCommand.MESSAGE_USAGE
+            + "\n" + ListCommand.MESSAGE_USAGE
             + "\n" + ViewAllCommand.MESSAGE_USAGE
             + "\n" + HelpCommand.MESSAGE_USAGE
-            + "\n" + LockCommand.MESSAGE_USAGE
-            + "\n" + ExitCommand.MESSAGE_USAGE;
+            + "\n" + RequestHelpCommand.MESSAGE_USAGE
+            + "\n" + ShowUnreadCommand.MESSAGE_USAGE
+            + "\n" + InboxCommand.MESSAGE_USAGE
+            + "\n" + ReadCommand.MESSAGE_USAGE
+            + "\n" + LogoutCommand.MESSAGE_USAGE
+            + "\n" + ShutdownCommand.MESSAGE_USAGE;
 
+
+    //@@author iamputradanish
     @Override
     public CommandResult execute() {
-        return new CommandResult(MESSAGE_ALL_USAGES);
+        Password password = new Password();
+        boolean isHQPFlag = password.isHQPUser();
+
+        if(isHQPFlag) {
+            return new CommandResult(MESSAGE_ALL_USAGES);
+        }
+        else{
+            return new CommandResult(MESSAGE_PO_USAGES);
+        }
     }
 }
