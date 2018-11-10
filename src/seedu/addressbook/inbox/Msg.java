@@ -8,12 +8,11 @@ import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.sql.Timestamp;
 
-/** Stores information on notifications that are sent from one user to another.
- *  @params SenderID, Read Status, Priority, timestamp, message are compulsory fields.
+/**
+ * Stores information on notifications that are sent from one user to another.
+ * @params SenderID, Read Status, Priority, timestamp, message are compulsory fields.
  * @params location (x,y coordinates) and ETA are non-compulsory fields.
  */
-
-
 public class Msg implements Comparable <Msg> {
     private String senderId = Password.getID();
     private String newMsg;
@@ -21,11 +20,11 @@ public class Msg implements Comparable <Msg> {
     private Location location;
     private int eta = -1;
 
-    public boolean isRead;
-    protected boolean isLocationAvailable;
+    private boolean isRead;
+    boolean isLocationAvailable;
     private Timestamp time;
-    public static final boolean MESSAGE_IS_READ = true;
-    public static final boolean MESSAGE_IS_UNREAD = false;
+    private static final boolean MESSAGE_IS_READ = true;
+    private static final boolean MESSAGE_IS_UNREAD = false;
 
     public enum Priority {
         HIGH(3),   // For messages that require HPQ intervention
@@ -66,9 +65,9 @@ public class Msg implements Comparable <Msg> {
         location = myLocale;
     }
 
-    public Msg(Priority urgency, String message, Location requesterLocale, int myEta){ // Constructor for request backup message
-        isLocationAvailable = true;                                                    // An ack message should be sent to PO requesting
-        isRead = MESSAGE_IS_UNREAD;                                                    // backup, stating ETA of backup deployed.
+    // Constructor for request backup message
+    public Msg(Priority urgency, String message, Location requesterLocale, int myEta){
+        isLocationAvailable = true;
         priority = urgency;
         time = new Timestamp(System.currentTimeMillis());
         newMsg = message;
@@ -76,65 +75,91 @@ public class Msg implements Comparable <Msg> {
         eta = myEta;
     }
 
-    public void setSenderId(String senderId) {
+    /**
+     * Implements comparable so that messages can be sorted first by its read status, followed by the priority
+     * and then the timestamp. Unread messages, higher priority messages and earlier messages should be sorted
+     * ahead of other messages.
+     * @param other
+     * @return
+     */
+    @Override
+    public int compareTo(Msg other) {
+        int otherReadState = other.isRead? 1 : 0;
+        int myReadState = isRead? 1 : 0;
+        int compare = Integer.compare(myReadState, otherReadState);
+        if(compare == 0) { // If same read status, compare priorities.
+            compare = compareByPriority(other);
+        }
+        if(compare == 0){ // If priority is the same, compare by timestamp.
+            compare = compareByTimestamp(other);
+        }
+
+        return compare;
+    }
+
+    private int compareByPriority(Msg other){
+        return Integer.compare(other.getPriority().toInteger(), getPriority().toInteger());
+    }
+
+    private int compareByTimestamp(Msg other){
+        return getTime().compareTo(other.getTime());
+    }
+
+    void setSenderId(String senderId) {
         this.senderId = senderId;
     }
 
     public String getSenderId(){
-        return this.senderId;
+        return senderId;
+    }
+
+    public boolean hasBeenRead(){
+        return isRead;
+    }
+
+    public void setReadStatus(boolean isRead){
+        this.isRead = isRead;
     }
 
     public void setMsg(String msg){
-        this.newMsg = msg;
+        newMsg = msg;
     }
 
-    public void setPriority(Priority urgency){
-        this.priority = urgency;
+    void setPriority(Priority urgency){
+        priority = urgency;
     }
 
     public Priority getPriority(){
-        return this.priority;
+        return priority;
     }
 
     public String getMsg(){
-        return this.newMsg;
+        return newMsg;
     }
 
     public void setLocation(Location place){
-        this.location = place;
+        location = place;
         isLocationAvailable = true;
     }
 
-    public Location getLocation(){
-        return location;
-    }
-
     public void setMsgAsRead(){
-        this.isRead = MESSAGE_IS_READ;
+        isRead = MESSAGE_IS_READ;
     }
 
-    public double getLongitude(){
+    double getLongitude(){
         return location.getLongitude();
     }
 
-    public double getLatitude() {
+    double getLatitude() {
         return location.getLatitude();
     }
 
-    public void setEta(int eta){
-        this.eta = eta;
+    int getEta(){
+        return eta;
     }
 
-    public int getEta(){
-        return this.eta;
-    }
-
-    public boolean hasEta(){
+    boolean hasEta(){
        return eta != -1;
-    }
-
-    public void setTime(){
-        time = new Timestamp(System.currentTimeMillis()); // Set to current time if no timestamp passed.
     }
 
     public void setTime(Timestamp time){
@@ -142,34 +167,11 @@ public class Msg implements Comparable <Msg> {
     }
 
     public Timestamp getTime(){
-        return this.time;
+        return time;
     }
 
-    public String getTimeString(){
-        return TimeAndDate.outputDATHrs(this.time);
-    }
-
-    @Override
-    public int compareTo(Msg other) {
-        int otherReadState = other.isRead? 1 : 0;
-        int myReadState = this.isRead? 1 : 0;
-        int compare = Integer.compare(myReadState, otherReadState);
-        if(compare == 0) { // If same read status, compare priorities.
-            compare = compareByPriority(other);
-        }
-        if(compare == 0){ // If priority is the same, compare by timestamp.
-                compare = compareByTimestamp(other);
-        }
-
-        return compare;
-    }
-
-    public int compareByPriority(Msg other){
-        return Integer.compare(other.getPriority().toInteger(), this.getPriority().toInteger());
-    }
-
-    public int compareByTimestamp(Msg other){
-        return this.getTime().compareTo(other.getTime());
+    public String getTimeString() {
+        return TimeAndDate.outputDATHrs(time);
     }
 
 }
