@@ -10,7 +10,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
 import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.WriteNotification;
+import seedu.addressbook.inbox.NotificationWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ public class DispatchCommand extends Command {
 
     public static String MESSAGE_BACKUP_DISPATCH_SAME = "Backup resource & Requester cannot be the same officer %s!";
 
-    private final WriteNotification writeNotificationToBackupOfficer;
-    private final WriteNotification writeNotificationToRequester;
+    private final NotificationWriter writeNotificationToBackupOfficer;
+    private final NotificationWriter writeNotificationToRequester;
 
     private Location origin;
     private ArrayList<Location> destinationList;
@@ -44,8 +44,8 @@ public class DispatchCommand extends Command {
      * Convenience constructor using raw values
      */
     public DispatchCommand(String backupOfficer, String requester, String caseName) {
-        writeNotificationToBackupOfficer = new WriteNotification(backupOfficer);
-        writeNotificationToRequester = new WriteNotification(requester);
+        writeNotificationToBackupOfficer = new NotificationWriter(backupOfficer);
+        writeNotificationToRequester = new NotificationWriter(requester);
 
         this.offense = caseName;
         this.backupOfficer = backupOfficer;

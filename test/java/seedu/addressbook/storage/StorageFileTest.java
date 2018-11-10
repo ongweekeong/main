@@ -9,7 +9,7 @@ import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
 import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.ReadNotification;
+import seedu.addressbook.inbox.NotificationReader;
 import seedu.addressbook.storage.StorageFile.StorageOperationException;
 
 import java.io.IOException;
@@ -119,7 +119,7 @@ public class StorageFileTest {
     public void load_missingInboxFile() {
         String result = "";
         try{
-            ReadNotification testReader = new ReadNotification("Nonsense");
+            NotificationReader testReader = new NotificationReader("Nonsense");
             TreeSet<Msg> testSet = testReader.ReadFromFile();
         }
         catch (IOException e){

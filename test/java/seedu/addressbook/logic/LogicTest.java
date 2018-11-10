@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -397,7 +396,7 @@ public class LogicTest {
 
     @Test
     public void execute_request_successful() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
         String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
         Password.unlockHQP();
 
@@ -409,7 +408,7 @@ public class LogicTest {
 
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
         Password.unlockHQP(); Password.lockIsPO();
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
@@ -442,12 +441,12 @@ public class LogicTest {
     @Test
     public void execute_dispatch_successful() throws Exception {
         PatrolResourceStatus.resetPatrolResourceStatus();
-        WriteNotification.clearAllInbox();
+        NotificationWriter.clearAllInbox();
         String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po5");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po5", expectedMessage1);
 
         PatrolResourceStatus.resetPatrolResourceStatus();
-        WriteNotification.clearAllInbox();
+        NotificationWriter.clearAllInbox();
         String expectedMessage2 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po4");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 gun po4", expectedMessage2);
     }
@@ -1357,7 +1356,7 @@ public class LogicTest {
     public void execute_missingInboxFile() {
         String result = "";
         try{
-            ReadNotification testReader = new ReadNotification("Nonsense");
+            NotificationReader testReader = new NotificationReader("Nonsense");
             TreeSet<Msg> testSet = testReader.ReadFromFile();
         }
         catch (IOException e){
@@ -1369,7 +1368,7 @@ public class LogicTest {
     @Test
     public void execute_inbox_noUnreadMessages() throws Exception {
         Password.lockIsPO(); Password.lockIsPO();
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String inputCommand = InboxCommand.COMMAND_WORD;
         final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
         assertCommandBehavior(inputCommand, expected);
@@ -1378,7 +1377,7 @@ public class LogicTest {
     @Test
     public void execute_inbox_successful_readAndUnread() throws Exception {
         Password.lockIsPO(); Password.lockIsPO();
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final String test = "This is the unread test msg";
         Msg testMsg = generateMsgInInbox(test);
         Thread.sleep(50);
@@ -1400,7 +1399,7 @@ public class LogicTest {
 
     @Test
     public void execute_checkEmptyInbox_successful() throws Exception{
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String expectedResult = Messages.MESSAGE_NO_UNREAD_MSGS;
         assertEquals(expectedResult, r.feedbackToUser);
@@ -1420,7 +1419,7 @@ public class LogicTest {
     @Test
     public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
         Password.lockIsHQP(); Password.lockIsPO();
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int messageNum = 1;
         String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
         final String testMessage = "This is a test message.";
@@ -1433,7 +1432,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Password.lockIsPO(); Password.lockIsHQP();
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
@@ -1446,7 +1445,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsgWithOutOfBoundsIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Password.lockIsHQP(); Password.lockIsPO(); //Set static boolean flags from other test cases back to original state.
         Msg testMsg;
         final int numOfMsgs = 3;
@@ -1465,7 +1464,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsg_invalidIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
         final int numOfMsgs = 3;
         for(int i=0; i<numOfMsgs; i++){
@@ -1479,7 +1478,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsg_veryLargeIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg = generateMsgInInbox("This is a test message.");
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 2147483648"; //Outside integer max value
@@ -1489,7 +1488,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsg_ValidIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Msg testMsg;
         int index = 1;
         final int numOfMsgs = 3;
@@ -1805,7 +1804,7 @@ public class LogicTest {
     Msg generateMsgInInbox(String testMessage) throws Exception {
         TestDataHelper MessageGenerator = new TestDataHelper();
         Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
-        WriteNotification testWriter = new WriteNotification(MessageFilePaths.FILEPATH_DEFAULT, true);
+        NotificationWriter testWriter = new NotificationWriter(MessageFilePaths.FILEPATH_DEFAULT, true);
         testWriter.writeToFile(testMsg);
         return testMsg;
     }
@@ -1814,7 +1813,7 @@ public class LogicTest {
         TestDataHelper MessageGenerator = new TestDataHelper();
         Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
         testMsg.setMsgAsRead();
-        WriteNotification testWriter = new WriteNotification(MessageFilePaths.FILEPATH_DEFAULT, true);
+        NotificationWriter testWriter = new NotificationWriter(MessageFilePaths.FILEPATH_DEFAULT, true);
         testWriter.writeToFile(testMsg);
         return testMsg;
     }

@@ -12,13 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeSet;
 
-public class ReadNotification {
+public class NotificationReader {
     private static String path;
     private Msg returnMsg;
     private int unreadMsgs = 0;
     private TreeSet<Msg> sortedMsgs = new TreeSet<>();
 
-    public ReadNotification(String filePath) {
+    public NotificationReader(String filePath) {
         path = filePath;
     }
 

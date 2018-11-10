@@ -8,16 +8,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.TreeSet;
 
-public class WriteNotification {
+public class NotificationWriter {
     private String path;
     private boolean isAppend;
 
-    public WriteNotification(String userId){
+    public NotificationWriter(String userId){
         path = MessageFilePaths.getFilePathFromUserId(userId);
         this.isAppend = true;
     }
 
-    public WriteNotification(String filePath, boolean appendValue){
+    public NotificationWriter(String filePath, boolean appendValue){
         path = filePath;
         isAppend = appendValue;
     }

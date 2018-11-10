@@ -18,27 +18,27 @@ public class Inbox {
     public static int numUnreadMsgs = -1;
     protected TreeSet<Msg> notificationsToPrint = new TreeSet<>();
     protected static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
-    protected static ReadNotification readNotification;
-    protected static WriteNotification allMessages;
+    protected static NotificationReader notificationReader;
+    protected static NotificationWriter allMessages;
     int messageIndex = 1;
 
-    static WriteNotification newMessages;
+    static NotificationWriter newMessages;
 
 
     public Inbox(String policeOfficerId) {
         MESSAGE_STORAGE_FILEPATH = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
-        readNotification = new ReadNotification(MESSAGE_STORAGE_FILEPATH);
-        newMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, true);
-        allMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, false);
+        notificationReader = new NotificationReader(MESSAGE_STORAGE_FILEPATH);
+        newMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, true);
+        allMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, false);
     }
 
     public TreeSet<Msg> loadMsgs() throws IOException {
-        notificationsToPrint = readNotification.ReadFromFile();
+        notificationsToPrint = notificationReader.ReadFromFile();
         messageIndex = 1;
         for (Msg message : notificationsToPrint){
             recordNotifications.put(messageIndex++, message);
         }
-        numUnreadMsgs = readNotification.getNumUnreadMsgs();
+        numUnreadMsgs = notificationReader.getNumUnreadMsgs();
         return notificationsToPrint;
     }
 
