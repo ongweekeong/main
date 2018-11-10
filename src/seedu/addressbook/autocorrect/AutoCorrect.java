@@ -101,7 +101,7 @@ public class AutoCorrect {
             displayCommand = displayCommand.substring(i + 1);
         }
         else {
-            boolean isHQPFlag = password.isHQPUser();
+            boolean isHQPFlag = password.isHqpUser();
             if(isHQPFlag) {
                 displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
             }

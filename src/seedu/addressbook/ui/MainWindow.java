@@ -94,7 +94,7 @@ public class MainWindow {
 
         else if(password.isUnauthorizedAccess(userCommandText)){
             clearScreen();
-            String unauthorizedCommandResult = password.invalidPOResult(userCommandText);
+            String unauthorizedCommandResult = password.invalidPoResult(userCommandText);
             display(unauthorizedCommandResult);
         }
         //@@author ShreyasKp
@@ -114,7 +114,7 @@ public class MainWindow {
                     display(displayCommand);
                 }
                 else {
-                    boolean isHQPFlag = password.isHQPUser();
+                    boolean isHQPFlag = password.isHqpUser();
                     if(isHQPFlag) {
                         displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
                     }
@@ -135,7 +135,7 @@ public class MainWindow {
 
     //@@author iamputradanish
     private boolean canUpdatePassword(String userCommandText){
-        return Password.isHQPUser() && isUpdatePasswordCommand(userCommandText);
+        return Password.isHqpUser() && isUpdatePasswordCommand(userCommandText);
     }
 
     //@@author

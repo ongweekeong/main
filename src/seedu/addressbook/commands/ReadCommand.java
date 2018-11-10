@@ -25,7 +25,7 @@ public class ReadCommand extends Command {
         this.index = targetVisibleIndex;
     }
 
-    public Inbox myInbox = new Inbox(Password.getID());
+    public Inbox myInbox = new Inbox(Password.getId());
 
     public CommandResult execute() {
         if(index == Integer.MAX_VALUE){

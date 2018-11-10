@@ -1,7 +1,6 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
-import seedu.addressbook.common.Messages;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
@@ -29,7 +28,7 @@ public class InboxCommand extends Command {
     @Override
     public CommandResult execute() {
 
-        Inbox myInbox = new Inbox(Password.getID());
+        Inbox myInbox = new Inbox(Password.getId());
         TreeSet<Msg> allMsgs;
         int myUnreadMsgs;
         int totalMsgs;
@@ -49,7 +48,7 @@ public class InboxCommand extends Command {
 
         } catch (IOException e) {
             //e.printStackTrace();
-            return new CommandResult(String.format(MESSAGE_UNKNOWN_ERROR, MessageFilePaths.getFilePathFromUserId(Password.getID())));
+            return new CommandResult(String.format(MESSAGE_UNKNOWN_ERROR, MessageFilePaths.getFilePathFromUserId(Password.getId())));
         }
     }
 

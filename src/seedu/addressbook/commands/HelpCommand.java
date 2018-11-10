@@ -49,7 +49,7 @@ public class HelpCommand extends Command {
     @Override
     public CommandResult execute() {
         Password password = new Password();
-        boolean isHQPFlag = password.isHQPUser();
+        boolean isHQPFlag = password.isHqpUser();
 
         if(isHQPFlag) {
             return new CommandResult(MESSAGE_ALL_USAGES);

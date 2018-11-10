@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 
 
 public class Msg implements Comparable <Msg> {
-    private String senderId = Password.getID();
+    private String senderId = Password.getId();
     private String newMsg;
     private Priority priority;
     private Location location;

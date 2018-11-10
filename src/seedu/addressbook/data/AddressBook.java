@@ -1,6 +1,5 @@
 package seedu.addressbook.data;
 
-import seedu.addressbook.data.person.NRIC;
 import seedu.addressbook.data.person.Person;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.person.UniquePersonList;
@@ -11,8 +10,6 @@ import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.io.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -106,7 +103,7 @@ public class AddressBook {
             while ((line = br.readLine()) !=  null){
                 String[] parts = line.split(" ",3);
                 if (parts[0].equals(tempNric)){
-                    myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getID());
+                    myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
                     myPrinter.close();
                     br.close();
                     return;
@@ -114,12 +111,12 @@ public class AddressBook {
                 line = br.readLine();
                 continue;
             }
-            myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getID());
+            myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
             myPrinter.close();
             br.close();
         }
         catch (Exception e){
-            myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getID());
+            myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getId());
 
             myPrinter.close();
             br.close();

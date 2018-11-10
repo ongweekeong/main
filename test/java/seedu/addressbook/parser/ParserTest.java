@@ -182,21 +182,21 @@ public class ParserTest {
     @Test
     public void execute_isRejectPO_allowed(){
         Password password = new Password();
-        boolean result = password.isRejectPO("list");
+        boolean result = password.isRejectPo("list");
         assertFalse(result);
     }
 
     @Test
     public void execute_isRejectPO(){
         Password password = new Password();
-        boolean result = password.isRejectPO("add");
+        boolean result = password.isRejectPo("add");
         assertTrue(result);
     }
 
     @Test
     public void execute_getUnauthorizedPOCommand_getAdd(){
         Password password = new Password();
-        String result =  password.getUnauthorizedPOCommand("add 1");
+        String result =  password.getUnauthorizedPoCommand("add 1");
         assertEquals("add",result);
     }
 

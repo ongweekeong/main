@@ -38,7 +38,7 @@ public class ClearInboxCommand extends Command {
 
         try {
             if(myInbox == null) {
-                myInbox = MessageFilePaths.getFilePathFromUserId(Password.getID());
+                myInbox = MessageFilePaths.getFilePathFromUserId(Password.getId());
             }
             ReadNotification dummyReader = new ReadNotification(myInbox);
             TreeSet<Msg> dummySet = dummyReader.ReadFromFile(); // Exception thrown if file does not exist

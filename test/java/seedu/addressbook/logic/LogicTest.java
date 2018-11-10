@@ -30,7 +30,6 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.exp;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
@@ -179,16 +178,16 @@ public class LogicTest {
     @Test
     public void execute_unknownCommandWord_forHQP() throws Exception {
         String unknownCommand = "uicfhmowqewca";
-        Password.unlockHQP();
+        Password.unlockHqp();
         assertCommandBehavior(unknownCommand, HelpCommand.MESSAGE_ALL_USAGES);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     @Test
     public void execute_help_forHQP() throws Exception {
-        Password.unlockHQP();
+        Password.unlockHqp();
         assertCommandBehavior("help", HelpCommand.MESSAGE_ALL_USAGES);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     //@@author iamputradanish
@@ -196,16 +195,16 @@ public class LogicTest {
     @Test
     public void execute_unknownCommandWord_forPO() throws Exception {
         String unknownCommand = "uicfhmowqewca";
-        unlockPO();
+        unlockPo();
         assertCommandBehavior(unknownCommand, HelpCommand.MESSAGE_PO_USAGES);
-        Password.lockIsPO();
+        Password.lockIsPo();
     }
 
     @Test
     public void execute_help_forPO() throws Exception {
-        unlockPO();
+        unlockPo();
         assertCommandBehavior("help", HelpCommand.MESSAGE_PO_USAGES);
-        Password.lockIsPO();
+        Password.lockIsPo();
     }
 
     @Test
@@ -398,7 +397,7 @@ public class LogicTest {
     public void execute_request_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
         String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
-        Password.unlockHQP();
+        Password.unlockHqp();
 
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " gun", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " theft", expectedMessage);
@@ -409,12 +408,12 @@ public class LogicTest {
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        Password.unlockHQP(); Password.lockIsPO();
+        Password.unlockHqp(); Password.lockIsPo();
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
         assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg());
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
 
@@ -913,7 +912,7 @@ public class LogicTest {
         String result = Password.unlockDevice("papa123",5);
         assertEquals(String.format(Password.MESSAGE_WELCOME , Password.MESSAGE_HQP)
                 + "\n" + Password.MESSAGE_ENTER_COMMAND , result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     @Test
@@ -922,13 +921,13 @@ public class LogicTest {
         assertEquals(String.format(Password.MESSAGE_WELCOME , Password.MESSAGE_PO + Password.MESSAGE_ONE)
                 + "\n" + Password.MESSAGE_UNAUTHORIZED
                 + "\n" + Password.MESSAGE_ENTER_COMMAND , result);
-        Password.lockIsPO();
+        Password.lockIsPo();
     }
 
     @Test
     public void execute_wrongPassword_firstTime() throws Exception{
-        Password.lockIsPO();
-        Password.lockIsHQP();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 5;
         Password.setWrongPasswordCounter(numberOfAttemptsLeft);
@@ -940,8 +939,8 @@ public class LogicTest {
     }
     @Test
     public void execute_wrongPassword_fourthTime() throws Exception{
-        Password.lockIsPO();
-        Password.lockIsHQP();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 1;
         Password.setWrongPasswordCounter(numberOfAttemptsLeft);
@@ -954,8 +953,8 @@ public class LogicTest {
 
     @Test
     public void execute_wrongPassword_lastTime() throws Exception{
-        Password.lockIsPO();
-        Password.lockIsHQP();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 0;
         Password.setWrongPasswordCounter(numberOfAttemptsLeft);
@@ -980,29 +979,29 @@ public class LogicTest {
 
     @Test
     public void execute_unlockHQPUser(){
-        unlockHQP();
-        boolean result = Password.isHQPUser();
+        unlockHqp();
+        boolean result = Password.isHqpUser();
         assertTrue(result);
     }
 
     @Test
     public void execute_unlockPOUser(){
-        unlockPO();
-        boolean result = Password.isPO();
+        unlockPo();
+        boolean result = Password.isPo();
         assertTrue(result);
     }
 
     @Test
     public void execute_lockHQPUser(){
-        Password.lockIsHQP();
-        boolean result = Password.isHQPUser();
+        Password.lockIsHqp();
+        boolean result = Password.isHqpUser();
         assertFalse(result);
     }
 
     @Test
     public void execute_lockPOUser(){
-        Password.lockIsPO();
-        boolean result = Password.isPO();
+        Password.lockIsPo();
+        boolean result = Password.isPo();
         assertFalse(result);
     }
 
@@ -1021,7 +1020,7 @@ public class LogicTest {
 
     @Test
     public void execute_wrongHQP(){
-        boolean result = correctHQP("hqp","-795402416" , 123);
+        boolean result = correctHqp("hqp","-795402416" , 123);
         assertFalse(result);
     }
 
@@ -1055,7 +1054,7 @@ public class LogicTest {
 
     @Test
     public void execute_correctHQP(){
-        boolean result = correctHQP("hqp","-795402416" , -795402416);
+        boolean result = correctHqp("hqp","-795402416" , -795402416);
         assertTrue(result);
     }
 
@@ -1099,29 +1098,29 @@ public class LogicTest {
     @Test
     public void execute_updatePassword_wrongPassword() throws Exception{
         Password password = new Password();
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         String result = password.updatePassword("thisiswrong", 5);
         assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
                 + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
                 + "\n" + MESSAGE_ENTER_PASSWORD,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     @Test
     public void execute_updatePassword_correctHQPPassword() throws Exception{
         Password password = new Password();
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         String result = password.updatePassword("papa123", 5);
         assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":" ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_tooShort() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "po1";
@@ -1131,26 +1130,26 @@ public class LogicTest {
                 + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
                 + "\n" + Password.MESSAGE_TRY_AGAIN
         ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingAlphabet() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "123456";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
                         + "\n" + Password.MESSAGE_TRY_AGAIN ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingNumber() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "popopo";
@@ -1158,13 +1157,13 @@ public class LogicTest {
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingNumberAndAlphabet() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "*********";
@@ -1172,13 +1171,13 @@ public class LogicTest {
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_alreadyExists() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "papa123";
@@ -1186,13 +1185,13 @@ public class LogicTest {
         assertEquals(Password.MESSAGE_PASSWORD_EXISTS
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_reenterPassword() throws Exception {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "mama123";
@@ -1200,22 +1199,22 @@ public class LogicTest {
         String result = password.updatePassword(userInput,5);
         assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD_AGAIN,result);
         assertTrue(Password.isUpdatePasswordConfirmNow());
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
     }
 
     @Test
     public void execute_updatePasswordFinal_notSame() throws Exception {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
-        Password.setOTP("mama123");
+        Password.setOtp("mama123");
         String result = password.updatePasswordFinal("thisiswrong");
         assertEquals(Password.MESSAGE_NOT_SAME
                 + "\n" + Password.MESSAGE_TRY_AGAIN, result);
         assertFalse(isUpdatePasswordConfirmNow());
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
     }
@@ -1223,11 +1222,11 @@ public class LogicTest {
     @Test
     public void execute_updatePasswordFinal_success() throws Exception {
         Password password = new Password();
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         password.updatePassword("papa123", 5);
         String userInput = "mama123";
-        Password.setOTP(userInput);
+        Password.setOtp(userInput);
         String result = password.updatePasswordFinal(userInput);
         assertFalse(isUpdatePasswordConfirmNow());
         assertFalse(getIsUpdatingPassword());
@@ -1235,32 +1234,32 @@ public class LogicTest {
                 + "\n" + MESSAGE_ENTER_COMMAND, result);
         password.updatePassword("mama123", 5);
         userInput = "papa123";
-        Password.setOTP(userInput);
+        Password.setOtp(userInput);
         password.updatePasswordFinal(userInput);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
     }
 
     @Test
     public void execute_getFullID(){
-        String result = getFullID(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
+        String result = getFullId(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
         assertEquals(Password.MESSAGE_HQP,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_1_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_1_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_ONE,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_2_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_2_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_TWO,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_3_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_3_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_THREE,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_4_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_4_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FOUR,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_5_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_5_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE,result);
     }
 
     @Test
     public void execute_getFullID_ghost(){
-        String result = getFullID("nonsense");
+        String result = getFullId("nonsense");
         assertEquals("Ghost",result);
     }
 
@@ -1338,10 +1337,10 @@ public class LogicTest {
 
     @Test
     public void execute_getID_HQP(){
-        Password.unlockHQP();
-        String result = getID();
+        Password.unlockHqp();
+        String result = getId();
         assertEquals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     //@@author ongweekeong
@@ -1367,7 +1366,7 @@ public class LogicTest {
 
     @Test
     public void execute_inbox_noUnreadMessages() throws Exception {
-        Password.lockIsPO(); Password.lockIsPO();
+        Password.lockIsPo(); Password.lockIsPo();
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String inputCommand = InboxCommand.COMMAND_WORD;
         final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
@@ -1376,7 +1375,7 @@ public class LogicTest {
 
     @Test
     public void execute_inbox_successful_readAndUnread() throws Exception {
-        Password.lockIsPO(); Password.lockIsPO();
+        Password.lockIsPo(); Password.lockIsPo();
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final String test = "This is the unread test msg";
         Msg testMsg = generateMsgInInbox(test);
@@ -1407,7 +1406,7 @@ public class LogicTest {
 
     @Test
     public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
-        Password.lockIsHQP(); Password.lockIsPO();
+        Password.lockIsHqp(); Password.lockIsPo();
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int messageNum = 1;
         String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
@@ -1422,7 +1421,7 @@ public class LogicTest {
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Password.lockIsPO(); Password.lockIsHQP();
+        Password.lockIsPo(); Password.lockIsHqp();
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
         String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
@@ -1432,7 +1431,7 @@ public class LogicTest {
     @Test
     public void execute_readMsgWithOutOfBoundsIndex() throws Exception {
         WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Password.lockIsHQP(); Password.lockIsPO(); //Set static boolean flags from other test cases back to original state.
+        Password.lockIsHqp(); Password.lockIsPo(); //Set static boolean flags from other test cases back to original state.
         Msg testMsg;
         final int numOfMsgs = 3;
         for (int i=0; i<numOfMsgs; i++){

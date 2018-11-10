@@ -1,6 +1,5 @@
 package seedu.addressbook.parser;
 
-import org.apache.commons.codec.binary.StringUtils;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.data.exception.IllegalValueException;
@@ -465,8 +464,8 @@ public class Parser {
                     RequestHelpCommand.MESSAGE_USAGE));
         }
 
-        message = Password.getID().toUpperCase() + " needs help with " + caseName + " at location "  +
-                        PatrolResourceStatus.getLocation(Password.getID()).getGoogleMapsURL();
+        message = Password.getId().toUpperCase() + " needs help with " + caseName + " at location "  +
+                        PatrolResourceStatus.getLocation(Password.getId()).getGoogleMapsURL();
 
         try {
             return new RequestHelpCommand(caseName, message);

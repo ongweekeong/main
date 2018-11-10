@@ -34,15 +34,15 @@ public class RequestHelpCommand extends Command {
      */
     public RequestHelpCommand(String caseName, String messageString) throws IllegalValueException {
         writeNotification = new WriteNotification(MessageFilePaths.FILEPATH_HQP_INBOX, true);
-        requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString, PatrolResourceStatus.getLocation(Password.getID()));
+        requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString, PatrolResourceStatus.getLocation(Password.getId()));
     }
 
     @Override
     public CommandResult execute() {
         try {
             writeNotification.writeToFile(requestHelpMessage);
-            PatrolResourceStatus.setStatus(Password.getID(), true);
-            return new CommandResult(String.format(MESSAGE_REQUEST_SUCCESS, Password.getID()));
+            PatrolResourceStatus.setStatus(Password.getId(), true);
+            return new CommandResult(String.format(MESSAGE_REQUEST_SUCCESS, Password.getId()));
         } catch (IOException ioe) {
             return new CommandResult(Messages.MESSAGE_SAVE_ERROR);
         } catch (IllegalValueException ive) {
