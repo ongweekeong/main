@@ -29,71 +29,78 @@ public class NotificationReader {
         BufferedReader br = new BufferedReader(new FileReader(path));
         unreadMsgs = 0;
         while ((line = br.readLine()) != null) {
-            if (line.equals("> START OF MESSAGE <")) {
-                returnMsg = new Msg();
-            }
-            else if (line.equals("> END OF MESSAGE <")) {  // End of message entry, store into TreeSet
-                sortedMsgs.add(returnMsg);
-            }
-            else {
-                String[] parts = line.split(":", 2);
-                String msgType = parts[0];
-                if (parts.length == 2) {
-                    if(msgType.equals("Sender ID")){
-                        readMsgSenderId(parts[1]);
+            switch (line) {
+                case "> START OF MESSAGE <":
+                    returnMsg = new Msg();
+                    break;
+                case "> END OF MESSAGE <":   // End of message entry, store into TreeSet
+                    sortedMsgs.add(returnMsg);
+                    break;
+                default:
+                    String[] parts = line.split(":", 2);
+                    String msgType = parts[0];
+                    if (parts.length == 2) {
+                        switch (msgType) {
+                            case "Sender ID":
+                                readMsgSenderId(parts[1]);
+                                break;
+                            case "Read status":
+                                readMsgReadStatus(parts[1]);
+                                if (!returnMsg.isRead)
+                                    unreadMsgs += 1;
+                                break;
+                            case "Priority":
+                                readMsgPriority(parts[1]);
+                                break;
+                            case "Timestamp":
+                                readMsgTimestamp(parts[1]);
+                                break;
+                            case "Message":
+                                readMsgMessage(parts[1]);
+                                break;
+                            case "Location":
+                                readMsgLocation(parts[1]);
+                                break;
+                        }
                     }
-                    else if (msgType.equals("Read status")) {
-                        readMsgReadStatus(parts[1]);
-                        if (!returnMsg.isRead)
-                            unreadMsgs += 1;
-                    }
-                    else if (msgType.equals("Priority")) {
-                        readMsgPriority(parts[1]);
-                    }
-                    else if (msgType.equals("Timestamp")) {
-                        readMsgTimestamp(parts[1]);
-                    }
-                    else if (msgType.equals("Message")) {
-                        readMsgMessage(parts[1]);
-                    }
-                    else if (msgType.equals("Location")) {
-                        readMsgLocation(parts[1]);
-                    }
-                }
 
+                    break;
             }
         }
         return sortedMsgs;
     }
 
-    public int getNumUnreadMsgs(){
+    int getNumUnreadMsgs(){
         return this.unreadMsgs;
     }
 
-    public void readMsgSenderId(String userId){
+    private void readMsgSenderId(String userId){
         this.returnMsg.setSenderId(userId);
     }
 
-    public void readMsgReadStatus(String readStatus) {
+    private void readMsgReadStatus(String readStatus) {
         this.returnMsg.isRead = Boolean.parseBoolean(readStatus);
     }
 
-    public void readMsgPriority(String priority){
+    private void readMsgPriority(String priority){
         Msg.Priority msgPriority;
-        if (priority.equals("HIGH"))
-            msgPriority = Msg.Priority.HIGH;
-        else if (priority.equals("MED")) {
-            msgPriority = Msg.Priority.MED;
-        }
-        else {
-            msgPriority = Msg.Priority.LOW;
+        switch (priority) {
+            case "HIGH":
+                msgPriority = Msg.Priority.HIGH;
+                break;
+            case "MED":
+                msgPriority = Msg.Priority.MED;
+                break;
+            default:
+                msgPriority = Msg.Priority.LOW;
+                break;
         }
 
         this.returnMsg.setPriority(msgPriority);
     }
 
 
-    public void readMsgTimestamp(String timestamp){
+    private void readMsgTimestamp(String timestamp){
         SimpleDateFormat timeFormatted = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss:SSS");
         Date parsedTimeStamp;
         try {
@@ -105,11 +112,11 @@ public class NotificationReader {
         returnMsg.setTime(msgTime);
     }
 
-    public void readMsgMessage(String message){
+    private void readMsgMessage(String message){
         this.returnMsg.setMsg(message);
     }
 
-    public void readMsgLocation(String xyValue){
+    private void readMsgLocation(String xyValue){
         String[] coordinates = xyValue.split(",", 2);
         Location myLocation = new Location(Double.parseDouble(coordinates[0]),
                 Double.parseDouble(coordinates[1]));
