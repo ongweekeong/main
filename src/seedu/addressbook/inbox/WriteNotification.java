@@ -58,7 +58,6 @@ public class WriteNotification {
 
     // Create overload function for write to file to write a set of notifications.
     public void writeToFile(TreeSet<Msg> msgSet) throws IOException {
-        TimeAndDate dateFormatter = new TimeAndDate();
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
         int numMsg = msgSet.size();
@@ -69,7 +68,7 @@ public class WriteNotification {
             myPrinter.println("Sender ID:" + msg.getSenderId());
             myPrinter.println("Read status:" + msg.isRead);
             myPrinter.println("Priority:" + msg.getPriority());
-            myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs(msg.getTime()));
+            myPrinter.println("Timestamp:" + TimeAndDate.outputDATHrs(msg.getTime()));
             myPrinter.println("Message:" + msg.getMsg());
             if (msg.hasEta())
                 myPrinter.println("ETA:" + msg.getEta());

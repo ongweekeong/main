@@ -56,9 +56,6 @@ public class ReadNotification {
                     else if (msgType.equals("Message")) {
                         readMsgMessage(parts[1]);
                     }
-                    /*else if (msgType.equals("ETA")) {
-                        readMsgEta(parts[1]);
-                    }*/
                     else if (msgType.equals("Location")) {
                         readMsgLocation(parts[1]);
                     }
@@ -71,10 +68,6 @@ public class ReadNotification {
 
     public int getNumUnreadMsgs(){
         return this.unreadMsgs;
-    }
-
-    public void resetUnreadMsgs(){
-        this.unreadMsgs = 0;
     }
 
     public void readMsgSenderId(String userId){
@@ -102,11 +95,11 @@ public class ReadNotification {
 
     public void readMsgTimestamp(String timestamp){
         SimpleDateFormat timeFormatted = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss:SSS");
-        Date parsedTimeStamp = new Date();
+        Date parsedTimeStamp;
         try {
             parsedTimeStamp = timeFormatted.parse(timestamp);
         } catch (ParseException e) {
-            // Find a way to debug this if time format is invalid.
+            parsedTimeStamp = new Date(0,1,1,0,0,0);
         }
         Timestamp msgTime = new Timestamp(parsedTimeStamp.getTime());
         returnMsg.setTime(msgTime);
@@ -114,10 +107,6 @@ public class ReadNotification {
 
     public void readMsgMessage(String message){
         this.returnMsg.setMsg(message);
-    }
-
-    public void readMsgEta (String eta){
-        this.returnMsg.setEta(Integer.parseInt(eta));
     }
 
     public void readMsgLocation(String xyValue){

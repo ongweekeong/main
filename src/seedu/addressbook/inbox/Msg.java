@@ -105,10 +105,6 @@ public class Msg implements Comparable <Msg> {
         isLocationAvailable = true;
     }
 
-    public Location getLocation(){
-        return location;
-    }
-
     public void setMsgAsRead(){
         this.isRead = MESSAGE_IS_READ;
     }
@@ -131,10 +127,6 @@ public class Msg implements Comparable <Msg> {
 
     public boolean hasEta(){
        return eta != -1;
-    }
-
-    public void setTime(){
-        time = new Timestamp(System.currentTimeMillis()); // Set to current time if no timestamp passed.
     }
 
     public void setTime(Timestamp time){
