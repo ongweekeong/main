@@ -44,7 +44,7 @@ public class Gui {
         loader.setLocation(Main.class.getResource("ui/mainwindow.fxml"));
         stage.setTitle(version);
         stage.setScene(new Scene(loader.load(), INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT));
-        stage.getIcons().add(new Image("file:docs/images/SPF.png"));
+        stage.getIcons().add(new Image("file:src/resources/SPF.png"));
         stage.show();
         MainWindow mainWindow = loader.getController();
         mainWindow.setLogic(logic);

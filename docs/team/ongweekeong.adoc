@@ -3,8 +3,8 @@
 :toc:
 :toc-title:
 :sectnums:
-:imagesDir: images
-:stylesDir: stylesheets
+:imagesDir: ../images
+:stylesDir: ../stylesheets
 :xrefstyle: full
 
 :tip-caption: :bulb:
@@ -49,8 +49,7 @@ The purpose of this section is to allow readers to get a clearer idea of how the
 *	This enhancement allows users to respond to the messages that are sent to them and updating the read status of those messages once action has been taken, depending on the nature of the message sent to them.
 
 === Code Contributed:
-*	Functional code: https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/collated/functional/ongweekeong.md
-*	Test code: https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/collated/test/ongweekeong.md
+*	Functional & test code: https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=ong...ong&sort=displayName&since=2018-09-12&until=2018-10-30&timeframe=day&reverse=false&repoSort=true
 
 === Other Contributions:
 *	Edited `build.gradle` file to enable jar file generation via using shadowJar

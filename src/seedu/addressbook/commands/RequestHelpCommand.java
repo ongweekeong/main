@@ -7,7 +7,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.WriteNotification;
+import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class RequestHelpCommand extends Command {
     public static String MESSAGE_RECENT_MESSAGE_EMPTY = "Request command was never called";
 
     private static Msg requestHelpMessage;
-    private WriteNotification writeNotification;
+    private NotificationWriter notificationWriter;
 
     /**
      * Constructor for the Writers to write to headquarters personnel file.
@@ -33,14 +33,14 @@ public class RequestHelpCommand extends Command {
      * @throws IllegalValueException if any of the raw values are invalid
      */
     public RequestHelpCommand(String caseName, String messageString) throws IllegalValueException {
-        writeNotification = new WriteNotification(MessageFilePaths.FILEPATH_HQP_INBOX, true);
+        notificationWriter = new NotificationWriter(MessageFilePaths.FILEPATH_HQP_INBOX, true);
         requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString, PatrolResourceStatus.getLocation(Password.getID()));
     }
 
     @Override
     public CommandResult execute() {
         try {
-            writeNotification.writeToFile(requestHelpMessage);
+            notificationWriter.writeToFile(requestHelpMessage);
             PatrolResourceStatus.setStatus(Password.getID(), true);
             return new CommandResult(String.format(MESSAGE_REQUEST_SUCCESS, Password.getID()));
         } catch (IOException ioe) {
