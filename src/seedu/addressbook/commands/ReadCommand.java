@@ -4,11 +4,15 @@ package seedu.addressbook.commands;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.password.Password;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * Updates read status of message identified using it's last displayed index from the user's inbox.
  * Can only be executed once 'showunread' or 'inbox' command has been used.
  */
 public class ReadCommand extends Command {
+    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
 
     public static final String COMMAND_WORD = "read";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
@@ -28,19 +32,31 @@ public class ReadCommand extends Command {
 
     public CommandResult execute() {
         if (index == Integer.MAX_VALUE) {
+            logger.log(Level.INFO, "Index entered too large.");
+
             return new CommandResult(MESSAGE_INPUT_INDEX_TOO_LARGE);
         }
         String result = myInbox.markMsgAsRead(index);
-        if (result.equals(myInbox.MESSAGE_READ_STATUS_UPDATED)) {
-            return new CommandResult(MESSAGE_UPDATE_SUCCESS);
-        } else if(result.equals(myInbox.INDEX_OUT_OF_BOUNDS)){
-            return new CommandResult(String.format(myInbox.INDEX_OUT_OF_BOUNDS, myInbox.checkNumUnreadMessages()));
-        } else if(result.equals(myInbox.INBOX_NOT_READ_YET)){
-            return new CommandResult(myInbox.INBOX_NOT_READ_YET);
-        } else if(result.equals(myInbox.INBOX_NO_UNREAD_MESSAGES)){
-            return new CommandResult(myInbox.INBOX_NO_UNREAD_MESSAGES);
-        } else {
-            return new CommandResult("Unknown error in updating messages.");
+        switch (result) {
+            case Inbox.MESSAGE_READ_STATUS_UPDATED:
+                logger.log(Level.INFO, MESSAGE_UPDATE_SUCCESS);
+                return new CommandResult(MESSAGE_UPDATE_SUCCESS);
+
+            case Inbox.INDEX_OUT_OF_BOUNDS:
+                logger.log(Level.INFO, "Index entered out of bounds.");
+                return new CommandResult(String.format(Inbox.INDEX_OUT_OF_BOUNDS, myInbox.checkNumUnreadMessages()));
+
+            case Inbox.INBOX_NOT_READ_YET:
+                logger.log(Level.INFO, "Inbox not opened yet.");
+                return new CommandResult(Inbox.INBOX_NOT_READ_YET);
+
+            case Inbox.INBOX_NO_UNREAD_MESSAGES:
+                logger.log(Level.INFO, "Inbox has no unread messages.");
+                return new CommandResult(Inbox.INBOX_NO_UNREAD_MESSAGES);
+
+            default:
+                logger.log(Level.WARNING, "Unknown error.");
+                return new CommandResult("Unknown error in updating messages.");
         }
     }
 

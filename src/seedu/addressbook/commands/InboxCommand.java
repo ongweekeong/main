@@ -9,6 +9,8 @@ import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.io.IOException;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Prints out total number of notifications, and all notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
@@ -16,6 +18,8 @@ import java.util.TreeSet;
  * @return messages to be displayed on the main window.
  */
 public class InboxCommand extends Command {
+    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
+
     public static final String COMMAND_WORD = "inbox";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
@@ -33,6 +37,8 @@ public class InboxCommand extends Command {
         int totalMsgs;
         int messageNum = 1;
         try {
+            logger.log(Level.INFO, String.format("Reading messages from \"%s\"", myInbox));
+
             allMsgs = myInbox.loadMsgs();
             totalMsgs = allMsgs.size();
             myUnreadMsgs = myInbox.checkNumUnreadMessages();
@@ -45,6 +51,8 @@ public class InboxCommand extends Command {
             return new CommandResult(String.format(fullPrintedMessage, totalMsgs, myUnreadMsgs));
 
         } catch (IOException e) {
+            logger.log(Level.WARNING, String.format("\"%s\" not found", myInbox));
+
             e.printStackTrace();
             return new CommandResult(String.format(MESSAGE_UNKNOWN_ERROR,
                                         MessageFilePaths.getFilePathFromUserId(Password.getID())));

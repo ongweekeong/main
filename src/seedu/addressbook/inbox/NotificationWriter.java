@@ -7,11 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.TreeSet;
+import java.util.logging.*;
 
 /**
  * Writes notifications sent from user to the specified recipient.
  */
 public class NotificationWriter {
+    private final static Logger logger = Logger.getLogger(NotificationWriter.class.getName());
+
     private String path;
     private boolean isAppend;
 
@@ -29,6 +32,7 @@ public class NotificationWriter {
      * Writes message sent by user in a specific format in the inbox storage text file of the recipient.
      */
     public void writeToFile(Msg message) throws IOException{
+        logger.log(Level.INFO, String.format("Writing to \"%s\"", path));
         TimeAndDate dateFormatter = new TimeAndDate();
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
@@ -55,6 +59,7 @@ public class NotificationWriter {
 
     // Create overload function for write to file to write a set of notifications.
     void writeToFile(TreeSet<Msg> msgSet) throws IOException {
+        logger.log(Level.INFO, String.format("Updating \"%s\"", path));
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
         int numMsg = msgSet.size();
