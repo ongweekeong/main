@@ -8,12 +8,11 @@ import seedu.addressbook.timeanddate.TimeAndDate;
 
 import java.sql.Timestamp;
 
-/** Stores information on notifications that are sent from one user to another.
- *  @params SenderID, Read Status, Priority, timestamp, message are compulsory fields.
+/**
+ * Stores information on notifications that are sent from one user to another.
+ * @params SenderID, Read Status, Priority, timestamp, message are compulsory fields.
  * @params location (x,y coordinates) and ETA are non-compulsory fields.
  */
-
-
 public class Msg implements Comparable <Msg> {
     private String senderId = Password.getID();
     private String newMsg;
@@ -74,6 +73,36 @@ public class Msg implements Comparable <Msg> {
         newMsg = message;
         location = requesterLocale;
         eta = myEta;
+    }
+
+    /**
+     * Implements comparable so that messages can be sorted first by its read status, followed by the priority
+     * and then the timestamp. Unread messages, higher priority messages and earlier messages should be sorted
+     * ahead of other messages.
+     * @param other
+     * @return
+     */
+    @Override
+    public int compareTo(Msg other) {
+        int otherReadState = other.isRead? 1 : 0;
+        int myReadState = isRead? 1 : 0;
+        int compare = Integer.compare(myReadState, otherReadState);
+        if(compare == 0) { // If same read status, compare priorities.
+            compare = compareByPriority(other);
+        }
+        if(compare == 0){ // If priority is the same, compare by timestamp.
+            compare = compareByTimestamp(other);
+        }
+
+        return compare;
+    }
+
+    private int compareByPriority(Msg other){
+        return Integer.compare(other.getPriority().toInteger(), getPriority().toInteger());
+    }
+
+    private int compareByTimestamp(Msg other){
+        return getTime().compareTo(other.getTime());
     }
 
     void setSenderId(String senderId) {
@@ -141,31 +170,8 @@ public class Msg implements Comparable <Msg> {
         return time;
     }
 
-    public String getTimeString(){
+    public String getTimeString() {
         return TimeAndDate.outputDATHrs(time);
-    }
-
-    @Override
-    public int compareTo(Msg other) {
-        int otherReadState = other.isRead? 1 : 0;
-        int myReadState = isRead? 1 : 0;
-        int compare = Integer.compare(myReadState, otherReadState);
-        if(compare == 0) { // If same read status, compare priorities.
-            compare = compareByPriority(other);
-        }
-        if(compare == 0){ // If priority is the same, compare by timestamp.
-                compare = compareByTimestamp(other);
-        }
-
-        return compare;
-    }
-
-    private int compareByPriority(Msg other){
-        return Integer.compare(other.getPriority().toInteger(), getPriority().toInteger());
-    }
-
-    private int compareByTimestamp(Msg other){
-        return getTime().compareTo(other.getTime());
     }
 
 }

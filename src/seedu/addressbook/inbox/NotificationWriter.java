@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.TreeSet;
 
+/**
+ * Writes notifications sent from user to the specified recipient.
+ */
 public class NotificationWriter {
     private String path;
     private boolean isAppend;
@@ -30,7 +33,6 @@ public class NotificationWriter {
      *  ETA, if applicable
      *  Location, if available
      */
-
     public void writeToFile(Msg message) throws IOException{
         TimeAndDate dateFormatter = new TimeAndDate();
         FileWriter write = new FileWriter (path, isAppend);

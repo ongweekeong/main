@@ -12,6 +12,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeSet;
 
+/**
+ * Reads the respective text files containing the messages sent to the user.
+ */
 public class NotificationReader {
     private static String path;
     private Msg returnMsg;
@@ -22,7 +25,12 @@ public class NotificationReader {
         path = filePath;
     }
 
-
+    /**
+     * Method parses the messages stored and converts them into Msg objects containing the relevant information.
+     *
+     * @return a sorted set of Msgs that were found in the user's inbox storage file.
+     * @throws IOException
+     */
     public TreeSet<Msg>
     ReadFromFile() throws IOException {  // If no new notifications and 'inbox' command invoked, show past 10 notifications
         String line;

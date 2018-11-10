@@ -10,12 +10,11 @@ import seedu.addressbook.timeanddate.TimeAndDate;
 import java.io.IOException;
 import java.util.TreeSet;
 
-/** Prints out all unread notifications ordered by read status, priority, then timestamp
+/** Prints out total number of notifications, and all notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
  *
- * @return messages to be printed out on the main window.
+ * @return messages to be displayed on the main window.
  */
-
 public class InboxCommand extends Command {
     public static final String COMMAND_WORD = "inbox";
 
@@ -52,6 +51,16 @@ public class InboxCommand extends Command {
         }
     }
 
+    /**
+     * Returns the everything to be displayed on the main window in a single string.
+     * Method adds the individual messages below the sentence informing users how
+     * many messages (total and unread) they have.
+     *
+     * @param messageNum
+     * @param message
+     * @return
+     * @throws NullPointerException
+     */
     public static String concatenateMsg(int messageNum, Msg message) throws NullPointerException{
         String concatenatedMsg;
         if (!message.hasBeenRead()) {

@@ -9,7 +9,6 @@ import java.io.IOException;
 /**
  * Clears the text file storing the messages sent to user.
  */
-
 public class ClearInboxCommand extends Command {
     public static final String COMMAND_WORD = "clearinbox";
 

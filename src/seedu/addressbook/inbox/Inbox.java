@@ -1,11 +1,14 @@
 //@@author ongweekeong
 package seedu.addressbook.inbox;
 
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+/**
+ * Stores all messages read from user's inbox message storage file.
+ * Also keeps track of the total number of messages and unread messages.
+ */
 public class Inbox {
     // all messages will be stored here, notifications will appear based on severity and timestamp.
     private static String MESSAGE_STORAGE_FILEPATH;
@@ -38,6 +41,15 @@ public class Inbox {
         return notificationsToPrint;
     }
 
+    /**
+     * Messages marked as read by the user will be updated in recordNotifications.
+     * Message storage file will be updated with the respective changes.
+     *
+     * @param index
+     * @return feedback to user indicating if execution was successful or not.
+     * @throws NullPointerException
+     * @throws IndexOutOfBoundsException
+     */
     public String markMsgAsRead(int index) throws NullPointerException, IndexOutOfBoundsException {
         try{
             if((index < 1) || (index > numUnreadMsgs)){
