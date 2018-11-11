@@ -1,6 +1,5 @@
 package seedu.addressbook.commands;
 
-
 import seedu.addressbook.password.Password;
 
 /**
@@ -10,7 +9,7 @@ public class HelpCommand extends Command {
 
     public static final String COMMAND_WORD = "help";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" +"Shows program usage instructions.\n\t"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Shows program usage instructions.\n\t"
             + "Example: " + COMMAND_WORD;
 
     public static final String MESSAGE_ALL_USAGES = AddCommand.MESSAGE_USAGE
@@ -18,7 +17,7 @@ public class HelpCommand extends Command {
             + "\n" + ClearCommand.MESSAGE_USAGE
             + "\n" + EditCommand.MESSAGE_USAGE
             + "\n" + CheckCommand.MESSAGE_USAGE
-            + "\n" + CheckPOStatusCommand.MESSAGE_USAGE
+            + "\n" + CheckPoStatusCommand.MESSAGE_USAGE
             + "\n" + UpdateStatusCommand.MESSAGE_USAGE
             + "\n" + FindCommand.MESSAGE_USAGE
             + "\n" + ShowUnreadCommand.MESSAGE_USAGE
@@ -48,13 +47,11 @@ public class HelpCommand extends Command {
     //@@author iamputradanish
     @Override
     public CommandResult execute() {
-        Password password = new Password();
-        boolean isHQPFlag = password.isHqpUser();
+        boolean isHqpFlag = Password.isHqpUser();
 
-        if(isHQPFlag) {
+        if (isHqpFlag) {
             return new CommandResult(MESSAGE_ALL_USAGES);
-        }
-        else{
+        } else {
             return new CommandResult(MESSAGE_PO_USAGES);
         }
     }

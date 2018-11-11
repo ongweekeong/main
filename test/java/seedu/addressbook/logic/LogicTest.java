@@ -397,7 +397,7 @@ public class LogicTest {
     @Test
     public void execute_request_successful() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
+        String expectedMessage = String.format(RequestHelpCommand.getMessageRequestSuccess(), "hqp");
         Password.unlockHqp();
 
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " gun", expectedMessage);
@@ -843,7 +843,7 @@ public class LogicTest {
 
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {
-        List<String> allPos = CheckPOStatusCommand.extractEngagementInformation(PatrolResourceStatus.getPatrolResourceStatus());
+        List<String> allPos = CheckPoStatusCommand.extractEngagementInformation(PatrolResourceStatus.getPatrolResourceStatus());
         assertCommandBehavior("checkstatus",
                                 Command.getMessage(allPos));
     }
@@ -1870,7 +1870,7 @@ public class LogicTest {
                 "chickstatus",
                 "checkstatuts"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPoStatusCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);

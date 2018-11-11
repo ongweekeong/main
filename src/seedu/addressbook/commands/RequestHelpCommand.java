@@ -1,6 +1,8 @@
 //@@author andyrobert3
 package seedu.addressbook.commands;
 
+import java.io.IOException;
+
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
@@ -10,8 +12,9 @@ import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 
-import java.io.IOException;
-
+/**
+ * TODO: Add Javadoc comment
+ */
 public class RequestHelpCommand extends Command {
     public static final String COMMAND_WORD = "rb";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
@@ -21,8 +24,7 @@ public class RequestHelpCommand extends Command {
             + " gun";
 
 
-    public static String MESSAGE_REQUEST_SUCCESS = "Request for backup case from %s has been sent to HQP.";
-    public static String MESSAGE_RECENT_MESSAGE_EMPTY = "Request command was never called";
+    private static String messageRequestSuccess = "Request for backup case from %s has been sent to HQP.";
 
     private static Msg requestHelpMessage;
     private NotificationWriter notificationWriter;
@@ -34,7 +36,12 @@ public class RequestHelpCommand extends Command {
      */
     public RequestHelpCommand(String caseName, String messageString) throws IllegalValueException {
         notificationWriter = new NotificationWriter(MessageFilePaths.FILEPATH_HQP_INBOX, true);
-        requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString, PatrolResourceStatus.getLocation(Password.getId()));
+        requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString,
+                PatrolResourceStatus.getLocation(Password.getId()));
+    }
+
+    public static String getMessageRequestSuccess() {
+        return messageRequestSuccess;
     }
 
     @Override
@@ -42,7 +49,7 @@ public class RequestHelpCommand extends Command {
         try {
             notificationWriter.writeToFile(requestHelpMessage);
             PatrolResourceStatus.setStatus(Password.getId(), true);
-            return new CommandResult(String.format(MESSAGE_REQUEST_SUCCESS, Password.getId()));
+            return new CommandResult(String.format(messageRequestSuccess, Password.getId()));
         } catch (IOException ioe) {
             return new CommandResult(Messages.MESSAGE_SAVE_ERROR);
         } catch (IllegalValueException ive) {
@@ -60,7 +67,8 @@ public class RequestHelpCommand extends Command {
      */
     public static Msg getRecentMsg() {
         if (requestHelpMessage == null) {
-            throw new NullPointerException(MESSAGE_RECENT_MESSAGE_EMPTY);
+            String messageRecentMessageEmpty = "Request command was never called";
+            throw new NullPointerException(messageRecentMessageEmpty);
         }
         return requestHelpMessage;
     }

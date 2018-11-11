@@ -1,10 +1,18 @@
 package seedu.addressbook.commands;
 
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.UniquePersonList;
 
 /**
  * Adds a person to the records.
@@ -50,7 +58,7 @@ public class AddCommand extends Command {
         );
     }
 
-    //TODO: Is code still used?
+    //TODO: If not used, delete
     public AddCommand(Person toAdd) {
         this.toAdd = toAdd;
     }

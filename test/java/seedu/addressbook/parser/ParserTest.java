@@ -77,7 +77,7 @@ public class ParserTest {
     @Test
     public void checkPoStatusCommand_parsedCorrectly() {
         final String input = "checkstatus";
-        parseAndAssertCommandType(input, CheckPOStatusCommand.class);
+        parseAndAssertCommandType(input, CheckPoStatusCommand.class);
     }
     /**
      * Test single argument COMMANDS

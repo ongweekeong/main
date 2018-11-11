@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.commands.AddCommand;
 import seedu.addressbook.commands.CheckCommand;
-import seedu.addressbook.commands.CheckPOStatusCommand;
+import seedu.addressbook.commands.CheckPoStatusCommand;
 import seedu.addressbook.commands.ClearCommand;
 import seedu.addressbook.commands.ClearInboxCommand;
 import seedu.addressbook.commands.Command;
@@ -147,8 +147,8 @@ public class Parser {
         case CheckCommand.COMMAND_WORD:
             return prepareCheck(arguments);
 
-        case CheckPOStatusCommand.COMMAND_WORD:
-            return new CheckPOStatusCommand();
+        case CheckPoStatusCommand.COMMAND_WORD:
+            return new CheckPoStatusCommand();
 
         case ListCommand.COMMAND_WORD:
             return new ListCommand();

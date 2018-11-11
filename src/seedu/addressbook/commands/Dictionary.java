@@ -28,7 +28,7 @@ public class Dictionary extends Command {
         } finally {
             COMMANDS.add(AddCommand.COMMAND_WORD);
             COMMANDS.add(CheckCommand.COMMAND_WORD);
-            COMMANDS.add(CheckPOStatusCommand.COMMAND_WORD);
+            COMMANDS.add(CheckPoStatusCommand.COMMAND_WORD);
             COMMANDS.add(ClearCommand.COMMAND_WORD);
             COMMANDS.add(DateTimeCommand.COMMAND_WORD);
             COMMANDS.add(DeleteCommand.COMMAND_WORD);

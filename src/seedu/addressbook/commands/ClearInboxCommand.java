@@ -1,18 +1,20 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
-import seedu.addressbook.inbox.*;
-import seedu.addressbook.password.Password;
-
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import seedu.addressbook.inbox.Inbox;
+import seedu.addressbook.inbox.MessageFilePaths;
+import seedu.addressbook.inbox.NotificationReader;
+import seedu.addressbook.inbox.NotificationWriter;
+import seedu.addressbook.password.Password;
 
 /**
  * Clears the text file storing the messages sent to user.
  */
 public class ClearInboxCommand extends Command {
-    private static final Logger logger = Logger.getLogger(ClearInboxCommand.class.getName());
 
     public static final String COMMAND_WORD = "clearinbox";
 
@@ -23,19 +25,20 @@ public class ClearInboxCommand extends Command {
     public static final String MESSAGE_CLEARINBOX_SUCCESSFUL = "Inbox cleared!";
     public static final String MESSAGE_CLEARINBOX_UNSUCCESSFUL = "Unable to clear inbox. Missing inbox storage file.";
 
+    private static final Logger logger = Logger.getLogger(ClearInboxCommand.class.getName());
     private String myInbox;
 
     public ClearInboxCommand(){
 
     }
-    public ClearInboxCommand(String filepath){
+    public ClearInboxCommand(String filepath) {
         myInbox = filepath;
     }
 
     @Override
     public CommandResult execute() {
         try {
-            if(myInbox == null) {
+            if (myInbox == null) {
                 myInbox = MessageFilePaths.getFilePathFromUserId(Password.getId());
             }
             logger.log(Level.INFO, String.format("Clearing messages in \"%s\"", myInbox));
@@ -45,8 +48,7 @@ public class ClearInboxCommand extends Command {
             NotificationWriter.clearInbox(myInbox);
             Inbox.clearInboxRecords();
             return new CommandResult(MESSAGE_CLEARINBOX_SUCCESSFUL);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             logger.log(Level.WARNING, String.format("\"%s\" not found", myInbox));
 
             return new CommandResult(MESSAGE_CLEARINBOX_UNSUCCESSFUL);

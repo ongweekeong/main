@@ -5,7 +5,7 @@ import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import seedu.addressbook.commands.AddCommand;
 import seedu.addressbook.commands.CheckCommand;
-import seedu.addressbook.commands.CheckPOStatusCommand;
+import seedu.addressbook.commands.CheckPoStatusCommand;
 import seedu.addressbook.commands.ClearCommand;
 import seedu.addressbook.commands.ClearInboxCommand;
 import seedu.addressbook.commands.DateTimeCommand;
@@ -53,9 +53,9 @@ public class AutoCorrect {
                         CheckCommand.MESSAGE_USAGE)).feedbackToUser;
                 break;
 
-            case CheckPOStatusCommand.COMMAND_WORD:
+            case CheckPoStatusCommand.COMMAND_WORD:
                 displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                        CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+                        CheckPoStatusCommand.MESSAGE_USAGE)).feedbackToUser;
                 break;
 
             case ClearCommand.COMMAND_WORD:
