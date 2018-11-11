@@ -291,13 +291,13 @@ public class Parser {
         };
 
         String userInputParameters[] = new String[editCommandIdentifiers.length];
-        String offenseString = "";
+        StringBuilder offenseString = new StringBuilder();
 
         for (int i = 0; i < editCommandIdentifiers.length; i++) {
             for (String argument : argParts) {
                 if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
                     if (editCommandIdentifiers[i].equals(editCommandIdentifiers[4])) {
-                        offenseString += " " + argument;
+                        offenseString.append(" ").append(argument);
                     } else {
                         userInputParameters[i] = argument.substring(2);
                         break;
@@ -306,7 +306,7 @@ public class Parser {
             }
         }
 
-        userInputParameters[4] = (!offenseString.equals("")) ? offenseString : null;
+        userInputParameters[4] = (!offenseString.toString().equals("")) ? offenseString.toString() : null;
 
         Set<String> offenses = null;
 

@@ -41,7 +41,8 @@ public class DispatchCommand extends Command {
     private String offense;
 
     /**
-     * Convenience constructor using raw values
+     * Convenience constructor using raw values.
+     * Constructs for Writers to write to designated personnel files.
      */
     public DispatchCommand(String backupOfficer, String requester, String caseName) {
         writeNotificationToBackupOfficer = new WriteNotification(backupOfficer);
@@ -54,21 +55,20 @@ public class DispatchCommand extends Command {
         this.destinationList = new ArrayList<>();
     }
 
-    private String generateStringMessage(String etaMessage, String patrolResourceId, boolean isRequester) {
-        return "ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
+    private String generateStringMessage(String etaMessage, String patrolResourceId, String caseType, boolean isRequester) {
+        return "Case type is: " + caseType +  ", ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
                 + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsURL();
     }
 
     public CommandResult execute() {
-
         try {
             destinationList.add(PatrolResourceStatus.getLocation(requester));
             ArrayList<Pair<Integer, String>> etaList = origin.getEtaFrom(destinationList);
 
             Pair<Integer, String> etaPair = etaList.get(0);
 
-            String dispatchStringMessage = generateStringMessage(etaPair.getValue1(), requester, true);
-            String requesterStringMessage = generateStringMessage(etaPair.getValue1(), backupOfficer, false);
+            String dispatchStringMessage = generateStringMessage(etaPair.getValue1(), requester, this.offense,true);
+            String requesterStringMessage = generateStringMessage(etaPair.getValue1(), backupOfficer, this.offense,false);
 
             Msg dispatchMessage = new Msg(Offense.getPriority(offense), dispatchStringMessage,
                     PatrolResourceStatus.getLocation(requester), etaPair.getValue0());
@@ -82,7 +82,6 @@ public class DispatchCommand extends Command {
             Msg requesterMessage = new Msg(Offense.getPriority(offense), requesterStringMessage,
                     PatrolResourceStatus.getLocation(backupOfficer), etaPair.getValue0());
 
-            //PatrolResourceStatus.setStatus(requester, true);
             writeNotificationToRequester.writeToFile(requesterMessage);
             writeNotificationToBackupOfficer.writeToFile(dispatchMessage);
         } catch (IOException ioe) {

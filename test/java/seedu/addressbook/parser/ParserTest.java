@@ -2,6 +2,7 @@ package seedu.addressbook.parser;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.Request;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
@@ -172,11 +173,32 @@ public class ParserTest {
     }
 
     @Test
+    public void requestCommand_validArgs_parsedCorrectly() {
+        final String caseType = "gun";
+        final String input = "rb " + caseType;
+
+        final RequestHelpCommand result =
+                parseAndAssertCommandType(input, RequestHelpCommand.class);
+        assertEquals(caseType, result.getCaseName());
+    }
+
+    @Test
     public void dispatchCommand_noArgs() {
         final String[] inputs = { "dispatch", "dispatch "};
         final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE);
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
     }
+
+    @Test
+    public void dispatchCommand_validArgs_parsedCorrectly() {
+        final String caseType = "cheating";
+        final String backupOfficer = "po1";
+        final String requester = "po3";
+
+        final String input = "dispatch" + backupOfficer
+    }
+
+
 
     //@@iamputradanish
     @Test

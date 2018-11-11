@@ -365,7 +365,6 @@ public class LogicTest {
 
     }
 
-
     //@@author andyrobert3
     @Test
     public void execute_location_setters()  {
@@ -483,17 +482,6 @@ public class LogicTest {
 
         assertTrue(statusCode == 200 || statusCode == 201 || statusCode == 204);
     }
-
-//    @Test
-//    public void execute_request_failSaveFailure() throws Exception {
-//        File file = new File(MessageFilePaths.FILEPATH_HQP_INBOX);
-//        if (file.renameTo(new File("inboxMessages/test"))) {
-//
-//        }
-//
-//        assertCommandBehavior("");
-//
-//    }
 
     @Test
     public void execute_request_recentMessageFail() {

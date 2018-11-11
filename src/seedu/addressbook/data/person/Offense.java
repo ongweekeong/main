@@ -59,7 +59,7 @@ public class Offense {
     public static String getListOfValidOffences() {
         String result = "";
         for (HashMap.Entry<String,Msg.Priority> entry : OFFENSE_LIST.entrySet()) {
-            if (!entry.getKey().matches(".*\\d+.*")) {
+            if (!entry.getKey().matches(".*\\d+.*") && !entry.getKey().equals("none")) {
                 result += entry.getKey() + "\n";
             }
         }

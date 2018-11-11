@@ -24,8 +24,13 @@ public class RequestHelpCommand extends Command {
     public static String MESSAGE_REQUEST_SUCCESS = "Request for backup case from %s has been sent to HQP.";
     public static String MESSAGE_RECENT_MESSAGE_EMPTY = "Request command was never called";
 
+    private String caseName;
     private static Msg requestHelpMessage;
     private WriteNotification writeNotification;
+
+    public String getCaseName() {
+        return this.caseName;
+    }
 
     /**
      * Constructor for the Writers to write to headquarters personnel file.
@@ -33,6 +38,7 @@ public class RequestHelpCommand extends Command {
      * @throws IllegalValueException if any of the raw values are invalid
      */
     public RequestHelpCommand(String caseName, String messageString) throws IllegalValueException {
+        this.caseName = caseName;
         writeNotification = new WriteNotification(MessageFilePaths.FILEPATH_HQP_INBOX, true);
         requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString, PatrolResourceStatus.getLocation(Password.getID()));
     }
