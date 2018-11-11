@@ -1,24 +1,39 @@
 package seedu.addressbook.storage.jaxb;
 
-import seedu.addressbook.common.Utils;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlValue;
-import java.util.*;
+
+import seedu.addressbook.common.Utils;
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.Status;
 
 /**
  * JAXB-friendly adapted person data holder class.
  */
 public class AdaptedPerson {
 
+    /**
+     * JAXB- friendly adapted contact details holder
+     */
     private static class AdaptedContactDetail {
         @XmlValue
-        public String value;
+        private String value;
+
         @XmlAttribute(required = true)
-        public boolean isPrivate;
+        private boolean isPrivate;
     }
 
     @XmlElement(required = true)
@@ -48,13 +63,14 @@ public class AdaptedPerson {
      *
      * @param source future changes to this will not affect the created AdaptedPerson
      */
-    public AdaptedPerson(ReadOnlyPerson source) {
+    AdaptedPerson(ReadOnlyPerson source) {
         name = source.getName().fullName;
 
         nric = new AdaptedContactDetail();
         nric.value = source.getNric().getIdentificationNumber();
 
-        dateOfBirth = new AdaptedContactDetail();dateOfBirth = new AdaptedContactDetail();
+        dateOfBirth = new AdaptedContactDetail();
+        dateOfBirth = new AdaptedContactDetail();
         dateOfBirth.value = source.getDateOfBirth().getDOB();
 
         postalCode = new AdaptedContactDetail();
@@ -81,7 +97,7 @@ public class AdaptedPerson {
      * is to ensure that every xml element in the document is present. JAXB sets missing elements as null,
      * so we check for that.
      */
-    public boolean isAnyRequiredFieldMissing() {
+    boolean isAnyRequiredFieldMissing() {
         for (AdaptedTag tag : tagged) {
             if (tag.isAnyRequiredFieldMissing()) {
                 return true;
@@ -97,7 +113,7 @@ public class AdaptedPerson {
      *
      * @throws IllegalValueException if there were any data constraints violated in the adapted person
      */
-    public Person toModelType() throws IllegalValueException {
+    Person toModelType() throws IllegalValueException {
         final Set<Offense> tags = new HashSet<>();
 
         for (AdaptedTag tag : tagged) {

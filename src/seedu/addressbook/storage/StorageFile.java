@@ -1,18 +1,33 @@
 package seedu.addressbook.storage;
 
-import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
-import seedu.addressbook.storage.jaxb.AdaptedAddressBook;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+
+import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.UniquePersonList;
+import seedu.addressbook.storage.jaxb.AdaptedAddressBook;
 
 /**
  * Represents the file used to store address book data.
@@ -20,7 +35,7 @@ import java.util.*;
 public class StorageFile {
 
     /** Default file path used if the user doesn't provide the file name. */
-    public static final String DEFAULT_STORAGE_FILEPATH = "policeRecords.txt";
+    private static final String DEFAULT_STORAGE_FILEPATH = "policeRecords.txt";
     /* Note: Note the use of nested classes below.
      * More info https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html
      */
@@ -29,7 +44,7 @@ public class StorageFile {
      * Signals that the given file path does not fulfill the storage filepath constraints.
      */
     public static class InvalidStorageFilePathException extends IllegalValueException {
-        public InvalidStorageFilePathException(String message) {
+        InvalidStorageFilePathException(String message) {
             super(message);
         }
     }
@@ -38,15 +53,15 @@ public class StorageFile {
      * Signals that some error has occured while trying to convert and read/write data between the application
      * and the storage file.
      */
-    public static class StorageOperationException extends Exception {
-        public StorageOperationException(String message) {
+    static class StorageOperationException extends Exception {
+        StorageOperationException(String message) {
             super(message);
         }
     }
 
-    private final JAXBContext jaxbContext;
+    private final Path path;
 
-    public final Path path;
+    private final JAXBContext jaxbContext;
 
     /**
      * @throws InvalidStorageFilePathException if the default path is invalid
@@ -149,6 +164,12 @@ public class StorageFile {
     }
 
     //@@iamputradanish
+
+    /**
+     * TODO: Add Javadoc comment
+     * @return
+     * @throws IllegalValueException
+     */
     private AddressBook populatedPoliceRecords() throws IllegalValueException {
         return new AddressBook(new UniquePersonList(
                 new Person(

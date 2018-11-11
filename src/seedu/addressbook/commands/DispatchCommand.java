@@ -28,12 +28,10 @@ public class DispatchCommand extends Command {
             + "Example: " + COMMAND_WORD
             + " PO1 gun PO3";
 
-    private static String MESSAGE_DISPATCH_SUCCESS = "Dispatch for %s backup is successful.\n";
+    private static String messageDispatchSuccess = "Dispatch for %s backup is successful.\n";
 
-    private static String MESSAGE_OFFICER_UNAVAILABLE = "Please choose another officer to send for backup.\n\t"
+    private static String messageOfficerUnavailable = "Please choose another officer to send for backup.\n\t"
             + "Use 'checkstatus' command to see engaged/free officers.";
-
-    private static String MESSAGE_BACKUP_DISPATCH_SAME = "Backup resource & Requester cannot be the same officer %s!";
 
     private final NotificationWriter writeNotificationToBackupOfficer;
     private final NotificationWriter writeNotificationToRequester;
@@ -59,15 +57,15 @@ public class DispatchCommand extends Command {
     }
 
     public static String getMessageDispatchSuccess() {
-        return MESSAGE_DISPATCH_SUCCESS;
+        return messageDispatchSuccess;
     }
 
     public static String getMessageOfficerUnavailable() {
-        return MESSAGE_OFFICER_UNAVAILABLE;
+        return messageOfficerUnavailable;
     }
 
     public static String getMessageBackupDispatchSame() {
-        return MESSAGE_BACKUP_DISPATCH_SAME;
+        return "Backup resource & Requester cannot be the same officer %s!";
     }
 
     private String generateStringMessage(String etaMessage, String patrolResourceId, boolean isRequester) {
@@ -115,9 +113,9 @@ public class DispatchCommand extends Command {
             return new CommandResult(Messages.MESSAGE_JSON_PARSE_ERROR);
         } catch (PatrolResourceUnavailableException prue) {
             return new CommandResult(prue.getMessage() + "\n"
-                    + MESSAGE_OFFICER_UNAVAILABLE);
+                    + messageOfficerUnavailable);
         }
 
-        return new CommandResult(String.format(MESSAGE_DISPATCH_SUCCESS, requester));
+        return new CommandResult(String.format(messageDispatchSuccess, requester));
     }
 }
