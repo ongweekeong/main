@@ -181,7 +181,7 @@ public class Msg implements Comparable <Msg> {
     }
 
     public String getTimeString() {
-        return TimeAndDate.outputDATHrs(time);
+        return TimeAndDate.outputDatHrs(time);
     }
 
 }

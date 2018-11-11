@@ -260,9 +260,9 @@ public class LogicTest {
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rob"));
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
+                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.getWantedForWarning());
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
+                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.getWantedForWarning());
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/2099 p/123456 s/wanted w/none o/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
     }
@@ -1349,7 +1349,7 @@ public class LogicTest {
     public void execute_timeCommand() throws Exception {
         String command = DateTimeCommand.COMMAND_WORD;
         TimeAndDate timeAndDate = new TimeAndDate();
-        assertTimeCommandBehavior(command, timeAndDate.outputDATHrs());
+        assertTimeCommandBehavior(command, timeAndDate.outputDatHrs());
     }
 
     @Test

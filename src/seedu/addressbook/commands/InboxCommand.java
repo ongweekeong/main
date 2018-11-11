@@ -74,11 +74,11 @@ public class InboxCommand extends Command {
         if (!message.hasBeenRead()) {
             concatenatedMsg = String.valueOf(messageNum) + ". [UNREAD] Sender: " + message.getSenderId() +
                     " Priority: " + message.getPriority() + ", Sent: " +
-                    TimeAndDate.outputDATHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
+                    TimeAndDate.outputDatHrsForMain(message.getTime()) + ",\n\tMessage: " + message.getMsg() + "\n\n";
         }
         else{
             concatenatedMsg = String.valueOf(messageNum) + ".\tSender: " + message.getSenderId() + " Priority: " +
-                    message.getPriority() + ", Sent: " + TimeAndDate.outputDATHrsForMain(message.getTime()) +
+                    message.getPriority() + ", Sent: " + TimeAndDate.outputDatHrsForMain(message.getTime()) +
                     ",\n\tMessage: " + message.getMsg() + "\n\n";
         }
 

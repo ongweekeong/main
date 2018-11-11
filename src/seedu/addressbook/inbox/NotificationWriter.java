@@ -41,7 +41,7 @@ public class NotificationWriter {
         myPrinter.println("Sender ID:" + message.getSenderId());
         myPrinter.println("Read status:" + message.hasBeenRead());
         myPrinter.println("Priority:" + message.getPriority());
-        myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs());
+        myPrinter.println("Timestamp:" + dateFormatter.outputDatHrs());
         myPrinter.println("Message:" + message.getMsg());
 
         if (message.hasEta()) {
@@ -80,7 +80,7 @@ public class NotificationWriter {
             myPrinter.println("Sender ID:" + msg.getSenderId());
             myPrinter.println("Read status:" + msg.hasBeenRead());
             myPrinter.println("Priority:" + msg.getPriority());
-            myPrinter.println("Timestamp:" + TimeAndDate.outputDATHrs(msg.getTime()));
+            myPrinter.println("Timestamp:" + TimeAndDate.outputDatHrs(msg.getTime()));
             myPrinter.println("Message:" + msg.getMsg());
             if (msg.hasEta()) {
                 myPrinter.println("ETA:" + msg.getEta());

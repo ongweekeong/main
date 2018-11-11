@@ -1,11 +1,10 @@
 package seedu.addressbook.data.person;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import seedu.addressbook.data.exception.IllegalValueException;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 /**
  * Represents a Person in the records.
@@ -13,6 +12,8 @@ import java.text.SimpleDateFormat;
  */
 //@@author muhdharun -reused
 public class Person implements ReadOnlyPerson {
+
+    private static String WANTED_FOR_WARNING = "State the offence if person's status is wanted";
 
     private Name name;
     private NRIC nric;
@@ -22,9 +23,6 @@ public class Person implements ReadOnlyPerson {
     private Offense wantedFor;
 
     private Set<Offense> pastOffenses = new HashSet<>();
-
-    public static String WANTED_FOR_WARNING = "State the offence if person's status is wanted";
-
 
     /**
      * Assumption: Every field must be present and not null.
@@ -37,17 +35,16 @@ public class Person implements ReadOnlyPerson {
         this.postalCode = postalCode;
         this.status = status;
         this.wantedFor = wantedFor;
-        if ((this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD)) && ((this.wantedFor.getOffense().equals(Offense.NULL_OFFENSE)) ||
-                this.wantedFor == null)){
+        if ((this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))
+                && ((this.wantedFor.getOffense().equals(Offense.NULL_OFFENSE))
+                || this.wantedFor == null)) {
             throw new IllegalValueException(WANTED_FOR_WARNING);
-        }
+        } else if (!(this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))) {
 
-        else if (!(this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))){
-
-        } else if (!(this.status.getCurrentStatus().equals(this.status.WANTED_KEYWORD))){
+        } else if (!(this.status.getCurrentStatus().equals(this.status.WANTED_KEYWORD))) {
 
             this.wantedFor = new Offense();
-        } else{
+        } else {
             this.wantedFor = wantedFor;
         }
 
@@ -63,7 +60,9 @@ public class Person implements ReadOnlyPerson {
                 source.getWantedFor(), source.getPastOffenses());
     }
 
-
+    public static String getWantedForWarning() {
+        return WANTED_FOR_WARNING;
+    }
 
     @Override
     public Name getName() {
@@ -76,7 +75,9 @@ public class Person implements ReadOnlyPerson {
     }
 
     @Override
-    public DateOfBirth getDateOfBirth() {return dateOfBirth;}
+    public DateOfBirth getDateOfBirth() {
+        return dateOfBirth;
+    }
 
     @Override
     public PostalCode getPostalCode() {
