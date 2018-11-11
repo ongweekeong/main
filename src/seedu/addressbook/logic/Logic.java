@@ -1,34 +1,42 @@
 package seedu.addressbook.logic;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import seedu.addressbook.commands.Command;
 import seedu.addressbook.commands.CommandResult;
 import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
+import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.parser.Parser;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.storage.StorageFile;
 
-import java.io.*;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Represents the main Logic of the AddressBook.
  */
 public class Logic {
 
-
-    private StorageFile storage;
     private static AddressBook addressBook;
     private static ReaderAndWriter readerandwriter = new ReaderAndWriter();
+    private StorageFile storage;
 
     /** The list of person shown to the user most recently.  */
     private List<? extends ReadOnlyPerson> lastShownList = Collections.emptyList();
 
-    public Logic() throws Exception{
+    Logic(StorageFile storageFile, AddressBook addressBook) {
+        setStorage(storageFile);
+        setAddressBook(addressBook);
+    }
+
+    public Logic() throws Exception {
         setStorage(initializeStorage());
         setAddressBook(storage.load());
         initializeTextFiles();
@@ -38,16 +46,11 @@ public class Logic {
         return addressBook;
     }
 
-    Logic(StorageFile storageFile, AddressBook addressBook){
-        setStorage(storageFile);
-        setAddressBook(addressBook);
-    }
-
-    void setStorage(StorageFile storage){
+    void setStorage(StorageFile storage) {
         this.storage = storage;
     }
 
-    void setAddressBook(AddressBook addressBook){
+    void setAddressBook(AddressBook addressBook) {
         this.addressBook = addressBook;
     }
 
@@ -109,8 +112,8 @@ public class Logic {
 
     //@@iamputradanish
     /** Initializes password, env , message inboxes and screening history text files upon start up of program.*/
-    private void initializeTextFiles(){
-        try{
+    private void initializeTextFiles() {
+        try {
             File passwordFile = readerandwriter.fileToUse("passwordStorage.txt");
             BufferedReader br = readerandwriter.openReader(passwordFile);
             try {
@@ -118,7 +121,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse("passwordStorage.txt");
             PrintWriter pw = null;
             try {
@@ -126,16 +129,16 @@ public class Logic {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            pw.println("hqp -795402416\n" +
-                    "po1 106852275\n" +
-                    "po2 106852276\n" +
-                    "po3 106852277\n" +
-                    "po4 106852278\n" +
-                    "po5 106852279\n");
+            pw.println("hqp -795402416\n"
+                    + "po1 106852275\n"
+                    + "po2 106852276\n"
+                    + "po3 106852277\n"
+                    + "po4 106852278\n"
+                    + "po5 106852279\n");
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File notificationsFile = readerandwriter.fileToUse("notifications.txt");
             BufferedReader br = readerandwriter.openReader(notificationsFile);
             try {
@@ -143,7 +146,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse("notifications.txt");
             PrintWriter pw = null;
             try {
@@ -155,7 +158,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File envFile = readerandwriter.fileToUse("env");
             BufferedReader br = readerandwriter.openReader(envFile);
             try {
@@ -163,7 +166,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse("env");
             PrintWriter pw = null;
             try {
@@ -175,19 +178,19 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File directory = new File("inboxMessages");
-            if(! directory.exists()){
+            if (!directory.exists()) {
                 directory.mkdir();
             }
-            File HQPFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_HQP_INBOX);
-            BufferedReader br = readerandwriter.openReader(HQPFile);
+            File hqpFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_HQP_INBOX);
+            BufferedReader br = readerandwriter.openReader(hqpFile);
             try {
                 br.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_HQP_INBOX);
             PrintWriter pw = null;
             try {
@@ -199,7 +202,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File PO1File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO1_INBOX);
             BufferedReader br = readerandwriter.openReader(PO1File);
             try {
@@ -207,7 +210,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO1_INBOX);
             PrintWriter pw = null;
             try {
@@ -219,7 +222,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File PO2File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO2_INBOX);
             BufferedReader br = readerandwriter.openReader(PO2File);
             try {
@@ -227,7 +230,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO2_INBOX);
             PrintWriter pw = null;
             try {
@@ -239,7 +242,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File PO3File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO3_INBOX);
             BufferedReader br = readerandwriter.openReader(PO3File);
             try {
@@ -247,7 +250,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO3_INBOX);
             PrintWriter pw = null;
             try {
@@ -259,7 +262,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File PO4File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO4_INBOX);
             BufferedReader br = readerandwriter.openReader(PO4File);
             try {
@@ -267,7 +270,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO4_INBOX);
             PrintWriter pw = null;
             try {
@@ -279,7 +282,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File PO5File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO5_INBOX);
             BufferedReader br = readerandwriter.openReader(PO5File);
             try {
@@ -287,7 +290,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO5_INBOX);
             PrintWriter pw = null;
             try {
@@ -299,7 +302,7 @@ public class Logic {
             pw.flush();
             pw.close();
         }
-        try{
+        try {
             File screeningHistoryFile = readerandwriter.fileToUse("screeningHistory.txt");
             BufferedReader br = readerandwriter.openReader(screeningHistoryFile);
             try {
@@ -307,7 +310,7 @@ public class Logic {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }catch(FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             File makeFile = readerandwriter.fileToUse("screeningHistory.txt");
             PrintWriter pw = null;
             try {
@@ -315,11 +318,11 @@ public class Logic {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            pw.println("s1234567a 20/10/2018-16:11:45 Headquarters Personnel\n" +
-                    "s1234567a 28/10/2018-03:02:00 Headquarters Personnel\n" +
-                    "s1234567a 29/10/2018-12:45:13 Headquarters Personnel\n" +
-                    "s1234567a 29/11/2018-22:02:00 Headquarters Personnel\n" +
-                    "s1234567a 01/11/2018-22:02:00 Headquarters Personnel");
+            pw.println("s1234567a 20/10/2018-16:11:45 Headquarters Personnel\n"
+                    + "s1234567a 28/10/2018-03:02:00 Headquarters Personnel\n"
+                    + "s1234567a 29/10/2018-12:45:13 Headquarters Personnel\n"
+                    + "s1234567a 29/11/2018-22:02:00 Headquarters Personnel\n"
+                    + "s1234567a 01/11/2018-22:02:00 Headquarters Personnel");
             pw.flush();
             pw.close();
         }
