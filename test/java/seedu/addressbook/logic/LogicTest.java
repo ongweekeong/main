@@ -1357,7 +1357,7 @@ public class LogicTest {
         String result = "";
         try{
             NotificationReader testReader = new NotificationReader("Nonsense");
-            testReader.ReadFromFile();
+            testReader.readFromFile();
         }
         catch (IOException e){
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
@@ -1391,7 +1391,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsg_withoutShowUnread() throws Exception {
-        Inbox.numUnreadMsgs = -1; // Set numUnreadMsgs to default state before inbox is accessed.
+        Inbox.setNumUnreadMsgs(-1); // Set numUnreadMsgs to default state before inbox is accessed.
         String inputCommand = ReadCommand.COMMAND_WORD + " 5";
         final String expected = Inbox.INBOX_NOT_READ_YET;
         assertCommandBehavior(inputCommand, expected);

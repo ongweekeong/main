@@ -10,20 +10,22 @@ import java.util.TreeSet;
  * Also keeps track of the total number of messages and unread messages.
  */
 public class Inbox {
-    // all messages will be stored here, notifications will appear based on severity and timestamp.
-    private static String MESSAGE_STORAGE_FILEPATH;
-    public static final String INBOX_NOT_READ_YET = "You have not read your inbox! \n\t" +
-            "Type \"showunread\" to view your unread messages.";
+    public static final String INBOX_NOT_READ_YET = "You have not read your inbox! \n\t"
+            + "Type \"showunread\" to view your unread messages.";
     public static final String INBOX_NO_UNREAD_MESSAGES = "You have no unread messages in your inbox.";
-    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. " +
-            "                                           Enter message number from 1 to %1$d.";
+    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. "
+            + "                                           Enter message number from 1 to %1$d.";
     public static final String MESSAGE_STORAGE_PATH_NOT_FOUND = "Cannot find file to write to.";
     public static final String MESSAGE_READ_STATUS_UPDATED = "Successful update";
-    public static int numUnreadMsgs = -1;
-    private TreeSet<Msg> notificationsToPrint = new TreeSet<>();
+
+    private static int numUnreadMsgs = -1;
+
     private static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
     private static NotificationReader notificationReader;
     private static NotificationWriter allMessages;
+    // all messages will be stored here, notifications will appear based on severity and timestamp.
+    private static String MESSAGE_STORAGE_FILEPATH;
+    private TreeSet<Msg> notificationsToPrint = new TreeSet<>();
 
     public Inbox(String policeOfficerId) {
         MESSAGE_STORAGE_FILEPATH = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
@@ -31,10 +33,19 @@ public class Inbox {
         allMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, false);
     }
 
+    public static void setNumUnreadMsgs(int numUnreadMsgs) {
+        Inbox.numUnreadMsgs = numUnreadMsgs;
+    }
+
+    /**
+     * TODO: Add Javadoc comment
+     * @return
+     * @throws IOException
+     */
     public TreeSet<Msg> loadMsgs() throws IOException {
-        notificationsToPrint = notificationReader.ReadFromFile();
+        notificationsToPrint = notificationReader.readFromFile();
         int messageIndex = 1;
-        for (Msg message : notificationsToPrint){
+        for (Msg message : notificationsToPrint) {
             recordNotifications.put(messageIndex++, message);
         }
         numUnreadMsgs = notificationReader.getNumUnreadMsgs();
@@ -51,48 +62,50 @@ public class Inbox {
      * @throws IndexOutOfBoundsException
      */
     public String markMsgAsRead(int index) throws NullPointerException, IndexOutOfBoundsException {
-        try{
-            if((index < 1) || (index > numUnreadMsgs)){
+        try {
+            if ((index < 1) || (index > numUnreadMsgs)) {
                 throw new IndexOutOfBoundsException();
             }
             recordNotifications.get(index).setMsgAsRead();
-            for(int i = 1; i <= recordNotifications.size(); i++) {
+            for (int i = 1; i <= recordNotifications.size(); i++) {
                 notificationsToPrint.add(recordNotifications.get(i));
             }
             allMessages.writeToFile(notificationsToPrint);
-        }
-        catch (IndexOutOfBoundsException | NullPointerException e){
-            if(numUnreadMsgs>0) {
+        } catch (IndexOutOfBoundsException | NullPointerException e) {
+            if (numUnreadMsgs > 0) {
                 return INDEX_OUT_OF_BOUNDS;
-            }
-            else if(numUnreadMsgs == -1){
+            } else if (numUnreadMsgs == -1) {
                 return INBOX_NOT_READ_YET;
-            }
-            else if(numUnreadMsgs == 0) {
+            } else if (numUnreadMsgs == 0) {
                 return INBOX_NO_UNREAD_MESSAGES;
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             return MESSAGE_STORAGE_PATH_NOT_FOUND;
         }
         return MESSAGE_READ_STATUS_UPDATED;
     }
 
-    public int checkNumUnreadMessages(){
+    public int checkNumUnreadMessages() {
         return numUnreadMsgs;
     }
 
-    public static void resetInboxWhenLogout(){
+    /**
+     * TODO: Add Javadoc comment
+     */
+    public static void resetInboxWhenLogout() {
         numUnreadMsgs = -1;
         recordNotifications.clear();
     }
 
-    public static void clearInboxRecords (){
+    /**
+     * TODO: Add Javadoc comment
+     */
+    public static void clearInboxRecords() {
         numUnreadMsgs = 0;
         recordNotifications.clear();
     }
 
-    public static boolean isRecordMsgsEmpty(){
+    public static boolean isRecordMsgsEmpty() {
         return recordNotifications.isEmpty();
     }
 

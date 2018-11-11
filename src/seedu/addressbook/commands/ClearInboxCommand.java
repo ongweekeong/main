@@ -41,7 +41,7 @@ public class ClearInboxCommand extends Command {
             logger.log(Level.INFO, String.format("Clearing messages in \"%s\"", myInbox));
 
             NotificationReader dummyReader = new NotificationReader(myInbox);
-            dummyReader.ReadFromFile(); // Exception thrown if file does not exist
+            dummyReader.readFromFile(); // Exception thrown if file does not exist
             NotificationWriter.clearInbox(myInbox);
             Inbox.clearInboxRecords();
             return new CommandResult(MESSAGE_CLEARINBOX_SUCCESSFUL);

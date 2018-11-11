@@ -120,7 +120,7 @@ public class StorageFileTest {
         String result = "";
         try{
             NotificationReader testReader = new NotificationReader("Nonsense");
-            TreeSet<Msg> testSet = testReader.ReadFromFile();
+            TreeSet<Msg> testSet = testReader.readFromFile();
         }
         catch (IOException e){
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
