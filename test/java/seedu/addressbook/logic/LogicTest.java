@@ -187,6 +187,8 @@ public class LogicTest {
         AutoCorrect correction = new AutoCorrect();
         Dictionary dict = new Dictionary();
 
+        Password.unlockHqp();
+
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = AutoCorrect.getCommand(input);
@@ -195,6 +197,8 @@ public class LogicTest {
             assertEquals(String.format(dict.getCommandErrorMessage(), command) + "\n"
                     + expected, displayCommand);
         }
+
+        Password.lockIsHqp();
     }
 
     /**
@@ -206,11 +210,12 @@ public class LogicTest {
         CheckDistance checker = new CheckDistance();
         AutoCorrect correction = new AutoCorrect();
         Dictionary dict = new Dictionary();
+        boolean isHqp = true;
 
         for (String input: inputs) {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
+            String displayCommand = correction.checkCommand(input, isHqp);
             assertEquals(expected, displayCommand);
         }
     }

@@ -45,12 +45,11 @@ public class Dictionary extends Command {
             COMMANDS.add(ReadCommand.COMMAND_WORD);
             COMMANDS.add(RequestHelpCommand.COMMAND_WORD);
             COMMANDS.add(UpdateStatusCommand.COMMAND_WORD);
-            //COMMANDS.add(UpdatePasswordCommand.COMMAND_WORD);
             COMMANDS.add(ViewAllCommand.COMMAND_WORD);
         }
     }
 
-    public String getErrorMessage() {
+    String getErrorMessage() {
         return "Did you mean to use %s?"
                     + "\n" + "Please try using the correct implementation of the input as shown below-";
     }
