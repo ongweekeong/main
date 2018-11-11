@@ -40,6 +40,34 @@ public abstract class Command {
 
         return "\n\n" + String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, personsDisplayed.size());
     }
+    //@@author ShreyasKp
+    /**
+     * Finds valid NRIC, if it exists
+     * @return the prediction found
+     */
+    public static String findPrediction(String nric) {
+        CheckDistance checker = new CheckDistance();
+
+        return checker.checkInputDistance(nric);
+    }
+
+    /**
+     * Finds result of invalid NRIC input
+     * @param predictedNricInput The prediction found
+     * @return The result of command
+     */
+    private static String invalidCheckCommandResult(String predictedNricInput) {
+
+        Dictionary dictionary = new Dictionary();
+        if (!predictedNricInput.equals("none")) {
+            return (Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                    + "\n"
+                    + String.format(dictionary.getErrorMessage(), predictedNricInput)
+                    + "\n\n" + CheckCommand.COMMAND_WORD + " " + predictedNricInput);
+        } else {
+            return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+        }
+    }
 
     /**
      * Constructs a feedback message to summarise an operation that displayed a listing of a person.
@@ -67,20 +95,9 @@ public abstract class Command {
 
     public static String getMessageForScreeningHistoryShownSummary(List<String> timestampsDisplayed, String nric) {
         if (timestampsDisplayed == null) {
-            //@@author ShreyasKp
-            CheckDistance checker = new CheckDistance();
+            String prediction = findPrediction(nric);
 
-            String prediction = checker.checkInputDistance(nric);
-
-            if (!prediction.equals("none")) {
-                return (Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
-                        + "\n"
-                        + "Did you mean to use "
-                        + prediction);
-            } else {
-                return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
-            }
-            //@@author muhdharun
+            return invalidCheckCommandResult(prediction);
         } else {
 
             UiFormatter formatter = new UiFormatter();

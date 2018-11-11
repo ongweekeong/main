@@ -3,7 +3,6 @@ package seedu.addressbook.commands;
 
 import java.util.Set;
 
-import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.Nric;
@@ -112,20 +111,31 @@ public class EditCommand extends Command {
             return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, this.nric));
         } catch (UniquePersonList.PersonNotFoundException pnfe) {
             //@@author ShreyasKp
-            CheckDistance checker = new CheckDistance();
 
             String nric = getNric().toString();
-            String prediction = checker.checkInputDistance(nric);
 
-            if (!prediction.equals("none")) {
-                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
-                        + "\n"
-                        + "Did you mean to use "
-                        + prediction);
-            } else {
-                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK);
-            }
+            String prediction = findPrediction(nric);
+
+            return resultEditPrediction(prediction);
         }
+    }
 
+    /**
+     * Finds result of invalid NRIC input
+     * @param predictedNricInput The prediction found
+     * @return The result of command
+     */
+    private CommandResult resultEditPrediction(String predictedNricInput) {
+
+        Dictionary dictionary = new Dictionary();
+        if (!predictedNricInput.equals("none")) {
+            return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                    + "\n"
+                    + String.format(dictionary.getErrorMessage(), predictedNricInput)
+                    + "\n\n" + COMMAND_WORD + " n/" + predictedNricInput + " "
+                    + "[p/POSTALCODE] [s/STATUS] [w/WANTEDFOR] [o/PASTOFFENSES]...\n");
+        } else {
+            return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK);
+        }
     }
 }

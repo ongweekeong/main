@@ -1,6 +1,5 @@
 package seedu.addressbook.commands;
 
-import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.person.Nric;
 import seedu.addressbook.data.person.ReadOnlyPerson;
@@ -37,21 +36,11 @@ public class DeleteCommand extends Command {
         } catch (PersonNotFoundException pnfe) {
             //@@author ShreyasKp
 
-            String prediction = findPrediction();
+            String nric = toDelete.toString();
+            String prediction = findPrediction(nric);
 
-            return result(prediction);
+            return resultDeletePrediction(prediction);
         }
-    }
-
-    /**
-     * Finds valid NRIC, if it exists
-     * @return the prediction found
-     */
-    private String findPrediction() {
-        CheckDistance checker = new CheckDistance();
-
-        String nric = toDelete.toString();
-        return checker.checkInputDistance(nric);
     }
 
     /**
@@ -59,7 +48,7 @@ public class DeleteCommand extends Command {
      * @param predictedNricInput The prediction found
      * @return The result of command
      */
-    private CommandResult result(String predictedNricInput) {
+    private CommandResult resultDeletePrediction(String predictedNricInput) {
 
         Dictionary dictionary = new Dictionary();
         if (!predictedNricInput.equals("none")) {
