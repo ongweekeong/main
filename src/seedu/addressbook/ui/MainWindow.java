@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import seedu.addressbook.autocorrect.AutoCorrect;
 import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.commands.CommandResult;
-import seedu.addressbook.commands.Dictionary;
 import seedu.addressbook.commands.LogoutCommand;
 import seedu.addressbook.commands.ShutdownCommand;
 import seedu.addressbook.data.person.ReadOnlyPerson;
