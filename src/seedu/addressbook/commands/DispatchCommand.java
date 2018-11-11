@@ -57,6 +57,11 @@ public class DispatchCommand extends Command {
         this.destinationList = new ArrayList<>();
     }
 
+    private String generateStringMessage(String etaMessage, String patrolResourceId, String caseType, boolean isRequester) {
+        return "Case type is: " + caseType +  ", ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
+                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsURL();
+    }
+  
     public static String getMessageDispatchSuccess() {
         return messageDispatchSuccess;
     }
@@ -69,10 +74,7 @@ public class DispatchCommand extends Command {
         return "Backup resource & Requester cannot be the same officer %s!";
     }
 
-    private String generateStringMessage(String etaMessage, String patrolResourceId, String caseType, boolean isRequester) {
-        return "Case type is: " + caseType +  ", ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
-                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsURL();
-    }
+
 
     /**
      * TODO: Add Javadoc comment

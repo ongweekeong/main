@@ -71,7 +71,7 @@ public class Offense {
         return result;
     }
 
-    public Offense(){
+    public Offense() {
         this.offense = "none";
     }
 
