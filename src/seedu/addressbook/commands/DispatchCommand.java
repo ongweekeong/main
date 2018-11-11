@@ -59,7 +59,7 @@ public class DispatchCommand extends Command {
 
     private String generateStringMessage(String etaMessage, String patrolResourceId, String caseType, boolean isRequester) {
         return "Case type is: " + caseType +  ", ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
-                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsURL();
+                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsUrl();
     }
   
     public static String getMessageDispatchSuccess() {

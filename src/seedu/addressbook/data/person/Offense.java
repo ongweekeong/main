@@ -61,14 +61,14 @@ public class Offense {
     private final String offense;
 
     public static String getListOfValidOffences() {
-        String result = "";
-        for (HashMap.Entry<String,Msg.Priority> entry : OFFENSE_LIST.entrySet()) {
+        StringBuilder result = new StringBuilder();
+        for (HashMap.Entry<String,Msg.Priority> entry : offenseList.entrySet()) {
             if (!entry.getKey().matches(".*\\d+.*") && !entry.getKey().equals("none")) {
-                result += entry.getKey() + "\n";
+                result.append(entry.getKey()).append("\n");
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     public Offense() {
@@ -91,16 +91,6 @@ public class Offense {
         this.offense = offense;
     }
 
-    public static String getListOfValidOffences() {
-        StringBuilder result = new StringBuilder();
-        for (HashMap.Entry<String, Msg.Priority> entry : offenseList.entrySet()) {
-            if (!entry.getKey().matches(".*\\d+.*")) {
-                result.append(entry.getKey()).append("\n");
-            }
-        }
-
-        return result.toString();
-    }
 
     /**
      * Returns true if a given string is a valid tag name.
