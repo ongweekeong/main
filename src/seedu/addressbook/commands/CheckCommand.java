@@ -17,8 +17,8 @@ public class CheckCommand extends Command {
 
     public static final String COMMAND_WORD = "check";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
-            + "Gets screening history of person with specified NRIC \n\t"
-            + "Parameters: NRIC ...\n\t"
+            + "Gets screening history of person with specified Nric \n\t"
+            + "Parameters: Nric ...\n\t"
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nricKeyword;

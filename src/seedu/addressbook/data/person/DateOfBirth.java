@@ -1,8 +1,9 @@
 package seedu.addressbook.data.person;
 //@@author muhdharun
-import seedu.addressbook.data.exception.IllegalValueException;
 
 import java.util.Calendar;
+
+import seedu.addressbook.data.exception.IllegalValueException;
 
 /**
  * Represents a Person's Date of Birth.
@@ -11,8 +12,9 @@ import java.util.Calendar;
 
 public class DateOfBirth {
     public static final String EXAMPLE = "1996";
-    public static final String MESSAGE_DATE_OF_BIRTH_CONSTRAINTS = "Year of Birth must from 1900 onwards, and less than or equal to current year";
-    private static final String DATE_OF_BIRTH_VALIDATION_REGEX =  "[1-2][0-9]{3}";
+    public static final String MESSAGE_DATE_OF_BIRTH_CONSTRAINTS = "Year of Birth must from 1900 onwards,"
+            + "and less than or equal to current year";
+    private static final String DATE_OF_BIRTH_VALIDATION_REGEX = "[1-2][0-9]{3}";
     private final int year = Calendar.getInstance().get(Calendar.YEAR);
     private final String birthYear;
 
@@ -25,9 +27,9 @@ public class DateOfBirth {
      * @throws IllegalValueException if given DoB string is invalid.
      */
 
-    public DateOfBirth(String dob) throws IllegalValueException{
+    public DateOfBirth(String dob) throws IllegalValueException {
         dob = dob.trim();
-        if (!isValidDateOfBirth(dob)){
+        if (!isValidDateOfBirth(dob)) {
             throw new IllegalValueException(MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
         }
         this.birthYear = dob;
@@ -35,12 +37,19 @@ public class DateOfBirth {
     }
 
 
-    public String getDOB() {
+    public String getDob() {
         return birthYear;
     }
 
-    public boolean isValidDateOfBirth(String test) {return test.matches(DATE_OF_BIRTH_VALIDATION_REGEX) &&
-            Integer.parseInt(test) <= year;}
+    /**
+     * TODO: Add Javadoc comment
+     * @param test
+     * @return
+     */
+    private boolean isValidDateOfBirth(String test) {
+        return test.matches(DATE_OF_BIRTH_VALIDATION_REGEX)
+                && Integer.parseInt(test) <= year;
+    }
 
 
 

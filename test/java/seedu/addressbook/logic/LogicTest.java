@@ -252,7 +252,7 @@ public class LogicTest {
         assertCommandBehavior(
                 "add []\\[;] n/s1234567a d/1980 p/123456 s/clear w/none", Name.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "add Valid Name n/s123457a d/1980 p/123456 s/clear w/none", NRIC.MESSAGE_NAME_CONSTRAINTS);
+                "add Valid Name n/s123457a d/1980 p/123456 s/clear w/none", Nric.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/188 p/123456 s/clear w/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
         assertCommandBehavior(
@@ -352,7 +352,7 @@ public class LogicTest {
     }
 
     private void assertInvalidCommandFormatBehaviorForCommand(String commandWord) throws Exception {
-        String expectedMessage = NRIC.MESSAGE_NAME_CONSTRAINTS;
+        String expectedMessage = Nric.MESSAGE_NAME_CONSTRAINTS;
         TestDataHelper helper = new TestDataHelper();
         List<Person> lastShownList = helper.generatePersonList(false, true);
 
@@ -561,7 +561,7 @@ public class LogicTest {
     @Test
     public void execute_delete_invalidArgsFormat() throws Exception {
         String expectedMessage1 = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
-        String expectedMessage2 = NRIC.MESSAGE_NAME_CONSTRAINTS;
+        String expectedMessage2 = Nric.MESSAGE_NAME_CONSTRAINTS;
         assertCommandBehavior("delete ", expectedMessage1);
         assertCommandBehavior("delete arg not number", expectedMessage2);
     }
@@ -636,7 +636,7 @@ public class LogicTest {
 
         assertCommandBehavior("edit n/s1234567a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         assertCommandBehavior(
-                "edit n/s123456a p/510247", NRIC.MESSAGE_NAME_CONSTRAINTS);
+                "edit n/s123456a p/510247", Nric.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
                 "edit n/s1234567a p/50247 w/murder o/gun", PostalCode.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
@@ -886,7 +886,7 @@ public class LogicTest {
         TestDataHelper helper = new TestDataHelper();
         Person test = helper.adam();
         Name name = test.getName();
-        NRIC nric = test.getNric();
+        Nric nric = test.getNric();
         PostalCode postalCode = test.getPostalCode();
         Status status = test.getStatus();
         Offense offense = test.getWantedFor();
@@ -1593,7 +1593,7 @@ public class LogicTest {
 //@@author muhdharun -reused
         Person adam() throws Exception {
             Name name = new Name("Adam Brown");
-            NRIC nric = new NRIC("f1234567j");
+            Nric nric = new Nric("f1234567j");
             DateOfBirth dateOfBirth = new DateOfBirth("1900");
             PostalCode postalCode = new PostalCode("444444");
             Status status = new Status("xc");
@@ -1616,7 +1616,7 @@ public class LogicTest {
         Person generatePerson(int seed) throws Exception {
             return new Person(
                     new Name("Person " + seed),
-                    new NRIC("g999999" + abs(seed) + "t"),
+                    new Nric("g999999" + abs(seed) + "t"),
                     new DateOfBirth(Integer.toString(seed + Integer.parseInt("1901"))),
                     new PostalCode("77777" + seed),
                     new Status("xc"),
@@ -1628,7 +1628,7 @@ public class LogicTest {
         Person generateDummyPerson() throws Exception {
             return new Person(
                     new Name("Not a human"),
-                    new NRIC("f0000000z"),
+                    new Nric("f0000000z"),
                     new DateOfBirth("1900"),
                     new PostalCode("777777"),
                     new Status("xc"),
@@ -1645,7 +1645,7 @@ public class LogicTest {
 
             cmd.add(p.getName().toString());
             cmd.add("n/" + p.getNric());
-            cmd.add("d/" + p.getDateOfBirth().getDOB());
+            cmd.add("d/" + p.getDateOfBirth().getDob());
             cmd.add("p/" + p.getPostalCode());
             cmd.add("s/" + p.getStatus());
             cmd.add("w/" + p.getWantedFor().getOffense());
@@ -1723,7 +1723,7 @@ public class LogicTest {
         }
 
         /**
-         * Generates a random NRIC
+         * Generates a random Nric
          */
         //@@author muhdharun
         String generateRandomNric() {
@@ -1740,7 +1740,7 @@ public class LogicTest {
         Person generatePersonWithNric(String nric) throws Exception {
             return new Person(
                     new Name("Bob"),
-                    new NRIC(nric),
+                    new Nric(nric),
                     new DateOfBirth("2005"),
                     new PostalCode("123456"),
                     new Status("xc"),
@@ -1756,7 +1756,7 @@ public class LogicTest {
             String randomNric = generateRandomNric();
             return new Person(
                     new Name(name),
-                    new NRIC(randomNric),
+                    new Nric(randomNric),
                     new DateOfBirth("2005"),
                     new PostalCode("123456"),
                     new Status("xc"),

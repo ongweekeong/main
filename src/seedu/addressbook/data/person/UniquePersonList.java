@@ -1,11 +1,16 @@
 package seedu.addressbook.data.person;
 
-import seedu.addressbook.common.Utils;
-import seedu.addressbook.data.exception.DuplicateDataException;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import seedu.addressbook.common.Utils;
+import seedu.addressbook.data.exception.DuplicateDataException;
 
 /**
  * A list of persons. Does not allow null elements or duplicates.
@@ -18,54 +23,9 @@ public class UniquePersonList implements Iterable<Person> {
     /**
      * Signals that an operation would have violated the 'no duplicates' property of the list.
      */
-    public static Timestamp screeningTimeStamp;
+    private static Timestamp screeningTimeStamp;
     private static final SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public static class DuplicatePersonException extends DuplicateDataException {
-        protected DuplicatePersonException() {
-            super("Operation would result in duplicate persons");
-        }
-    }
-//@@author muhdharun
-    /**
-     * Signals that an operation adding a person in the list would fail because
-     * it would result in duplicate NRICs.
-     */
-
-    public static class DuplicateNricException extends DuplicateDataException {
-        protected DuplicateNricException() {
-            super("Operation would result in duplicate NRIC");
-        }
-    }
-//@@author
-    /**
-     * Signals that an operation targeting a specified person in the list would fail because
-     * there is no such matching person in the list.
-     */
-    public static class PersonNotFoundException extends Exception {}
-
-    private final List<Person> internalList = new ArrayList<>();
-
-    /**
-     * Constructs empty person list.
-     */
-    public UniquePersonList() {}
-
-    /**
-     * Checks if a person in the records has the specified NRIC
-     *
-     */
-
-//@@author muhdharun
-    public boolean containNric(Person toCheck) {
-        for ( Person person : internalList){
-            if (person.getNric().getIdentificationNumber().equals(toCheck.getNric().getIdentificationNumber())){
-                return true;
-            }
-        }
-        return false;
-    }
-//@@author
     /**
      * Constructs a person list with the given persons.
      */
@@ -95,6 +55,55 @@ public class UniquePersonList implements Iterable<Person> {
     public UniquePersonList(UniquePersonList source) {
         internalList.addAll(source.internalList);
     }
+
+    /**
+     * TODO: Add Javadoc comment
+     */
+    public static class DuplicatePersonException extends DuplicateDataException {
+        protected DuplicatePersonException() {
+            super("Operation would result in duplicate persons");
+        }
+    }
+    //@@author muhdharun
+    /**
+     * Signals that an operation adding a person in the list would fail because
+     * it would result in duplicate NRICs.
+     */
+
+    public static class DuplicateNricException extends DuplicateDataException {
+        protected DuplicateNricException() {
+            super("Operation would result in duplicate Nric");
+        }
+    }
+    //@@author
+    /**
+     * Signals that an operation targeting a specified person in the list would fail because
+     * there is no such matching person in the list.
+     */
+    public static class PersonNotFoundException extends Exception {}
+
+    private final List<Person> internalList = new ArrayList<>();
+
+    /**
+     * Constructs empty person list.
+     */
+    public UniquePersonList() {}
+
+    /**
+     * Checks if a person in the records has the specified Nric
+     *
+     */
+
+    //@@author muhdharun
+    private boolean containNric(Person toCheck) {
+        for ( Person person : internalList) {
+            if (person.getNric().getIdentificationNumber().equals(toCheck.getNric().getIdentificationNumber())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    //@@author
 
     /**
      * Unmodifiable java List view with elements cast as immutable {@link ReadOnlyPerson}s.

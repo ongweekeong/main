@@ -11,14 +11,8 @@ import javax.xml.bind.annotation.XmlValue;
 
 import seedu.addressbook.common.Utils;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.DateOfBirth;
-import seedu.addressbook.data.person.NRIC;
-import seedu.addressbook.data.person.Name;
-import seedu.addressbook.data.person.Offense;
-import seedu.addressbook.data.person.Person;
-import seedu.addressbook.data.person.PostalCode;
-import seedu.addressbook.data.person.ReadOnlyPerson;
-import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.*;
+import seedu.addressbook.data.person.Nric;
 
 /**
  * JAXB-friendly adapted person data holder class.
@@ -71,7 +65,7 @@ public class AdaptedPerson {
 
         dateOfBirth = new AdaptedContactDetail();
         dateOfBirth = new AdaptedContactDetail();
-        dateOfBirth.value = source.getDateOfBirth().getDOB();
+        dateOfBirth.value = source.getDateOfBirth().getDob();
 
         postalCode = new AdaptedContactDetail();
         postalCode.value = source.getPostalCode().getPostalCode();
@@ -122,7 +116,7 @@ public class AdaptedPerson {
         Set<String> screeningHist = new HashSet<>();
 
         final Name name = new Name(this.name);
-        final NRIC nric = new NRIC(this.nric.value);
+        final Nric nric = new Nric(this.nric.value);
         final DateOfBirth dateOfBirth = new DateOfBirth(this.dateOfBirth.value);
         final PostalCode postalCode = new PostalCode(this.postalCode.value);
         final Status status = new Status(this.status.value);

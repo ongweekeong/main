@@ -41,7 +41,7 @@ import seedu.addressbook.commands.ShutdownCommand;
 import seedu.addressbook.commands.UpdateStatusCommand;
 import seedu.addressbook.commands.ViewAllCommand;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.Nric;
 import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.password.Password;
 
@@ -251,7 +251,7 @@ public class Parser {
         try {
             final String nric = parseArgsAsNric(args);
 
-            return new DeleteCommand(new NRIC(nric));
+            return new DeleteCommand(new Nric(nric));
         } catch (ParseException e) {
             logr.log(Level.WARNING, "Invalid delete command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
@@ -383,17 +383,17 @@ public class Parser {
     }
     //@@author muhdharun
     /**
-     * Parses argument string as an NRIC
+     * Parses argument string as an Nric
      *
-     * @param args argument string to parse as NRIC
-     * @return the prepared NRIC
+     * @param args argument string to parse as Nric
+     * @return the prepared Nric
      */
 
     private String parseArgsAsNric(String args) throws ParseException {
         final Matcher matcher = PERSON_NRIC_FORMAT.matcher(args.trim());
         if (!matcher.matches()) {
-            logr.warning("NRIC does not exist in argument");
-            throw new ParseException("Could not find NRIC to parse");
+            logr.warning("Nric does not exist in argument");
+            throw new ParseException("Could not find Nric to parse");
         }
         return matcher.group(0);
     }
@@ -407,10 +407,10 @@ public class Parser {
 
     private Command prepareCheck(String args) {
         args = args.trim();
-        if (NRIC.isValidNRIC(args)) {
+        if (Nric.isValidNric(args)) {
             return new CheckCommand(args);
         } else {
-            logr.warning("NRIC argument is invalid");
+            logr.warning("Nric argument is invalid");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE));
         }
     }
@@ -422,10 +422,10 @@ public class Parser {
      */
     private Command prepareFind(String args) {
         args = args.trim();
-        if (NRIC.isValidNRIC(args)) {
+        if (Nric.isValidNric(args)) {
             return new FindCommand(args);
         } else {
-            logr.warning("NRIC argument is invalid");
+            logr.warning("Nric argument is invalid");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
     }

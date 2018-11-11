@@ -7,7 +7,7 @@ import java.util.List;
 import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.person.NRIC;
+import seedu.addressbook.data.person.Nric;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.person.UniquePersonList;
 import seedu.addressbook.ui.UiFormatter;
@@ -130,7 +130,7 @@ public abstract class Command {
     }
 
     //@@author andyrobert3
-    protected ReadOnlyPerson getTargetPerson(NRIC nric) throws UniquePersonList.PersonNotFoundException {
+    protected ReadOnlyPerson getTargetPerson(Nric nric) throws UniquePersonList.PersonNotFoundException {
         for (ReadOnlyPerson person: relevantPersons) {
             if (person.getNric().getIdentificationNumber().equals(nric.getIdentificationNumber())) {
                 return person;

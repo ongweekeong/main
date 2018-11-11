@@ -6,12 +6,8 @@ import java.util.Set;
 import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.NRIC;
-import seedu.addressbook.data.person.Offense;
-import seedu.addressbook.data.person.Person;
-import seedu.addressbook.data.person.PostalCode;
-import seedu.addressbook.data.person.Status;
-import seedu.addressbook.data.person.UniquePersonList;
+import seedu.addressbook.data.person.*;
+import seedu.addressbook.data.person.Nric;
 
 /**
  * Edits existing person in police records.
@@ -21,14 +17,14 @@ public class EditCommand extends Command {
     public static final String COMMAND_WORD = "edit";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
-            + "Edits the person identified by the NRIC number.\n\t"
-            + "Parameters: n/NRIC [p/POSTALCODE] [s/STATUS] [w/WANTEDFOR] [o/PASTOFFENSES]...\n\t"
+            + "Edits the person identified by the Nric number.\n\t"
+            + "Parameters: n/Nric [p/POSTALCODE] [s/STATUS] [w/WANTEDFOR] [o/PASTOFFENSES]...\n\t"
             + "At least one optional tag must be filled.\n\t"
             + "Example: " + COMMAND_WORD
             + " n/s1234567a p/510247 s/wanted w/murder o/gun";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited Person: %s";
-    private NRIC nric;
+    private Nric nric;
     private PostalCode postalCode;
     private Status status;
 
@@ -41,7 +37,7 @@ public class EditCommand extends Command {
                        String wantedFor,
                        Set<String> offenses) throws IllegalValueException {
 
-        this.nric = new NRIC(nric);
+        this.nric = new Nric(nric);
 
         if (postalCode != null) {
             this.postalCode = new PostalCode(postalCode);
@@ -64,7 +60,7 @@ public class EditCommand extends Command {
         }
     }
 
-    public NRIC getNric() {
+    public Nric getNric() {
         return nric;
     }
 

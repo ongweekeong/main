@@ -328,19 +328,19 @@ public class ParserTest {
                 "add ",
                 "add wrong args format",
                 // no nric prefix
-                String.format("add $s $s d/$s p/$s s/$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s $s d/$s p/$s s/$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no dateOfBirth prefix
-                String.format("add $s n/$s $s p/$s s/$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s $s p/$s s/$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no postalCode prefix
-                String.format("add $s n/$s d/$s $s s/$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s d/$s $s s/$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no status prefix
-                String.format("add $s n/$s d/$s p/$s /$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s d/$s p/$s /$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no offense(for wantedFor) prefix
-                String.format("add $s n/$s d/$s p/$s s/$s /$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s d/$s p/$s s/$s /$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE)
         };
         final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
@@ -352,7 +352,7 @@ public class ParserTest {
         final String invalidName = "[]\\[;]";
         final String validName = Name.EXAMPLE;
         final String invalidNricArg = "n/not__numbers";
-        final String validNricArg = "n/" + NRIC.EXAMPLE;
+        final String validNricArg = "n/" + Nric.EXAMPLE;
         final String invalidDateOfBirthArg = "d/1000";
         final String validDateOfBirthArg = "d/" + DateOfBirth.EXAMPLE;
         final String invalidPostalCodeArg = "p/11234565";
@@ -412,7 +412,7 @@ public class ParserTest {
         try {
             return new Person(
                 new Name(Name.EXAMPLE),
-                new NRIC(NRIC.EXAMPLE),
+                new Nric(Nric.EXAMPLE),
                 new DateOfBirth(DateOfBirth.EXAMPLE),
                 new PostalCode(PostalCode.EXAMPLE),
                 new Status(Status.EXAMPLE),
@@ -428,7 +428,7 @@ public class ParserTest {
         String addCommand = "add "
                 + person.getName().fullName
                 + " n/" + person.getNric().getIdentificationNumber()
-                + " d/" + person.getDateOfBirth().getDOB()
+                + " d/" + person.getDateOfBirth().getDob()
                 + " p/" + person.getPostalCode().getPostalCode()
                 + " s/" + person.getStatus().getCurrentStatus()
                 + " w/" + person.getWantedFor().getOffense();

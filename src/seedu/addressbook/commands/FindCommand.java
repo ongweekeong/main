@@ -7,15 +7,15 @@ import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.storage.StorageFile;
 
 /**
- * Finds a particular person with the specified NRIC, used for screening.
- * Letters in NRIC must be in lower case.
+ * Finds a particular person with the specified Nric, used for screening.
+ * Letters in Nric must be in lower case.
  */
 public class FindCommand extends Command {
     //@@author muhdharun -reused
     public static final String COMMAND_WORD = "find";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Finds person with specified NRIC \n\t"
-            + "Parameters: NRIC ...\n\t"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Finds person with specified Nric \n\t"
+            + "Parameters: Nric ...\n\t"
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nric;
@@ -64,7 +64,7 @@ public class FindCommand extends Command {
 
 
     /**
-     * Retrieve the person in the records whose name contain the specified NRIC.
+     * Retrieve the person in the records whose name contain the specified Nric.
      *
      * @return Persons found, null if no person found
      */

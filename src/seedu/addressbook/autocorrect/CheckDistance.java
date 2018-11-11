@@ -42,7 +42,7 @@ public class CheckDistance {
 
     /**
      * Checks distance for invalid NRICs and finds prediction
-     * @param input The invalid input NRIC
+     * @param input The invalid input Nric
      * @return The prediction if found
      */
     public String checkInputDistance(String input) {

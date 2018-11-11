@@ -1,5 +1,12 @@
 package seedu.addressbook.data;
 
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 import seedu.addressbook.data.person.Person;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.person.UniquePersonList;
@@ -8,9 +15,6 @@ import seedu.addressbook.data.person.UniquePersonList.PersonNotFoundException;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.timeanddate.TimeAndDate;
-
-import java.io.*;
-import java.util.*;
 
 /**
  * Represents the records. Contains the data of all persons and POs.
@@ -23,10 +27,6 @@ public class AddressBook {
 
     private final UniquePersonList allPersons;
     private ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-
-    public static AddressBook empty() {
-        return new AddressBook();
-    }
 
     /**
      * Creates an empty record.
@@ -44,6 +44,10 @@ public class AddressBook {
         this.allPersons = new UniquePersonList(persons);
     }
 
+    public static AddressBook empty() {
+        return new AddressBook();
+    }
+
     /**
      * Adds a person to the records.
      *
@@ -52,10 +56,10 @@ public class AddressBook {
     public void addPerson(Person toAdd) throws UniquePersonList.DuplicateNricException {
         allPersons.add(toAdd);
     }
-//@@author muhdharun
+    //@@author muhdharun
 
     /**
-     * Sets the timestamp of screening, as well as the NRIC to be added
+     * Sets the timestamp of screening, as well as the Nric to be added
      */
     public void addPersonToDbAndUpdate(ReadOnlyPerson toAdd) {
         TimeAndDate timeAndDate = new TimeAndDate();
@@ -64,7 +68,7 @@ public class AddressBook {
     }
 
     /**
-     * Reads the txt file to get the timestamps for the specified NRIC
+     * Reads the txt file to get the timestamps for the specified Nric
      */
 
     public List<String> readDatabase(String nric, String file) throws IOException {
@@ -72,17 +76,16 @@ public class AddressBook {
         String line;
         BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(file));
         line = br.readLine();
-        while (line != null){
+        while (line != null) {
             String[] parts = line.split(" ", 3);
 
-            if (parts[0].equals(nric)){
-                if(parts[2].equals("null")){
+            if (parts[0].equals(nric)) {
+                if(parts[2].equals("null")) {
                     continue;
                 }
                 data.add(parts[1] + " by " + parts[2]);
                 line = br.readLine();
-            }
-            else{
+            } else {
                 line = br.readLine();
             }
         }
@@ -91,18 +94,18 @@ public class AddressBook {
     }
 
     /**
-     * Adds the timestamp, the respective NRIC and the PO who screened the person (using 'find' command)
+     * Adds the timestamp, the respective Nric and the PO who screened the person (using 'find' command)
      */
 
     public void updateDatabase(String file) throws IOException {
         String line;
         BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(file));
-        FileWriter write = new FileWriter(file,true);
+        FileWriter write = new FileWriter(file, true);
         PrintWriter myPrinter = new PrintWriter(write);
         try {
-            while ((line = br.readLine()) !=  null){
+            while ((line = br.readLine()) !=  null) {
                 String[] parts = line.split(" ",3);
-                if (parts[0].equals(tempNric)){
+                if (parts[0].equals(tempNric)) {
                     myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
                     myPrinter.close();
                     br.close();

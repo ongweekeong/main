@@ -16,7 +16,7 @@ public class Person implements ReadOnlyPerson {
     private static String WANTED_FOR_WARNING = "State the offence if person's status is wanted";
 
     private Name name;
-    private NRIC nric;
+    private Nric nric;
     private DateOfBirth dateOfBirth;
     private PostalCode postalCode;
     private Status status;
@@ -27,7 +27,7 @@ public class Person implements ReadOnlyPerson {
     /**
      * Assumption: Every field must be present and not null.
      */
-    public Person(Name name, NRIC nric, DateOfBirth dateOfBirth, PostalCode postalCode, Status status ,
+    public Person(Name name, Nric nric, DateOfBirth dateOfBirth, PostalCode postalCode, Status status ,
                   Offense wantedFor, Set<Offense> PastOffenses) throws IllegalValueException {
         this.name = name;
         this.nric = nric;
@@ -70,7 +70,7 @@ public class Person implements ReadOnlyPerson {
     }
 
     @Override
-    public NRIC getNric() {
+    public Nric getNric() {
         return nric;
     }
 
