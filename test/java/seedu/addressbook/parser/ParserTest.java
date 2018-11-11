@@ -189,14 +189,14 @@ public class ParserTest {
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
     }
 
-    @Test
-    public void dispatchCommand_validArgs_parsedCorrectly() {
-        final String caseType = "cheating";
-        final String backupOfficer = "po1";
-        final String requester = "po3";
-
-        final String input = "dispatch" + backupOfficer
-    }
+//    @Test
+//    public void dispatchCommand_validArgs_parsedCorrectly() {
+//        final String caseType = "cheating";
+//        final String backupOfficer = "po1";
+//        final String requester = "po3";
+//
+//        final String input = "dispatch" + backupOfficer
+//    }
 
 
 
