@@ -60,16 +60,6 @@ public class Offense {
     //@@author muhdharun
     private final String offense;
 
-    public static String getListOfValidOffences() {
-        StringBuilder result = new StringBuilder();
-        for (HashMap.Entry<String,Msg.Priority> entry : offenseList.entrySet()) {
-            if (!entry.getKey().matches(".*\\d+.*") && !entry.getKey().equals("none")) {
-                result.append(entry.getKey()).append("\n");
-            }
-        }
-
-        return result.toString();
-    }
 
     public Offense() {
         this.offense = "none";
@@ -91,6 +81,19 @@ public class Offense {
         this.offense = offense;
     }
 
+    /**
+     * Returns String of valid offences from offense list except "none"
+     */
+    public static String getListOfValidOffences() {
+        StringBuilder result = new StringBuilder();
+        for (HashMap.Entry<String, Msg.Priority> entry : offenseList.entrySet()) {
+            if (!entry.getKey().matches(".*\\d+.*") && !entry.getKey().equals("none")) {
+                result.append(entry.getKey()).append("\n");
+            }
+        }
+
+        return result.toString();
+    }
 
     /**
      * Returns true if a given string is a valid tag name.
@@ -119,11 +122,7 @@ public class Offense {
 
         return offenseList.get(offense);
     }
-
-    //TODO: If not used, delete
-    public static int getPriority(Msg.Priority priority) {
-        return priority.toInteger();
-    }
+    
     //@@author muhdharun
     public static Set<Offense> getOffenseSet(Set<String> offenseStringSet) throws IllegalValueException {
         Set<Offense> offenseSet = new HashSet<>();

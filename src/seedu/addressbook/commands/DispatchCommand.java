@@ -17,7 +17,7 @@ import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.inbox.NotificationWriter;
 
 /**
- * TODO: Add Javadoc comment
+ * Sends dispatch & backup message to relevant personnel
  */
 public class DispatchCommand extends Command {
     public static final String COMMAND_WORD = "dispatch";
@@ -57,11 +57,12 @@ public class DispatchCommand extends Command {
         this.destinationList = new ArrayList<>();
     }
 
-    private String generateStringMessage(String etaMessage, String patrolResourceId, String caseType, boolean isRequester) {
-        return "Case type is: " + caseType +  ", ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
-                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsUrl();
+    private String generateStringMessage(String etaMessage, String patrolResourceId,
+                                         String caseType, boolean isRequester) {
+        return "Case type is: " + caseType + ", ETA " + etaMessage + ", Location of "
+                + (isRequester ? "Requester: " : "Backup: ") + patrolResourceId + ", "
+                + PatrolResourceStatus.getLocation(requester).getGoogleMapsUrl();
     }
-  
     public static String getMessageDispatchSuccess() {
         return messageDispatchSuccess;
     }
@@ -87,8 +88,9 @@ public class DispatchCommand extends Command {
 
             Pair<Integer, String> etaPair = etaList.get(0);
 
-            String dispatchStringMessage = generateStringMessage(etaPair.getValue1(), requester, this.offense,true);
-            String requesterStringMessage = generateStringMessage(etaPair.getValue1(), backupOfficer, this.offense,false);
+            String dispatchStringMessage = generateStringMessage(etaPair.getValue1(), requester, this.offense, true);
+            String requesterStringMessage = generateStringMessage(etaPair.getValue1(), backupOfficer,
+                                                    this.offense, false);
 
             Msg dispatchMessage = new Msg(Offense.getPriority(offense), dispatchStringMessage,
                     PatrolResourceStatus.getLocation(requester), etaPair.getValue0());

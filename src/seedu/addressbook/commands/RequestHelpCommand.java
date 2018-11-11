@@ -26,13 +26,9 @@ public class RequestHelpCommand extends Command {
 
     private static String messageRequestSuccess = "Request for backup case from %s has been sent to HQP.";
 
-    private String caseName;
     private static Msg requestHelpMessage;
+    private String caseName;
     private NotificationWriter notificationWriter;
-
-    public String getCaseName() {
-        return this.caseName;
-    }
 
     /**
      * Constructor for the Writers to write to headquarters personnel file.
@@ -44,6 +40,10 @@ public class RequestHelpCommand extends Command {
         notificationWriter = new NotificationWriter(MessageFilePaths.FILEPATH_HQP_INBOX, true);
         requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString,
                 PatrolResourceStatus.getLocation(Password.getId()));
+    }
+
+    public String getCaseName() {
+        return this.caseName;
     }
 
     public static String getMessageRequestSuccess() {
