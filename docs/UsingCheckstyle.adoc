@@ -1,3 +1,4 @@
+//Solution below adapted from addressbook-level4
 = Using Checkstyle-IDEA
 :site-section: DeveloperGuide
 :imagesDir: images

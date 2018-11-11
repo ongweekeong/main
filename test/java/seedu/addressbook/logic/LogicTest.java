@@ -175,6 +175,27 @@ public class LogicTest {
         assertEquals(r.feedbackToUser, expectedResult);
     }
 
+    //@@author ShreyasKp
+
+    /**
+     * Executes the autocorrection algorithm and confirms that the invalid input has a prediction
+     * @param expected The expected output
+     * @param inputs The invalid command inputs
+     */
+    private void assertCommandBehaviourAutocorrect(String expected, String[] inputs) {
+        CheckDistance checker = new CheckDistance();
+        AutoCorrect correction = new AutoCorrect();
+        Dictionary dict = new Dictionary();
+
+        expected = expected.substring(expected.indexOf("!") + 1);
+        for (String input: inputs) {
+            String output = checker.checkDistance(input);
+            String suggestion = String.format(dict.getCommandErrorMessage(), output);
+            String displayCommand = correction.checkCommand(input);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected, suggestion + "\n" + displayCommand);
+        }
+    }
+
     //@@author iamputradanish
     @Test
     public void execute_unknownCommandWord_forHQP() throws Exception {
@@ -1825,10 +1846,6 @@ public class LogicTest {
 
     //@@author ShreyasKp
 
-    CheckDistance checker = new CheckDistance();
-    AutoCorrect correction = new AutoCorrect();
-    Dictionary dict = new Dictionary();
-
     @Test
     public void execute_addCommand_wrongSpellingOfCommandWord() {
         final String[] inputs = {
@@ -1837,13 +1854,7 @@ public class LogicTest {
                 "adds"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1854,13 +1865,7 @@ public class LogicTest {
                 "checks"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1871,13 +1876,7 @@ public class LogicTest {
                 "checkstatuts"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPoStatusCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1888,13 +1887,7 @@ public class LogicTest {
                 "clears"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1907,13 +1900,7 @@ public class LogicTest {
                 "clearinboox"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1924,13 +1911,7 @@ public class LogicTest {
                 "times"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
 
@@ -1942,13 +1923,7 @@ public class LogicTest {
                 "deletes"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1959,13 +1934,7 @@ public class LogicTest {
                 "disphatch"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
 
@@ -1977,13 +1946,7 @@ public class LogicTest {
                 "edits"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -1994,13 +1957,7 @@ public class LogicTest {
                 "fhind"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2011,13 +1968,7 @@ public class LogicTest {
                 "helpp"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2028,13 +1979,7 @@ public class LogicTest {
                 "binbox"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2045,13 +1990,7 @@ public class LogicTest {
                 "lists"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2062,13 +2001,7 @@ public class LogicTest {
                 "logoute"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2079,13 +2012,7 @@ public class LogicTest {
                 "bread"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2096,13 +2023,7 @@ public class LogicTest {
                 "rbp"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2115,13 +2036,7 @@ public class LogicTest {
                 "showunbread"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2132,13 +2047,7 @@ public class LogicTest {
                 "shutdowns"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2151,13 +2060,7 @@ public class LogicTest {
                 "updatesstatus"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
@@ -2168,12 +2071,6 @@ public class LogicTest {
                 "viewalll"
         };
         String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
-        expected = expected.substring(expected.indexOf("!") + 1);
-        for (String input: inputs) {
-            String output = checker.checkDistance(input);
-            String suggestion = String.format(dict.getCommandErrorMessage(), output);
-            String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
-        }
+        assertCommandBehaviourAutocorrect(expected, inputs);
     }
 }
