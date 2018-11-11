@@ -1,8 +1,6 @@
 //@@author ongweekeong
 package seedu.addressbook.inbox;
 
-import seedu.addressbook.common.Location;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -11,6 +9,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeSet;
+
+import seedu.addressbook.common.Location;
 
 /**
  * Reads the respective text files containing the messages sent to the user.
@@ -32,57 +32,57 @@ public class NotificationReader {
      * @throws IOException
      */
     public TreeSet<Msg>
-    ReadFromFile() throws IOException {  // If no new notifications and 'inbox' command invoked, show past 10 notifications
+        readFromFile() throws IOException { //If no new notifications and 'inbox' command invoked,
+        // show past 10 notifications
         String line;
         BufferedReader br = new BufferedReader(new FileReader(path));
         unreadMsgs = 0;
         while ((line = br.readLine()) != null) {
             switch (line) {
-                case "> START OF MESSAGE <":
-                    returnMsg = new Msg();
-                    break;
-                case "> END OF MESSAGE <":   // End of message entry, store into TreeSet
-                    sortedMsgs.add(returnMsg);
-                    break;
-                default:
-                    String[] parts = line.split(":", 2);
-                    String msgType = parts[0];
-                    if (parts.length == 2) {
-                        switch (msgType) {
-                            case "Sender ID":
-                                readMsgSenderId(parts[1]);
-                                break;
-                            case "Read status":
-                                readMsgReadStatus(parts[1]);
-                                if (!returnMsg.hasBeenRead())
-                                    unreadMsgs += 1;
-                                break;
-                            case "Priority":
-                                readMsgPriority(parts[1]);
-                                break;
-                            case "Timestamp":
-                                readMsgTimestamp(parts[1]);
-                                break;
-                            case "Message":
-                                readMsgMessage(parts[1]);
-                                break;
-                            case "Location":
-                                readMsgLocation(parts[1]);
-                                break;
-                        }
-                    }
+            case "> START OF MESSAGE <":
+                returnMsg = new Msg();
+                break;
+            case "> END OF MESSAGE <": // End of message entry, store into TreeSet
+                sortedMsgs.add(returnMsg);
+                break;
+            default:
+                String[] parts = line.split(":", 2);
+                String msgType = parts[0];
+                if (parts.length == 2) {
+                    if ("Sender ID".equals(msgType)) {
+                        readMsgSenderId(parts[1]);
 
-                    break;
+                    } else if ("Read status".equals(msgType)) {
+                        readMsgReadStatus(parts[1]);
+                        if (!returnMsg.hasBeenRead()) {
+                            unreadMsgs += 1;
+                        }
+
+                    } else if ("Priority".equals(msgType)) {
+                        readMsgPriority(parts[1]);
+
+                    } else if ("Timestamp".equals(msgType)) {
+                        readMsgTimestamp(parts[1]);
+
+                    } else if ("Message".equals(msgType)) {
+                        readMsgMessage(parts[1]);
+
+                    } else if ("Location".equals(msgType)) {
+                        readMsgLocation(parts[1]);
+
+                    }
+                }
+                break;
             }
         }
         return sortedMsgs;
     }
 
-    int getNumUnreadMsgs(){
+    int getNumUnreadMsgs() {
         return unreadMsgs;
     }
 
-    private void readMsgSenderId(String userId){
+    private void readMsgSenderId(String userId) {
         returnMsg.setSenderId(userId);
     }
 
@@ -90,45 +90,56 @@ public class NotificationReader {
         returnMsg.setReadStatus(Boolean.parseBoolean(readStatus));
     }
 
-    private void readMsgPriority(String priority){
+    /**
+     * TODO: Add Javadoc comment
+     * @param priority
+     */
+    private void readMsgPriority(String priority) {
         Msg.Priority msgPriority;
         switch (priority) {
-            case "HIGH":
-                msgPriority = Msg.Priority.HIGH;
-                break;
-            case "MED":
-                msgPriority = Msg.Priority.MED;
-                break;
-            default:
-                msgPriority = Msg.Priority.LOW;
-                break;
+        case "HIGH":
+            msgPriority = Msg.Priority.HIGH;
+            break;
+        case "MED":
+            msgPriority = Msg.Priority.MED;
+            break;
+        default:
+            msgPriority = Msg.Priority.LOW;
+            break;
         }
 
         returnMsg.setPriority(msgPriority);
     }
 
 
-    private void readMsgTimestamp(String timestamp){
+    /**
+     * TODO: Add Javadoc comment
+     * @param timestamp
+     */
+    private void readMsgTimestamp(String timestamp) {
         SimpleDateFormat timeFormatted = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss:SSS");
         Date parsedTimeStamp;
         try {
             parsedTimeStamp = timeFormatted.parse(timestamp);
         } catch (ParseException e) {
-            parsedTimeStamp = new Date(0,1,1,0,0,0);
+            parsedTimeStamp = new Date(0, 1, 1, 0, 0, 0);
         }
         Timestamp msgTime = new Timestamp(parsedTimeStamp.getTime());
         returnMsg.setTime(msgTime);
     }
 
-    private void readMsgMessage(String message){
+    private void readMsgMessage(String message) {
         returnMsg.setMsg(message);
     }
 
-    private void readMsgLocation(String xyValue){
+    /**
+     * TODO: Add Javadoc comment
+     * @param xyValue
+     */
+    private void readMsgLocation(String xyValue) {
         String[] coordinates = xyValue.split(",", 2);
         Location myLocation = new Location(Double.parseDouble(coordinates[0]),
                 Double.parseDouble(coordinates[1]));
         returnMsg.setLocation(myLocation);
     }
-
 }

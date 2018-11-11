@@ -1,33 +1,59 @@
 package seedu.addressbook.parser;
 
-import org.apache.commons.codec.binary.StringUtils;
-import seedu.addressbook.PatrolResourceStatus;
-import seedu.addressbook.commands.*;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.NRIC;
-import seedu.addressbook.data.person.Offense;
-import seedu.addressbook.password.Password;
+import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.*;
-import java.util.logging.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import seedu.addressbook.PatrolResourceStatus;
+import seedu.addressbook.commands.AddCommand;
+import seedu.addressbook.commands.CheckCommand;
+import seedu.addressbook.commands.CheckPoStatusCommand;
+import seedu.addressbook.commands.ClearCommand;
+import seedu.addressbook.commands.ClearInboxCommand;
+import seedu.addressbook.commands.Command;
+import seedu.addressbook.commands.DateTimeCommand;
+import seedu.addressbook.commands.DeleteCommand;
+import seedu.addressbook.commands.DispatchCommand;
+import seedu.addressbook.commands.EditCommand;
+import seedu.addressbook.commands.FindCommand;
+import seedu.addressbook.commands.HelpCommand;
+import seedu.addressbook.commands.InboxCommand;
+import seedu.addressbook.commands.IncorrectCommand;
+import seedu.addressbook.commands.ListCommand;
+import seedu.addressbook.commands.LogoutCommand;
+import seedu.addressbook.commands.ReadCommand;
+import seedu.addressbook.commands.RequestHelpCommand;
+import seedu.addressbook.commands.ShowUnreadCommand;
+import seedu.addressbook.commands.ShutdownCommand;
+import seedu.addressbook.commands.UpdateStatusCommand;
+import seedu.addressbook.commands.ViewAllCommand;
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.password.Password;
 
 /**
  * Parses user input.
  */
 public class Parser {
-    private final static Logger logr = Logger.getLogger( Parser.class.getName() );
 
-    public static final Pattern PERSON_INDEX_ARGS_FORMAT = Pattern.compile("(?<targetIndex>.+)");
-
+    //TODO If not used, delete
     public static final Pattern KEYWORDS_ARGS_FORMAT =
             Pattern.compile("(?<keywords>\\S+(?:\\s+\\S+)*)"); // one or more keywords separated by whitespace
-//@@author muhdharun -reused
+    //@@author muhdharun -reused
     public static final Pattern PERSON_DATA_ARGS_FORMAT = // '/' forward slashes are reserved for delimiter prefixes
             Pattern.compile("(?<name>[^/]+)"
                     + " n/(?<nric>[^/]+)"
@@ -36,17 +62,13 @@ public class Parser {
                     + " s/(?<status>[^/]+)"
                     + " w/(?<wantedFor>[^/]+)"
                     + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
-//@@author
-    public static final Pattern EDIT_DATA_ARGS_FORMAT =
-            Pattern.compile("n/(?<nric>[^/]+)"
-                    + " p/(?<postalCode>[^/]+)"
-                    + " s/(?<status>[^/]+)"
-                    + " w/(?<wantedFor>[^/]+)"
-                    + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
+    //@@author
 
+    //TODO If not used, delete
     public static final Pattern PERSON_NAME_FORMAT = Pattern.compile("(?<name>[^/]+)");
-    public static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
-    public static final String PO_REGEX = "[Pp][Oo][0-9]+";
+
+    private static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
+    private static final String PO_REGEX = "[Pp][Oo][0-9]+";
 
     /**
      * Signals that the user input could not be parsed.
@@ -60,7 +82,12 @@ public class Parser {
     /**
      * Used for initial separation of command word and args.
      */
-    public static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
+    private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
+
+    private static final Logger logr = Logger.getLogger(Parser.class.getName());
+
+    private static final Pattern PERSON_INDEX_ARGS_FORMAT = Pattern.compile("(?<targetIndex>.+)");
+
 
     private static void setupLogger() {
         LogManager.getLogManager().reset();
@@ -89,45 +116,6 @@ public class Parser {
         setupLogger();
         final Matcher matcher = BASIC_COMMAND_FORMAT.matcher(userInput.trim());
 
-        // TODO: Delete this if not used
-        /*if (!matcher.matches()) {
-            switch (result) {
-                case AddCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE));
-
-                case DeleteCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
-
-                case EditCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
-
-                case ClearCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE));
-
-                case FindCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
-
-                case ListCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
-
-                case ViewCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewCommand.MESSAGE_USAGE));
-
-                case ViewAllCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE));
-
-                case ShutdownCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE));
-
-                case LogoutCommand.COMMAND_WORD:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE));
-
-                case HelpCommand.COMMAND_WORD: // Fallthrough
-                default:
-                    return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
-            }
-        }*/
-
         if (!matcher.matches()) {
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE));
         }
@@ -135,79 +123,79 @@ public class Parser {
         final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
 
-        logr.info("Parsed the user input and matching commands.");
+        logr.info("Parsed the user input and matching COMMANDS.");
 
         switch (commandWord) {
-            case AddCommand.COMMAND_WORD:
-                return prepareAdd(arguments);
+        case AddCommand.COMMAND_WORD:
+            return prepareAdd(arguments);
 
-            case DateTimeCommand.COMMAND_WORD:
-                return new DateTimeCommand();
+        case DateTimeCommand.COMMAND_WORD:
+            return new DateTimeCommand();
 
-            case DeleteCommand.COMMAND_WORD:
-                return prepareDelete(arguments);
+        case DeleteCommand.COMMAND_WORD:
+            return prepareDelete(arguments);
 
-            case EditCommand.COMMAND_WORD:
-                return prepareEdit(arguments);
+        case EditCommand.COMMAND_WORD:
+            return prepareEdit(arguments);
 
-            case ClearCommand.COMMAND_WORD:
-                return new ClearCommand();
+        case ClearCommand.COMMAND_WORD:
+            return new ClearCommand();
 
-            case FindCommand.COMMAND_WORD:
-                return prepareFind(arguments);
+        case FindCommand.COMMAND_WORD:
+            return prepareFind(arguments);
 
-            case CheckCommand.COMMAND_WORD:
-                return prepareCheck(arguments);
+        case CheckCommand.COMMAND_WORD:
+            return prepareCheck(arguments);
 
-            case CheckPOStatusCommand.COMMAND_WORD:
-                return new CheckPOStatusCommand();
+        case CheckPoStatusCommand.COMMAND_WORD:
+            return new CheckPoStatusCommand();
 
-            case ListCommand.COMMAND_WORD:
-                return new ListCommand();
+        case ListCommand.COMMAND_WORD:
+            return new ListCommand();
 
-            case ShowUnreadCommand.COMMAND_WORD:
-                return new ShowUnreadCommand();
+        case ShowUnreadCommand.COMMAND_WORD:
+            return new ShowUnreadCommand();
 
-            case InboxCommand.COMMAND_WORD:
-                return new InboxCommand();
+        case InboxCommand.COMMAND_WORD:
+            return new InboxCommand();
 
-            case ClearInboxCommand.COMMAND_WORD:
-                return new ClearInboxCommand();
+        case ClearInboxCommand.COMMAND_WORD:
+            return new ClearInboxCommand();
 
-            case UpdateStatusCommand.COMMAND_WORD:
-                return prepareUpdateStatus(arguments);
+        case UpdateStatusCommand.COMMAND_WORD:
+            return prepareUpdateStatus(arguments);
 
-            case ReadCommand.COMMAND_WORD:
-                return prepareRead(arguments);
+        case ReadCommand.COMMAND_WORD:
+            return prepareRead(arguments);
 
-            case ViewAllCommand.COMMAND_WORD:
-                return prepareViewAll(arguments);
+        case ViewAllCommand.COMMAND_WORD:
+            return prepareViewAll(arguments);
 
-            case RequestHelpCommand.COMMAND_WORD:
-                return prepareRequest(arguments);
+        case RequestHelpCommand.COMMAND_WORD:
+            return prepareRequest(arguments);
 
-            case DispatchCommand.COMMAND_WORD:
-                return prepareDispatch(arguments);
+        case DispatchCommand.COMMAND_WORD:
+            return prepareDispatch(arguments);
 
-            case ShutdownCommand.COMMAND_WORD:
-                return new ShutdownCommand();
+        case ShutdownCommand.COMMAND_WORD:
+            return new ShutdownCommand();
 
-            case LogoutCommand.COMMAND_WORD:
-                return new LogoutCommand();
+        case LogoutCommand.COMMAND_WORD:
+            return new LogoutCommand();
 
-            case HelpCommand.COMMAND_WORD: // Fallthrough
-            default:
-                return new HelpCommand();
+        case HelpCommand.COMMAND_WORD: // Fallthrough
+        default:
+            return new HelpCommand();
         }
     }
-//@@author muhdharun -reused
+    //@@author muhdharun -reused
     /**
      * Parses arguments in the context of the add person command.
      *
      * @param args full command args string
      * @return the prepared command
      */
-    private Command prepareAdd(String args){
+    private Command prepareAdd(String args) {
         final Matcher matcher = PERSON_DATA_ARGS_FORMAT.matcher(args.trim());
         // Validate arg string format
         if (!matcher.matches()) {
@@ -227,8 +215,9 @@ public class Parser {
             return new IncorrectCommand(ive.getMessage());
         }
     }
-//@@author
+    //@@author
     /**
+     * TODO: If not used, delete
      * Checks whether the private prefix of a contact detail in the add command's arguments string is present.
      */
     private static boolean isPrivatePrefixPresent(String matchedPrefix) {
@@ -250,7 +239,7 @@ public class Parser {
     }
 
 
-//@@author muhdharun -reused
+    //@@author muhdharun -reused
 
     /**
      * Parses arguments in the context of the delete person command.
@@ -258,11 +247,11 @@ public class Parser {
      * @param args full command args string
      * @return the prepared command
      */
-    private Command prepareDelete(String args){
+    private Command prepareDelete(String args) {
         try {
             final String nric = parseArgsAsNric(args);
 
-            return new DeleteCommand(new NRIC(nric));
+            return new DeleteCommand(new Nric(nric));
         } catch (ParseException e) {
             logr.log(Level.WARNING, "Invalid delete command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
@@ -285,19 +274,19 @@ public class Parser {
     private Command prepareEdit(String args) {
         args = args.trim();
 
-        String argParts[] = args.split("\\s");
-        String editCommandIdentifiers[] = {
+        String[] argParts = args.split("\\s");
+        String[] editCommandIdentifiers = {
             "n/", "p/", "s/", "w/", "o/"
         };
 
-        String userInputParameters[] = new String[editCommandIdentifiers.length];
-        String offenseString = "";
+        String[] userInputParameters = new String[editCommandIdentifiers.length];
+        StringBuilder offenseString = new StringBuilder();
 
         for (int i = 0; i < editCommandIdentifiers.length; i++) {
             for (String argument : argParts) {
                 if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
                     if (editCommandIdentifiers[i].equals(editCommandIdentifiers[4])) {
-                        offenseString += " " + argument;
+                        offenseString.append(" ").append(argument);
                     } else {
                         userInputParameters[i] = argument.substring(2);
                         break;
@@ -306,13 +295,14 @@ public class Parser {
             }
         }
 
-        userInputParameters[4] = (!offenseString.equals("")) ? offenseString : null;
+        userInputParameters[4] = (!offenseString.toString().equals("")) ? offenseString.toString() : null;
 
         Set<String> offenses = null;
 
         try {
             if (userInputParameters[0] == null) {
-                throw new IllegalValueException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                        EditCommand.MESSAGE_USAGE));
             }
 
             if (userInputParameters[4] != null) {
@@ -333,13 +323,18 @@ public class Parser {
         }
     }
 
-//@@author ongweekeong
-    private Command prepareRead(String args){
-        try{
+    //@@author ongweekeong
+
+    /**
+     *
+     * @param args
+     * @return
+     */
+    private Command prepareRead(String args) {
+        try {
             final int targetIndex = parseArgsAsDisplayedIndex(args);
             return new ReadCommand(targetIndex);
-        }
-        catch (ParseException | NumberFormatException e){
+        } catch (ParseException | NumberFormatException e) {
             logr.log(Level.WARNING, "Invalid read command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     ReadCommand.MESSAGE_USAGE));
@@ -381,25 +376,24 @@ public class Parser {
         }
         try {
             return Integer.parseInt(matcher.group("targetIndex"));
-        }
-        catch (NumberFormatException nfe){
+        } catch (NumberFormatException nfe) {
             new BigInteger(matcher.group("targetIndex")); //Throws NFE if input index is not numeric.
             return Integer.MAX_VALUE;
         }
     }
-//@@author muhdharun
+    //@@author muhdharun
     /**
-     * Parses argument string as an NRIC
+     * Parses argument string as an Nric
      *
-     * @param args argument string to parse as NRIC
-     * @return the prepared NRIC
+     * @param args argument string to parse as Nric
+     * @return the prepared Nric
      */
 
     private String parseArgsAsNric(String args) throws ParseException {
         final Matcher matcher = PERSON_NRIC_FORMAT.matcher(args.trim());
         if (!matcher.matches()) {
-            logr.warning("NRIC does not exist in argument");
-            throw new ParseException("Could not find NRIC to parse");
+            logr.warning("Nric does not exist in argument");
+            throw new ParseException("Could not find Nric to parse");
         }
         return matcher.group(0);
     }
@@ -413,20 +407,25 @@ public class Parser {
 
     private Command prepareCheck(String args) {
         args = args.trim();
-        if (NRIC.isValidNRIC(args)) {
+        if (Nric.isValidNric(args)) {
             return new CheckCommand(args);
         } else {
-            logr.warning("NRIC argument is invalid");
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,CheckCommand.MESSAGE_USAGE));
+            logr.warning("Nric argument is invalid");
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE));
         }
     }
 
+    /**
+     * TODO: Add Javadoc comment
+     * @param args
+     * @return
+     */
     private Command prepareFind(String args) {
         args = args.trim();
-        if (NRIC.isValidNRIC(args)) {
+        if (Nric.isValidNric(args)) {
             return new FindCommand(args);
         } else {
-            logr.warning("NRIC argument is invalid");
+            logr.warning("Nric argument is invalid");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
     }
@@ -442,14 +441,15 @@ public class Parser {
         args = args.trim();
         if (args.matches(PO_REGEX)) {
             return new UpdateStatusCommand(args);
-        } else{
+        } else {
             logr.warning("an existing or valid PO must be stated");
-            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE));
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    UpdateStatusCommand.MESSAGE_USAGE));
         }
 
     }
 
-//@@author andyrobert3
+    //@@author andyrobert3
 
     /**
      * Parses arguments in context of request help command.
@@ -458,15 +458,16 @@ public class Parser {
      * @return the prepared request command
      */
     private Command prepareRequest(String args) {
-        String message, caseName = args.trim();
+        String message;
+        String caseName = args.trim();
 
         if (caseName.length() == 0) {
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     RequestHelpCommand.MESSAGE_USAGE));
         }
 
-        message = Password.getID().toUpperCase() + " needs help with " + caseName + " at location "  +
-                        PatrolResourceStatus.getLocation(Password.getID()).getGoogleMapsURL();
+        message = Password.getId().toUpperCase() + " needs help with " + caseName + " at location "
+                + PatrolResourceStatus.getLocation(Password.getId()).getGoogleMapsUrl();
 
         try {
             return new RequestHelpCommand(caseName, message);
@@ -479,12 +480,14 @@ public class Parser {
     /**
      * Parses arguments in context of dispatch command
      *
-     * @params args full command args string
+     * @param args full command args string
      * @return the prepared request command
      */
     private Command prepareDispatch(String args) {
-        String backupOfficer, dispatchRequester, caseName;
-        String[] argParts = args.trim().split("\\s+",  3);
+        String backupOfficer;
+        String dispatchRequester;
+        String caseName;
+        String[] argParts = args.trim().split("\\s+", 3);
 
         if (argParts.length < 3) {
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
@@ -497,7 +500,7 @@ public class Parser {
 
         try {
             if (backupOfficer.equalsIgnoreCase(dispatchRequester)) {
-                throw new IllegalValueException(String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME,
+                throw new IllegalValueException(String.format(DispatchCommand.getMessageBackupDispatchSame(),
                         backupOfficer));
             }
             return new DispatchCommand(backupOfficer, dispatchRequester, caseName);

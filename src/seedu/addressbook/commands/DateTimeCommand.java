@@ -1,5 +1,6 @@
 //@@author ShreyasKp
 package seedu.addressbook.commands;
+
 import seedu.addressbook.timeanddate.TimeAndDate;
 
 /**
@@ -13,9 +14,9 @@ public class DateTimeCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Returns current date and time \n\t"
             + "Example: " + COMMAND_WORD;
 
-    public TimeAndDate timeAndDate;
+    private TimeAndDate timeAndDate;
 
-    public DateTimeCommand(){
+    public DateTimeCommand() {
         timeAndDate = new TimeAndDate();
     }
 

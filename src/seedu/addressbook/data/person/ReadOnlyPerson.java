@@ -8,9 +8,9 @@ import java.util.Set;
  * Implementations should guarantee: details are present and not null, field values are validated.
  */
 public interface ReadOnlyPerson {
-//@@author muhdharun
+    //@@author muhdharun
     Name getName();
-    NRIC getNric();
+    Nric getNric();
     DateOfBirth getDateOfBirth();
     PostalCode getPostalCode();
     Status getStatus();
@@ -25,14 +25,15 @@ public interface ReadOnlyPerson {
 
 
     /**
-     * Returns true if the values inside this object is same as those of the other (Note: interfaces cannot override .equals)
+     * Returns true if the values inside this object is same as those of the other
+     * (Note: interfaces cannot override .equals)
      */
     default boolean isSameStateAs(ReadOnlyPerson other) {
         return other == this // short circuit if same object
                 || (other != null // this is first to avoid NPE below
                 && other.getName().fullName.equals(this.getName().fullName) // state checks here onwards
                 && other.getNric().getIdentificationNumber().equals(this.getNric().getIdentificationNumber())
-                && other.getDateOfBirth().getDOB().equals((this.getDateOfBirth().getDOB()))
+                && other.getDateOfBirth().getDob().equals((this.getDateOfBirth().getDob()))
                 && other.getPostalCode().getPostalCode().equals(this.getPostalCode().getPostalCode())
                 && other.getStatus().getCurrentStatus().equals(this.getStatus().getCurrentStatus())
                 && other.getWantedFor().getOffense().equals(this.getWantedFor().getOffense()));
@@ -44,10 +45,10 @@ public interface ReadOnlyPerson {
     default String getAsTextShowAll() {
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
-                .append(" NRIC: ");
+                .append(" Nric: ");
         builder.append(getNric())
                 .append(" DateOfBirth: ");
-        builder.append(getDateOfBirth().getDOB())
+        builder.append(getDateOfBirth().getDob())
                 .append(" Postal Code: ");
         builder.append(getPostalCode())
                 .append(" Status: ");
@@ -60,7 +61,7 @@ public interface ReadOnlyPerson {
         }
         return builder.toString();
     }
-//@@author muhdharun
+    //@@author muhdharun
     /**
      * Formats the person as text, showing all details vertically for better readability.
      */
@@ -69,11 +70,11 @@ public interface ReadOnlyPerson {
         final StringBuilder builder = new StringBuilder();
         builder.append(getName())
                 .append("\n")
-                .append(" NRIC: ");
+                .append(" Nric: ");
         builder.append(getNric())
                 .append("\n")
                 .append(" DateOfBirth: ");
-        builder.append(getDateOfBirth().getDOB())
+        builder.append(getDateOfBirth().getDob())
                 .append("\n")
                 .append(" Postal Code: ");
         builder.append(getPostalCode())

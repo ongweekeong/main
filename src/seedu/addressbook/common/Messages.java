@@ -17,7 +17,7 @@ public class Messages {
     public static final String MESSAGE_INTERNET_NOT_AVAILABLE = "Internet not available for Google Maps API.";
 
     //    public static final String MESSAGE_PROGRAM_LAUNCH_ARGS_USAGE = "Launch command format: " +
-//            "java seedu.addressbook.Main [STORAGE_FILE_PATH]";
+    //        "java seedu.addressbook.Main [STORAGE_FILE_PATH]";
     public static final String MESSAGE_WELCOME = "Welcome to the Police Records and Intelligent System.";
     public static final String MESSAGE_USING_STORAGE_FILE = "Using storage file : %1$s";
     public static final String MESSAGE_BATTERY_PERCENTAGE = "Battery level left: %d";

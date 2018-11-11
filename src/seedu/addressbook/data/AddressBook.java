@@ -1,19 +1,20 @@
 package seedu.addressbook.data;
 
-import seedu.addressbook.data.person.NRIC;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+
 import seedu.addressbook.data.person.Person;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.person.UniquePersonList;
-import seedu.addressbook.data.person.UniquePersonList.DuplicatePersonException;
+import seedu.addressbook.data.person.UniquePersonList.DuplicateNricException;
 import seedu.addressbook.data.person.UniquePersonList.PersonNotFoundException;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 import seedu.addressbook.timeanddate.TimeAndDate;
-
-import java.io.*;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Represents the records. Contains the data of all persons and POs.
@@ -26,10 +27,6 @@ public class AddressBook {
 
     private final UniquePersonList allPersons;
     private ReaderAndWriter readerAndWriter = new ReaderAndWriter();
-
-    public static AddressBook empty() {
-        return new AddressBook();
-    }
 
     /**
      * Creates an empty record.
@@ -47,27 +44,31 @@ public class AddressBook {
         this.allPersons = new UniquePersonList(persons);
     }
 
+    public static AddressBook empty() {
+        return new AddressBook();
+    }
+
     /**
      * Adds a person to the records.
      *
-     * @throws DuplicatePersonException if an equivalent person already exists.
+     * @throws DuplicateNricException if an equivalent person already exists.
      */
     public void addPerson(Person toAdd) throws UniquePersonList.DuplicateNricException {
         allPersons.add(toAdd);
     }
-//@@author muhdharun
+    //@@author muhdharun
 
     /**
-     * Sets the timestamp of screening, as well as the NRIC to be added
+     * Sets the timestamp of screening, as well as the Nric to be added
      */
     public void addPersonToDbAndUpdate(ReadOnlyPerson toAdd) {
         TimeAndDate timeAndDate = new TimeAndDate();
         tempNric = toAdd.getNric().getIdentificationNumber();
-        tempTimestamp = timeAndDate.getOutputDAThrsForCheckCommand();
+        tempTimestamp = timeAndDate.getOutputDatHrsForCheckCommand();
     }
 
     /**
-     * Reads the txt file to get the timestamps for the specified NRIC
+     * Reads the txt file to get the timestamps for the specified Nric
      */
 
     public List<String> readDatabase(String nric, String file) throws IOException {
@@ -75,17 +76,16 @@ public class AddressBook {
         String line;
         BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(file));
         line = br.readLine();
-        while (line != null){
+        while (line != null) {
             String[] parts = line.split(" ", 3);
 
-            if (parts[0].equals(nric)){
-                if(parts[2].equals("null")){
+            if (parts[0].equals(nric)) {
+                if (parts[2].equals("null")) {
                     continue;
                 }
                 data.add(parts[1] + " by " + parts[2]);
                 line = br.readLine();
-            }
-            else{
+            } else {
                 line = br.readLine();
             }
         }
@@ -94,19 +94,20 @@ public class AddressBook {
     }
 
     /**
-     * Adds the timestamp, the respective NRIC and the PO who screened the person (using 'find' command)
+     * Adds the timestamp, the respective Nric and the PO who screened the person (using 'find' command)
      */
 
     public void updateDatabase(String file) throws IOException {
         String line;
         BufferedReader br = readerAndWriter.openReader(readerAndWriter.fileToUse(file));
-        FileWriter write = new FileWriter(file,true);
+        FileWriter write = new FileWriter(file, true);
         PrintWriter myPrinter = new PrintWriter(write);
         try {
-            while ((line = br.readLine()) !=  null){
-                String[] parts = line.split(" ",3);
-                if (parts[0].equals(tempNric)){
-                    myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getID());
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ", 3);
+
+                if (parts[0].equals(tempNric)) {
+                    myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
                     myPrinter.close();
                     br.close();
                     return;
@@ -114,18 +115,17 @@ public class AddressBook {
                 line = br.readLine();
                 continue;
             }
-            myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getID());
+            myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
             myPrinter.close();
             br.close();
-        }
-        catch (Exception e){
-            myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getID());
+        } catch (Exception e) {
+            myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getId());
 
             myPrinter.close();
             br.close();
         }
     }
-//@@author
+    //@@author
     /**
      * Checks if an equivalent person exists in the records.
      */
@@ -149,10 +149,11 @@ public class AddressBook {
      * @throws PersonNotFoundException if no such Person could be found.
      * @throws DuplicatePersonException if an equivalent person already exists.
      */
-//    public void editPerson(ReadOnlyPerson toDelete, Person toAdd) throws PersonNotFoundException, DuplicatePersonException {
-//        removePerson(toDelete);
-//        addPerson(toAdd);
-//    }
+    //public void editPerson(ReadOnlyPerson toDelete, Person toAdd)
+    //throws PersonNotFoundException, DuplicatePersonException {
+    //removePerson(toDelete);
+    //addPerson(toAdd);
+    //}
 
     /**
      * Clears all persons from the records.

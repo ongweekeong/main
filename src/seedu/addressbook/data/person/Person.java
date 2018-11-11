@@ -1,11 +1,10 @@
 package seedu.addressbook.data.person;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 import seedu.addressbook.data.exception.IllegalValueException;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 /**
  * Represents a Person in the records.
@@ -14,8 +13,10 @@ import java.text.SimpleDateFormat;
 //@@author muhdharun -reused
 public class Person implements ReadOnlyPerson {
 
+    private static String wantedForWarning = "State the offence if person's status is wanted";
+
     private Name name;
-    private NRIC nric;
+    private Nric nric;
     private DateOfBirth dateOfBirth;
     private PostalCode postalCode;
     private Status status;
@@ -23,35 +24,31 @@ public class Person implements ReadOnlyPerson {
 
     private Set<Offense> pastOffenses = new HashSet<>();
 
-    public static String WANTED_FOR_WARNING = "State the offence if person's status is wanted";
-
-
     /**
      * Assumption: Every field must be present and not null.
      */
-    public Person(Name name, NRIC nric, DateOfBirth dateOfBirth, PostalCode postalCode, Status status ,
-                  Offense wantedFor, Set<Offense> PastOffenses) throws IllegalValueException {
+    public Person(Name name, Nric nric, DateOfBirth dateOfBirth, PostalCode postalCode, Status status ,
+                  Offense wantedFor, Set<Offense> pastOffenses) throws IllegalValueException {
         this.name = name;
         this.nric = nric;
         this.dateOfBirth = dateOfBirth;
         this.postalCode = postalCode;
         this.status = status;
         this.wantedFor = wantedFor;
-        if ((this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD)) && ((this.wantedFor.getOffense().equals(Offense.NULL_OFFENSE)) ||
-                this.wantedFor == null)){
-            throw new IllegalValueException(WANTED_FOR_WARNING);
-        }
+        if ((this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))
+                && ((this.wantedFor.getOffense().equals(Offense.NULL_OFFENSE))
+                || this.wantedFor == null)) {
+            throw new IllegalValueException(wantedForWarning);
+        } else if (!(this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))) {
 
-        else if (!(this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))){
-
-        } else if (!(this.status.getCurrentStatus().equals(this.status.WANTED_KEYWORD))){
+        } else if (!(this.status.getCurrentStatus().equals(this.status.WANTED_KEYWORD))) {
 
             this.wantedFor = new Offense();
-        } else{
+        } else {
             this.wantedFor = wantedFor;
         }
 
-        this.pastOffenses.addAll(PastOffenses);
+        this.pastOffenses.addAll(pastOffenses);
     }
 
     /**
@@ -63,7 +60,9 @@ public class Person implements ReadOnlyPerson {
                 source.getWantedFor(), source.getPastOffenses());
     }
 
-
+    public static String getWantedForWarning() {
+        return wantedForWarning;
+    }
 
     @Override
     public Name getName() {
@@ -71,12 +70,14 @@ public class Person implements ReadOnlyPerson {
     }
 
     @Override
-    public NRIC getNric() {
+    public Nric getNric() {
         return nric;
     }
 
     @Override
-    public DateOfBirth getDateOfBirth() {return dateOfBirth;}
+    public DateOfBirth getDateOfBirth() {
+        return dateOfBirth;
+    }
 
     @Override
     public PostalCode getPostalCode() {

@@ -1,9 +1,9 @@
 package seedu.addressbook.ui;
 
-import seedu.addressbook.data.person.ReadOnlyPerson;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import seedu.addressbook.data.person.ReadOnlyPerson;
 
 /**
  * Used for formatting text for display. e.g. for adding text decorations.
@@ -29,7 +29,7 @@ public class UiFormatter {
     public String format(String... messages) {
         StringBuilder sb = new StringBuilder();
         for (String m : messages) {
-            sb.append(LINE_PREFIX + m.replace("\n", LS + LINE_PREFIX) + LS);
+            sb.append(LINE_PREFIX).append(m.replace("\n", LS + LINE_PREFIX)).append(LS);
         }
         return sb.toString();
     }
@@ -42,20 +42,17 @@ public class UiFormatter {
         }
         return format(asIndexedList(formattedPersons));
     }
-//@@author muhdharun
+    //@@author muhdharun
     /** Formats given list of strings to the user. */
     public String formatForStrings(List<String> strings) {
-        final List<String> formattedTimestamps = new ArrayList<>();
-        for (String string : strings) {
-            formattedTimestamps.add(string);
-        }
+        final List<String> formattedTimestamps = new ArrayList<>(strings);
         return format(asIndexedList(formattedTimestamps));
     }
-//@@author
+    //@@author
     /** Formats a list of strings as an indexed list. */
     private static String asIndexedList(List<String> listItems) {
         final StringBuilder formatted = new StringBuilder();
-        int displayIndex = 0 + DISPLAYED_INDEX_OFFSET;
+        int displayIndex = DISPLAYED_INDEX_OFFSET;
         for (String listItem : listItems) {
             formatted.append(getIndexedListItem(displayIndex, listItem)).append("\n");
             displayIndex++;

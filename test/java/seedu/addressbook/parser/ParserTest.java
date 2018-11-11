@@ -2,6 +2,7 @@ package seedu.addressbook.parser;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.Request;
 import seedu.addressbook.commands.*;
 import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.*;
@@ -38,7 +39,7 @@ public class ParserTest {
     }
 
     /**
-     * Test 0-argument commands
+     * Test 0-argument COMMANDS
      */
     
     @Test
@@ -77,10 +78,10 @@ public class ParserTest {
     @Test
     public void checkPoStatusCommand_parsedCorrectly() {
         final String input = "checkstatus";
-        parseAndAssertCommandType(input, CheckPOStatusCommand.class);
+        parseAndAssertCommandType(input, CheckPoStatusCommand.class);
     }
     /**
-     * Test single argument commands
+     * Test single argument COMMANDS
      */
     @Test
     public void updateStatusCommand_parsedCorrectly() {
@@ -104,7 +105,7 @@ public class ParserTest {
 
     //@@author
     /**
-     * Test single index argument commands
+     * Test single index argument COMMANDS
      */
     
     @Test
@@ -172,31 +173,52 @@ public class ParserTest {
     }
 
     @Test
+    public void requestCommand_validArgs_parsedCorrectly() {
+        final String caseType = "gun";
+        final String input = "rb " + caseType;
+
+        final RequestHelpCommand result =
+                parseAndAssertCommandType(input, RequestHelpCommand.class);
+        assertEquals(caseType, result.getCaseName());
+    }
+
+    @Test
     public void dispatchCommand_noArgs() {
         final String[] inputs = { "dispatch", "dispatch "};
         final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE);
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
     }
 
+//    @Test
+//    public void dispatchCommand_validArgs_parsedCorrectly() {
+//        final String caseType = "cheating";
+//        final String backupOfficer = "po1";
+//        final String requester = "po3";
+//
+//        final String input = "dispatch" + backupOfficer
+//    }
+
+
+
     //@@iamputradanish
     @Test
     public void execute_isRejectPO_allowed(){
         Password password = new Password();
-        boolean result = password.isRejectPO("list");
+        boolean result = password.isRejectPo("list");
         assertFalse(result);
     }
 
     @Test
     public void execute_isRejectPO(){
         Password password = new Password();
-        boolean result = password.isRejectPO("add");
+        boolean result = password.isRejectPo("add");
         assertTrue(result);
     }
 
     @Test
     public void execute_getUnauthorizedPOCommand_getAdd(){
         Password password = new Password();
-        String result =  password.getUnauthorizedPOCommand("add 1");
+        String result =  password.getUnauthorizedPoCommand("add 1");
         assertEquals("add",result);
     }
 
@@ -328,19 +350,19 @@ public class ParserTest {
                 "add ",
                 "add wrong args format",
                 // no nric prefix
-                String.format("add $s $s d/$s p/$s s/$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s $s d/$s p/$s s/$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no dateOfBirth prefix
-                String.format("add $s n/$s $s p/$s s/$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s $s p/$s s/$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no postalCode prefix
-                String.format("add $s n/$s d/$s $s s/$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s d/$s $s s/$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no status prefix
-                String.format("add $s n/$s d/$s p/$s /$s w/$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s d/$s p/$s /$s w/$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE),
                 // no offense(for wantedFor) prefix
-                String.format("add $s n/$s d/$s p/$s s/$s /$s", Name.EXAMPLE, NRIC.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
+                String.format("add $s n/$s d/$s p/$s s/$s /$s", Name.EXAMPLE, Nric.EXAMPLE, DateOfBirth.EXAMPLE, PostalCode.EXAMPLE,
                         Status.EXAMPLE, Offense.EXAMPLE)
         };
         final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
@@ -352,7 +374,7 @@ public class ParserTest {
         final String invalidName = "[]\\[;]";
         final String validName = Name.EXAMPLE;
         final String invalidNricArg = "n/not__numbers";
-        final String validNricArg = "n/" + NRIC.EXAMPLE;
+        final String validNricArg = "n/" + Nric.EXAMPLE;
         final String invalidDateOfBirthArg = "d/1000";
         final String validDateOfBirthArg = "d/" + DateOfBirth.EXAMPLE;
         final String invalidPostalCodeArg = "p/11234565";
@@ -412,7 +434,7 @@ public class ParserTest {
         try {
             return new Person(
                 new Name(Name.EXAMPLE),
-                new NRIC(NRIC.EXAMPLE),
+                new Nric(Nric.EXAMPLE),
                 new DateOfBirth(DateOfBirth.EXAMPLE),
                 new PostalCode(PostalCode.EXAMPLE),
                 new Status(Status.EXAMPLE),
@@ -428,7 +450,7 @@ public class ParserTest {
         String addCommand = "add "
                 + person.getName().fullName
                 + " n/" + person.getNric().getIdentificationNumber()
-                + " d/" + person.getDateOfBirth().getDOB()
+                + " d/" + person.getDateOfBirth().getDob()
                 + " p/" + person.getPostalCode().getPostalCode()
                 + " s/" + person.getStatus().getCurrentStatus()
                 + " w/" + person.getWantedFor().getOffense();
