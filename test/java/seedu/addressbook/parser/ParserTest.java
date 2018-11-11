@@ -38,7 +38,7 @@ public class ParserTest {
     }
 
     /**
-     * Test 0-argument commands
+     * Test 0-argument COMMANDS
      */
     
     @Test
@@ -80,7 +80,7 @@ public class ParserTest {
         parseAndAssertCommandType(input, CheckPOStatusCommand.class);
     }
     /**
-     * Test single argument commands
+     * Test single argument COMMANDS
      */
     @Test
     public void updateStatusCommand_parsedCorrectly() {
@@ -104,7 +104,7 @@ public class ParserTest {
 
     //@@author
     /**
-     * Test single index argument commands
+     * Test single index argument COMMANDS
      */
     
     @Test

@@ -123,7 +123,7 @@ public class Parser {
         final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
 
-        logr.info("Parsed the user input and matching commands.");
+        logr.info("Parsed the user input and matching COMMANDS.");
 
         switch (commandWord) {
         case AddCommand.COMMAND_WORD:

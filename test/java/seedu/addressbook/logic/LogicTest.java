@@ -1842,7 +1842,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1859,7 +1859,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1876,7 +1876,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1893,7 +1893,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1912,7 +1912,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1929,7 +1929,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1947,7 +1947,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1964,7 +1964,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1982,7 +1982,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1999,7 +1999,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2016,7 +2016,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2033,7 +2033,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2050,7 +2050,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2067,7 +2067,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2084,7 +2084,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2101,7 +2101,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2120,7 +2120,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2137,7 +2137,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2156,7 +2156,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2173,7 +2173,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 }
