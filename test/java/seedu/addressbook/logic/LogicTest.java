@@ -442,19 +442,19 @@ public class LogicTest {
     public void execute_dispatch_successful() throws Exception {
         PatrolResourceStatus.resetPatrolResourceStatus();
         NotificationWriter.clearAllInbox();
-        String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po5");
+        String expectedMessage1 = String.format(DispatchCommand.getMessageDispatchSuccess(), "po5");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po5", expectedMessage1);
 
         PatrolResourceStatus.resetPatrolResourceStatus();
         NotificationWriter.clearAllInbox();
-        String expectedMessage2 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po4");
+        String expectedMessage2 = String.format(DispatchCommand.getMessageDispatchSuccess(), "po4");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 gun po4", expectedMessage2);
     }
 
     @Test
     public void execute_dispatch_engagedOfficer() throws Exception {
         PatrolResourceStatus.setStatus("po3", true);
-        String baseMessage = "Patrol resource %s is engaged.\n" + DispatchCommand.MESSAGE_OFFICER_UNAVAILABLE;
+        String baseMessage = "Patrol resource %s is engaged.\n" + DispatchCommand.getMessageOfficerUnavailable();
 
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " hqp theft po3", String.format(baseMessage, "hqp"));
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 riot po2", String.format(baseMessage, "po3"));
@@ -462,8 +462,8 @@ public class LogicTest {
 
     @Test
     public void execute_dispatch_backupRequesterSameOfficer() throws Exception {
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1", String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME, "po1"));
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5", String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME, "po5"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1", String.format(DispatchCommand.getMessageBackupDispatchSame(), "po1"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5", String.format(DispatchCommand.getMessageBackupDispatchSame(), "po5"));
     }
 
     @Test

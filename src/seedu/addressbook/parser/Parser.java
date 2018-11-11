@@ -467,7 +467,7 @@ public class Parser {
         }
 
         message = Password.getId().toUpperCase() + " needs help with " + caseName + " at location "
-                + PatrolResourceStatus.getLocation(Password.getId()).getGoogleMapsURL();
+                + PatrolResourceStatus.getLocation(Password.getId()).getGoogleMapsUrl();
 
         try {
             return new RequestHelpCommand(caseName, message);
@@ -500,7 +500,7 @@ public class Parser {
 
         try {
             if (backupOfficer.equalsIgnoreCase(dispatchRequester)) {
-                throw new IllegalValueException(String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME,
+                throw new IllegalValueException(String.format(DispatchCommand.getMessageBackupDispatchSame(),
                         backupOfficer));
             }
             return new DispatchCommand(backupOfficer, dispatchRequester, caseName);
