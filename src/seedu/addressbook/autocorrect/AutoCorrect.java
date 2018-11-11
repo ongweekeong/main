@@ -10,6 +10,7 @@ import seedu.addressbook.commands.ClearCommand;
 import seedu.addressbook.commands.ClearInboxCommand;
 import seedu.addressbook.commands.DateTimeCommand;
 import seedu.addressbook.commands.DeleteCommand;
+import seedu.addressbook.commands.Dictionary;
 import seedu.addressbook.commands.DispatchCommand;
 import seedu.addressbook.commands.EditCommand;
 import seedu.addressbook.commands.FindCommand;
@@ -33,6 +34,38 @@ public class AutoCorrect {
 
     private CheckDistance checker = new CheckDistance();
 
+    private Dictionary dict = new Dictionary();
+
+    /**
+     * Extracts the command from the user input
+     * @param userInput The input
+     * @return The command
+     */
+    public static String getCommand(String userInput) {
+        String[] arr = userInput.split(" ", 2);
+        return arr[0];
+    }
+
+    public static String getInvalidCommandMessage(boolean isHqpFlag) {
+        if (isHqpFlag) {
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
+        } else {
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                    HelpCommand.MESSAGE_PO_USAGES)).feedbackToUser;
+        }
+    }
+
+    public String getResultOfInvalidCommand(String userInput) {
+        String command = checkCommand(userInput);
+        String output = checker.checkDistance(userInput);
+        if (!(output.equals("none"))) {
+            return (String.format(dict.getCommandErrorMessage(), output)) + "\n" + command;
+        } else {
+            boolean isHqpFlag = Password.isHqpUser();
+            return getInvalidCommandMessage(isHqpFlag);
+        }
+    }
     /**
      * Checks if the invalid command has a prediction and returns valid format of using command if found
      * @param commandInput User Input which is invalid
