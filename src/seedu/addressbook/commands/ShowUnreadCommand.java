@@ -1,15 +1,15 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
-import seedu.addressbook.common.Messages;
-import seedu.addressbook.inbox.Inbox;
-import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.password.Password;
-
 import java.io.IOException;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import seedu.addressbook.common.Messages;
+import seedu.addressbook.inbox.Inbox;
+import seedu.addressbook.inbox.Msg;
+import seedu.addressbook.password.Password;
 
 /** Prints out all unread notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
@@ -18,7 +18,6 @@ import java.util.logging.Logger;
  */
 
 public class ShowUnreadCommand extends Command {
-    private static final Logger logger = Logger.getLogger(ShowUnreadCommand.class.getName());
 
     public static final String COMMAND_WORD = "showunread";
 
@@ -26,6 +25,7 @@ public class ShowUnreadCommand extends Command {
             + "Displays all unread messages in the application starting from the most urgent.\n\t"
             + "Example: " + COMMAND_WORD;
 
+    private static final Logger logger = Logger.getLogger(ShowUnreadCommand.class.getName());
 
     @Override
     public CommandResult execute() {
@@ -40,17 +40,16 @@ public class ShowUnreadCommand extends Command {
 
             allMsgs = myInbox.loadMsgs();
             myUnreadMsgs = myInbox.checkNumUnreadMessages();
-            if(myUnreadMsgs!=0) {
-                String fullPrintedMessage = Messages.MESSAGE_UNREAD_MSG_NOTIFICATION + '\n';
-                for(int i=0; i<myUnreadMsgs; i++){
+            if (myUnreadMsgs != 0) {
+                StringBuilder fullPrintedMessage = new StringBuilder(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION + '\n');
+                for (int i = 0; i < myUnreadMsgs; i++) {
                     msgToPrint = allMsgs.pollFirst();
-                    fullPrintedMessage += InboxCommand.concatenateMsg(messageNum, msgToPrint);
+                    fullPrintedMessage.append(InboxCommand.concatenateMsg(messageNum, msgToPrint));
                     messageNum++;
                 }
                 allMsgs.clear();
-                return new CommandResult(String.format(fullPrintedMessage, myUnreadMsgs));
-            }
-            else{
+                return new CommandResult(String.format(fullPrintedMessage.toString(), myUnreadMsgs));
+            } else {
                 allMsgs.clear();
                 return new CommandResult(Messages.MESSAGE_NO_UNREAD_MSGS);
             }
