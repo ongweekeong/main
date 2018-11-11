@@ -122,7 +122,6 @@ public class Offense {
 
         return offenseList.get(offense);
     }
-    
     //@@author muhdharun
     public static Set<Offense> getOffenseSet(Set<String> offenseStringSet) throws IllegalValueException {
         Set<Offense> offenseSet = new HashSet<>();
