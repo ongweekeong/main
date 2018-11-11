@@ -38,7 +38,7 @@ In order to start the setup, you are required to install the following:
 == Design
 The diagram below shows a high level architecture design of the current classes that are used in the project.
 
-image::mainClassDiagram.png[]
+image::mainClassDiagramFULL.png[]
 
 == Implementation
 This section describes some of the more important details of certain features implemented.
