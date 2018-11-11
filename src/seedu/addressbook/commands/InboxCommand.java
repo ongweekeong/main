@@ -42,13 +42,13 @@ public class InboxCommand extends Command {
             allMsgs = myInbox.loadMsgs();
             totalMsgs = allMsgs.size();
             myUnreadMsgs = myInbox.checkNumUnreadMessages();
-            String fullPrintedMessage = MESSAGE_TOTAL_MESSAGE_NOTIFICATION;
+            StringBuilder fullPrintedMessage = new StringBuilder(MESSAGE_TOTAL_MESSAGE_NOTIFICATION);
             for (Msg msgToPrint : allMsgs) {
-                fullPrintedMessage += concatenateMsg(messageNum, msgToPrint);
+                fullPrintedMessage.append(concatenateMsg(messageNum, msgToPrint));
                 messageNum++;
             }
             allMsgs.clear();
-            return new CommandResult(String.format(fullPrintedMessage, totalMsgs, myUnreadMsgs));
+            return new CommandResult(String.format(fullPrintedMessage.toString(), totalMsgs, myUnreadMsgs));
 
         } catch (IOException e) {
             logger.log(Level.WARNING, String.format("\"%s\" not found", myInbox));
