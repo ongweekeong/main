@@ -59,7 +59,7 @@ dependencies {
 }
 
 shadowJar{
-    archiveName = 'PRISM.jar'
+    archiveName = '[F10-3][PRISM].jar'
 
     destinationDir = file("${buildDir}/jar/")
 }

@@ -8,6 +8,8 @@ import seedu.addressbook.password.Password;
 
 import java.io.IOException;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /** Prints out all unread notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
@@ -16,6 +18,8 @@ import java.util.TreeSet;
  */
 
 public class ShowUnreadCommand extends Command {
+    private static final Logger logger = Logger.getLogger(ShowUnreadCommand.class.getName());
+
     public static final String COMMAND_WORD = "showunread";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
@@ -32,6 +36,8 @@ public class ShowUnreadCommand extends Command {
         int messageNum = 1;
         Msg msgToPrint;
         try {
+            logger.log(Level.INFO, String.format("Reading messages from \"%s\"", myInbox));
+
             allMsgs = myInbox.loadMsgs();
             myUnreadMsgs = myInbox.checkNumUnreadMessages();
             if(myUnreadMsgs!=0) {
@@ -49,6 +55,8 @@ public class ShowUnreadCommand extends Command {
                 return new CommandResult(Messages.MESSAGE_NO_UNREAD_MSGS);
             }
         } catch (IOException e) {
+            logger.log(Level.WARNING, String.format("\"%s\" not found", myInbox));
+
             e.printStackTrace();
             return new CommandResult("Error loading messages.");
         }

@@ -33,6 +33,7 @@ import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static seedu.addressbook.common.Messages.*;
 import static seedu.addressbook.password.Password.*;
 
@@ -395,7 +396,7 @@ public class LogicTest {
 
     @Test
     public void execute_request_successful() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
         String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
         Password.unlockHqp();
 
@@ -407,7 +408,7 @@ public class LogicTest {
 
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
         Password.unlockHqp(); Password.lockIsPo();
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
@@ -440,12 +441,12 @@ public class LogicTest {
     @Test
     public void execute_dispatch_successful() throws Exception {
         PatrolResourceStatus.resetPatrolResourceStatus();
-        WriteNotification.clearAllInbox();
+        NotificationWriter.clearAllInbox();
         String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po5");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po5", expectedMessage1);
 
         PatrolResourceStatus.resetPatrolResourceStatus();
-        WriteNotification.clearAllInbox();
+        NotificationWriter.clearAllInbox();
         String expectedMessage2 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po4");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 gun po4", expectedMessage2);
     }
@@ -1355,8 +1356,8 @@ public class LogicTest {
     public void execute_missingInboxFile() {
         String result = "";
         try{
-            ReadNotification testReader = new ReadNotification("Nonsense");
-            TreeSet<Msg> testSet = testReader.ReadFromFile();
+            NotificationReader testReader = new NotificationReader("Nonsense");
+            testReader.ReadFromFile();
         }
         catch (IOException e){
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
@@ -1367,7 +1368,7 @@ public class LogicTest {
     @Test
     public void execute_inbox_noUnreadMessages() throws Exception {
         Password.lockIsPo(); Password.lockIsPo();
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String inputCommand = InboxCommand.COMMAND_WORD;
         final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
         assertCommandBehavior(inputCommand, expected);
@@ -1376,12 +1377,12 @@ public class LogicTest {
     @Test
     public void execute_inbox_successful_readAndUnread() throws Exception {
         Password.lockIsPo(); Password.lockIsPo();
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final String test = "This is the unread test msg";
         Msg testMsg = generateMsgInInbox(test);
         Thread.sleep(50);
         Msg readMsg = generateReadMsgInInbox("This is the read test msg");
-        String inputCommand = InboxCommand.COMMAND_WORD;
+        final String inputCommand = InboxCommand.COMMAND_WORD;
         String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION + InboxCommand.concatenateMsg(1, testMsg) +
                 InboxCommand.concatenateMsg(2, readMsg), 2, 1);
         assertCommandBehavior(inputCommand, expected, test);
@@ -1392,27 +1393,37 @@ public class LogicTest {
     public void execute_readMsg_withoutShowUnread() throws Exception {
         Inbox.numUnreadMsgs = -1; // Set numUnreadMsgs to default state before inbox is accessed.
         String inputCommand = ReadCommand.COMMAND_WORD + " 5";
-        String expected = Inbox.INBOX_NOT_READ_YET;
+        final String expected = Inbox.INBOX_NOT_READ_YET;
         assertCommandBehavior(inputCommand, expected);
     }
 
     @Test
     public void execute_checkEmptyInbox_successful() throws Exception{
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
-        String expectedResult = Messages.MESSAGE_NO_UNREAD_MSGS;
-        assertEquals(expectedResult, r.feedbackToUser);
+        assertEquals(Messages.MESSAGE_NO_UNREAD_MSGS, r.feedbackToUser);
+    }
+
+    @Test
+    public void execute_checkEmptyInbox_afterClearInbox() throws Exception {
+        CommandResult r = logic.execute(ClearInboxCommand.COMMAND_WORD);
+        final String input = InboxCommand.COMMAND_WORD;
+        final String input1 = ShowUnreadCommand.COMMAND_WORD;
+        final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION,0,0);
+        final String expected1 = Messages.MESSAGE_NO_UNREAD_MSGS; //TODO: Refactor all message strings
+        assertCommandBehavior(input, expected);
+        assertCommandBehavior(input1, expected1);
     }
 
     @Test
     public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
         Password.lockIsHqp(); Password.lockIsPo();
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int messageNum = 1;
         String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
         final String testMessage = "This is a test message.";
         Msg testMsg = generateMsgInInbox(testMessage);
-        String expectedResult1 = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 1, 1);
+        final String expectedResult1 = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 1, 1);
 
         assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedResult, testMsg);
         assertCommandBehavior(InboxCommand.COMMAND_WORD, expectedResult1, testMsg);
@@ -1420,70 +1431,70 @@ public class LogicTest {
 
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Password.lockIsPo(); Password.lockIsHqp();
-        CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
+        logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
-        String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
+        final String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
         assertCommandBehavior(inputCommand, expected);
+        logic.execute(InboxCommand.COMMAND_WORD);
+        final String expected1 = String.format(Inbox.INBOX_NO_UNREAD_MESSAGES,0,0);
+        assertCommandBehavior(inputCommand, expected1);
     }
 
     @Test
     public void execute_readMsgWithOutOfBoundsIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         Password.lockIsHqp(); Password.lockIsPo(); //Set static boolean flags from other test cases back to original state.
-        Msg testMsg;
         final int numOfMsgs = 3;
         for (int i=0; i<numOfMsgs; i++){
-            testMsg = generateMsgInInbox("This is a test message.");
+            generateMsgInInbox("This is a test message.");
             Thread.sleep(100);
         }
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
-        String input1 = ReadCommand.COMMAND_WORD + " 0";
-        String expected1 = String.format(Inbox.INDEX_OUT_OF_BOUNDS, numOfMsgs);
+        final String input1 = ReadCommand.COMMAND_WORD + " 0";
+        final String expected1 = String.format(Inbox.INDEX_OUT_OF_BOUNDS, numOfMsgs);
         assertCommandBehavior(input1, expected1);
-        String input2 = ReadCommand.COMMAND_WORD + " 4";
-        String expected2 = String.format(Inbox.INDEX_OUT_OF_BOUNDS, numOfMsgs);
+        final String input2 = ReadCommand.COMMAND_WORD + " 4";
+        final String expected2 = String.format(Inbox.INDEX_OUT_OF_BOUNDS, numOfMsgs);
         assertCommandBehavior(input2, expected2);
     }
 
     @Test
     public void execute_readMsg_invalidIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Msg testMsg;
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final int numOfMsgs = 3;
         for(int i=0; i<numOfMsgs; i++){
-            testMsg = generateMsgInInbox("This is a test message.");
+            generateMsgInInbox("This is a test message.");
             Thread.sleep(100);
         }
-        String inputCommand = ReadCommand.COMMAND_WORD + " a";
-        String expected = String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE);
+        final String inputCommand = ReadCommand.COMMAND_WORD + " a";
+        final String expected = String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE);
         assertCommandBehavior(inputCommand, expected);
     }
 
     @Test
     public void execute_readMsg_veryLargeIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Msg testMsg = generateMsgInInbox("This is a test message.");
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
+        generateMsgInInbox("This is a test message.");
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
-        String inputCommand = ReadCommand.COMMAND_WORD + " 2147483648"; //Outside integer max value
-        String expected = ReadCommand.MESSAGE_INPUT_INDEX_TOO_LARGE;
+        final String inputCommand = ReadCommand.COMMAND_WORD + " 2147483648"; //Outside integer max value
+        final String expected = ReadCommand.MESSAGE_INPUT_INDEX_TOO_LARGE;
         assertCommandBehavior(inputCommand, expected);
     }
 
     @Test
     public void execute_readMsg_ValidIndex() throws Exception {
-        WriteNotification.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Msg testMsg;
+        NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int index = 1;
         final int numOfMsgs = 3;
         for(int i=0; i<numOfMsgs; i++){
-            testMsg = generateMsgInInbox("This is a test message. " + index++);
+            generateMsgInInbox("This is a test message. " + index++);
             Thread.sleep(100);
         }
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " " + numOfMsgs;
-        String expected = ReadCommand.MESSAGE_UPDATE_SUCCESS;
+        final String expected = ReadCommand.MESSAGE_UPDATE_SUCCESS;
         assertCommandBehavior(inputCommand, expected);
     }
 
@@ -1491,10 +1502,6 @@ public class LogicTest {
     public void execute_returnMessageFilePaths_successful(){
         String result = MessageFilePaths.getFilePathFromUserId("hqp");
         String expected = MessageFilePaths.FILEPATH_HQP_INBOX;
-        assertEquals(expected, result);
-
-        result = MessageFilePaths.getFilePathFromUserId("hqp");
-        expected = MessageFilePaths.FILEPATH_HQP_INBOX;
         assertEquals(expected, result);
 
         result = MessageFilePaths.getFilePathFromUserId("po1");
@@ -1551,12 +1558,32 @@ public class LogicTest {
 
     @Test
     public void execute_ClearInboxCommand_unsuccessful() throws Exception {
-        String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_UNSUCCESSFUL;
+        final String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_UNSUCCESSFUL;
         Command input = new ClearInboxCommand("This file path does not exist");
         CommandResult r = input.execute();
         assertEquals(expected, r.feedbackToUser);
     }
 
+    @Test
+    public void execute_clearRecordedMsgWhenLogout() throws Exception{
+        Password.lockIsPo(); Password.lockIsHqp();
+        generateMsgInInbox("populate the inbox!");
+        logic.execute(ShowUnreadCommand.COMMAND_WORD);
+        assertFalse(Inbox.isRecordMsgsEmpty());
+        logic.execute(LogoutCommand.COMMAND_WORD);
+        assertTrue(Inbox.isRecordMsgsEmpty());
+        assertCommandBehavior(ReadCommand.COMMAND_WORD + " 1", Inbox.INBOX_NOT_READ_YET);
+    }
+
+    @Test
+    public void execute_clearInbox_thenCheckInbox() throws Exception {
+        Password.lockIsHqp(); Password.lockIsPo();
+        generateMsgInInbox("populate the inbox!");
+        logic.execute(ClearInboxCommand.COMMAND_WORD);
+        assertTrue(Inbox.isRecordMsgsEmpty());
+        assertCommandBehavior(InboxCommand.COMMAND_WORD, String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION,0,0));
+
+    }
     //@@author
 
     /**
@@ -1769,7 +1796,7 @@ public class LogicTest {
     Msg generateMsgInInbox(String testMessage) throws Exception {
         TestDataHelper MessageGenerator = new TestDataHelper();
         Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
-        WriteNotification testWriter = new WriteNotification(MessageFilePaths.FILEPATH_DEFAULT, true);
+        NotificationWriter testWriter = new NotificationWriter(MessageFilePaths.FILEPATH_DEFAULT, true);
         testWriter.writeToFile(testMsg);
         return testMsg;
     }
@@ -1778,7 +1805,7 @@ public class LogicTest {
         TestDataHelper MessageGenerator = new TestDataHelper();
         Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
         testMsg.setMsgAsRead();
-        WriteNotification testWriter = new WriteNotification(MessageFilePaths.FILEPATH_DEFAULT, true);
+        NotificationWriter testWriter = new NotificationWriter(MessageFilePaths.FILEPATH_DEFAULT, true);
         testWriter.writeToFile(testMsg);
         return testMsg;
     }

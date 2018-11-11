@@ -61,6 +61,7 @@ public class MainWindow {
 
     //@@author iamputradanish
     private void decipherUserCommandText(String userCommandText) throws Exception {
+        Password.setupLogger();
         if(toCloseApp(userCommandText)){
             password.lockDevice();
             mainApp.stop();
@@ -82,7 +83,7 @@ public class MainWindow {
         }
         else if(password.isUpdatingPasswordNow()){
             String updatePasswordResult;
-            if(password.isUpdatePasswordConfirmNow()) {
+            if(Password.isUpdatePasswordConfirmNow()) {
                 updatePasswordResult = password.updatePasswordFinal(userCommandText);
             }
             else{

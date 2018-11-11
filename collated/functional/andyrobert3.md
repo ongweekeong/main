@@ -32,7 +32,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.WriteNotification;
+import seedu.addressbook.inbox.NotificationWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -174,7 +174,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.WriteNotification;
+import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 
 import java.io.IOException;
@@ -223,7 +223,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.inbox.MessageFilePaths;
 import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.WriteNotification;
+import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 
 import java.io.IOException;
