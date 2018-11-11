@@ -1,18 +1,33 @@
 package seedu.addressbook.storage;
 
-import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
-import seedu.addressbook.storage.jaxb.AdaptedAddressBook;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import java.io.*;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+
+import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.UniquePersonList;
+import seedu.addressbook.storage.jaxb.AdaptedAddressBook;
 
 /**
  * Represents the file used to store address book data.
@@ -20,7 +35,7 @@ import java.util.*;
 public class StorageFile {
 
     /** Default file path used if the user doesn't provide the file name. */
-    public static final String DEFAULT_STORAGE_FILEPATH = "policeRecords.txt";
+    private static final String DEFAULT_STORAGE_FILEPATH = "policeRecords.txt";
     /* Note: Note the use of nested classes below.
      * More info https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html
      */
@@ -29,7 +44,7 @@ public class StorageFile {
      * Signals that the given file path does not fulfill the storage filepath constraints.
      */
     public static class InvalidStorageFilePathException extends IllegalValueException {
-        public InvalidStorageFilePathException(String message) {
+        InvalidStorageFilePathException(String message) {
             super(message);
         }
     }
@@ -38,15 +53,15 @@ public class StorageFile {
      * Signals that some error has occured while trying to convert and read/write data between the application
      * and the storage file.
      */
-    public static class StorageOperationException extends Exception {
-        public StorageOperationException(String message) {
+    static class StorageOperationException extends Exception {
+        StorageOperationException(String message) {
             super(message);
         }
     }
 
-    private final JAXBContext jaxbContext;
+    private final Path path;
 
-    public final Path path;
+    private final JAXBContext jaxbContext;
 
     /**
      * @throws InvalidStorageFilePathException if the default path is invalid
@@ -149,11 +164,17 @@ public class StorageFile {
     }
 
     //@@iamputradanish
+
+    /**
+     * TODO: Add Javadoc comment
+     * @return
+     * @throws IllegalValueException
+     */
     private AddressBook populatedPoliceRecords() throws IllegalValueException {
         return new AddressBook(new UniquePersonList(
                 new Person(
                         new Name("AJ Styles"),
-                        new NRIC("s8012345a"),
+                        new Nric("s8012345a"),
                         new DateOfBirth("1980"),
                         new PostalCode("510246"),
                         new Status("xc"),
@@ -161,7 +182,7 @@ public class StorageFile {
                         Set.of(new Offense("theft"), new Offense("assault"))),
                 new Person(
                         new Name("Becky Lynch"),
-                        new NRIC("s9611234c"),
+                        new Nric("s9611234c"),
                         new DateOfBirth("1996"),
                         new PostalCode("948372"),
                         new Status("xc"),
@@ -169,7 +190,7 @@ public class StorageFile {
                         Set.of(new Offense("riot"))),
                 new Person(
                         new Name("Brock Lesnar"),
-                        new NRIC("s7512345a"),
+                        new Nric("s7512345a"),
                         new DateOfBirth("1975"),
                         new PostalCode("213456"),
                         new Status("clear"),
@@ -177,7 +198,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("Cesaro"),
-                        new NRIC("s8812341g"),
+                        new Nric("s8812341g"),
                         new DateOfBirth("1988"),
                         new PostalCode("402917"),
                         new Status("wanted"),
@@ -185,7 +206,7 @@ public class StorageFile {
                         Set.of(new Offense("kidnap"))),
                 new Person(
                         new Name("Pete Dunne"),
-                        new NRIC("s9443567h"),
+                        new Nric("s9443567h"),
                         new DateOfBirth("1994"),
                         new PostalCode("234567"),
                         new Status("xc"),
@@ -193,7 +214,7 @@ public class StorageFile {
                         Set.of(new Offense("piracy"), new Offense("assault"))),
                 new Person(
                         new Name("Ronda Rousey"),
-                        new NRIC("s9154362c"),
+                        new Nric("s9154362c"),
                         new DateOfBirth("1991"),
                         new PostalCode("567342"),
                         new Status("clear"),
@@ -201,7 +222,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("Sheamus"),
-                        new NRIC("s8512356e"),
+                        new Nric("s8512356e"),
                         new DateOfBirth("1985"),
                         new PostalCode("908371"),
                         new Status("clear"),
@@ -209,7 +230,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("Seth Rollins"),
-                        new NRIC("s9012345k"),
+                        new Nric("s9012345k"),
                         new DateOfBirth("1990"),
                         new PostalCode("975241"),
                         new Status("wanted"),
@@ -217,7 +238,7 @@ public class StorageFile {
                         Set.of(new Offense("riot"))),
                 new Person(
                         new Name("Shinsuke Nakamura"),
-                        new NRIC("s8412345c"),
+                        new Nric("s8412345c"),
                         new DateOfBirth("1984"),
                         new PostalCode("738492"),
                         new Status("xc"),
@@ -225,7 +246,7 @@ public class StorageFile {
                         Set.of(new Offense("cheating"), new Offense("theft"))),
                 new Person(
                         new Name("Adam Cole"),
-                        new NRIC("s9677843c"),
+                        new Nric("s9677843c"),
                         new DateOfBirth("1996"),
                         new PostalCode("545246"),
                         new Status("clear"),
@@ -233,7 +254,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("Aleister Black"),
-                        new NRIC("s9212386d"),
+                        new Nric("s9212386d"),
                         new DateOfBirth("1992"),
                         new PostalCode("125773"),
                         new Status("xc"),
@@ -241,7 +262,7 @@ public class StorageFile {
                         Set.of(new Offense("robbery"), new Offense("rape"))),
                 new Person(
                         new Name("Alexa Bliss"),
-                        new NRIC("s9898325j"),
+                        new Nric("s9898325j"),
                         new DateOfBirth("1998"),
                         new PostalCode("876524"),
                         new Status("wanted"),
@@ -249,7 +270,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("Apollo Crews"),
-                        new NRIC("s8988374e"),
+                        new Nric("s8988374e"),
                         new DateOfBirth("1989"),
                         new PostalCode("214563"),
                         new Status("xc"),
@@ -257,7 +278,7 @@ public class StorageFile {
                         Set.of(new Offense("riot"))),
                 new Person(
                         new Name("Baron Corbin"),
-                        new NRIC("s9001235z"),
+                        new Nric("s9001235z"),
                         new DateOfBirth("1990"),
                         new PostalCode("468974"),
                         new Status("wanted"),
@@ -265,7 +286,7 @@ public class StorageFile {
                         Set.of(new Offense("robbery"), new Offense("theft"))),
                 new Person(
                         new Name("Randy Orton"),
-                        new NRIC("s8298760a"),
+                        new Nric("s8298760a"),
                         new DateOfBirth("1982"),
                         new PostalCode("568986"),
                         new Status("xc"),
@@ -273,7 +294,7 @@ public class StorageFile {
                         Set.of(new Offense("assault"))),
                 new Person(
                         new Name("Paul Heyman"),
-                        new NRIC("s7656436d"),
+                        new Nric("s7656436d"),
                         new DateOfBirth("1976"),
                         new PostalCode("987764"),
                         new Status("clear"),
@@ -281,7 +302,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("Matt Hardy"),
-                        new NRIC("s8712392n"),
+                        new Nric("s8712392n"),
                         new DateOfBirth("1987"),
                         new PostalCode("928716"),
                         new Status("xc"),
@@ -289,7 +310,7 @@ public class StorageFile {
                         Set.of(new Offense("theft"))),
                 new Person(
                         new Name("Jeff Hardy"),
-                        new NRIC("s9023472c"),
+                        new Nric("s9023472c"),
                         new DateOfBirth("1990"),
                         new PostalCode("029837"),
                         new Status("clear"),
@@ -297,7 +318,7 @@ public class StorageFile {
                         Set.of(new Offense("none"))),
                 new Person(
                         new Name("John Cena"),
-                        new NRIC("s8017234a"),
+                        new Nric("s8017234a"),
                         new DateOfBirth("1980"),
                         new PostalCode("920175"),
                         new Status("xc"),
@@ -305,7 +326,7 @@ public class StorageFile {
                         Set.of(new Offense("robbery"), new Offense("assault"))),
                 new Person(
                         new Name("Kevin Owens"),
-                        new NRIC("s9128391f"),
+                        new Nric("s9128391f"),
                         new DateOfBirth("1991"),
                         new PostalCode("928615"),
                         new Status("xc"),

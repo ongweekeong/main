@@ -1,17 +1,16 @@
 package seedu.addressbook.commands;
 
-import seedu.addressbook.autocorrect.CheckDistance;
-import seedu.addressbook.common.Messages;
-import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.NRIC;
-import seedu.addressbook.data.person.ReadOnlyPerson;
-import seedu.addressbook.data.person.UniquePersonList;
-import seedu.addressbook.ui.UiFormatter;
+import static seedu.addressbook.ui.Gui.DISPLAYED_INDEX_OFFSET;
 
 import java.util.List;
 
-import static seedu.addressbook.ui.Gui.DISPLAYED_INDEX_OFFSET;
+import seedu.addressbook.autocorrect.CheckDistance;
+import seedu.addressbook.common.Messages;
+import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.UniquePersonList;
+import seedu.addressbook.ui.UiFormatter;
 
 /**
  * Represents an executable command.
@@ -50,10 +49,9 @@ public abstract class Command {
      */
     //@@author muhdharun
     public static String getMessageForPersonShownSummary(ReadOnlyPerson personDisplayed) {
-        if (personDisplayed == null){
+        if (personDisplayed == null) {
             return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
-        }
-        else{
+        } else {
             String result = personDisplayed.getAsTextShowAllInVerticalMode();
             return result + "\n\n" + String.format(Messages.MESSAGE_PERSONS_LISTED_OVERVIEW, 1);
         }
@@ -68,13 +66,13 @@ public abstract class Command {
      */
 
     public static String getMessageForScreeningHistoryShownSummary(List<String> timestampsDisplayed, String nric) {
-        if (timestampsDisplayed == null){
+        if (timestampsDisplayed == null) {
             //@@author ShreyasKp
             CheckDistance checker = new CheckDistance();
 
             String prediction = checker.checkInputDistance(nric);
 
-            if(!prediction.equals("none")) {
+            if (!prediction.equals("none")) {
                 return (Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
                         + "\n"
                         + "Did you mean to use "
@@ -83,14 +81,13 @@ public abstract class Command {
                 return Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
             }
             //@@author muhdharun
-        }
-        else {
+        } else {
 
             UiFormatter formatter = new UiFormatter();
             String result = formatter.formatForStrings(timestampsDisplayed);
 
-            String finalResult = result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW, nric, timestampsDisplayed.size());
-            return finalResult;
+            return result + String.format(Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,
+                    nric, timestampsDisplayed.size());
         }
     }
 
@@ -119,7 +116,8 @@ public abstract class Command {
      */
     public void setData(AddressBook addressBook, List<? extends ReadOnlyPerson> relevantPersons) {
         this.addressBook = addressBook;
-        this.relevantPersons = (relevantPersons.isEmpty()) ? addressBook.getAllPersons().immutableListView() : relevantPersons;
+        this.relevantPersons = (relevantPersons.isEmpty())
+                ? addressBook.getAllPersons().immutableListView() : relevantPersons;
     }
 
     /**
@@ -132,7 +130,7 @@ public abstract class Command {
     }
 
     //@@author andyrobert3
-    protected ReadOnlyPerson getTargetPerson(NRIC nric) throws UniquePersonList.PersonNotFoundException {
+    protected ReadOnlyPerson getTargetPerson(Nric nric) throws UniquePersonList.PersonNotFoundException {
         for (ReadOnlyPerson person: relevantPersons) {
             if (person.getNric().getIdentificationNumber().equals(nric.getIdentificationNumber())) {
                 return person;
