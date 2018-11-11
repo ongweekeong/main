@@ -1,10 +1,18 @@
 package seedu.addressbook.commands;
 
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
-
 import java.util.HashSet;
 import java.util.Set;
+
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.UniquePersonList;
 
 /**
  * Adds a person to the records.
@@ -14,7 +22,7 @@ public class AddCommand extends Command {
     public static final String COMMAND_WORD = "add";
     //@@ author muhdharun -reused
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Adds a person to the Police Records. "
-            + "Parameters: NAME n/NRIC d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR o/PASTOFFENSES...\n\t"
+            + "Parameters: NAME n/Nric d/DATEOFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR o/PASTOFFENSES...\n\t"
             + "Example: " + COMMAND_WORD
             + " John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs";
 
@@ -41,7 +49,7 @@ public class AddCommand extends Command {
         }
         this.toAdd = new Person(
                 new Name(name),
-                new NRIC(nric),
+                new Nric(nric),
                 new DateOfBirth(dateOfBirth),
                 new PostalCode(postalCode),
                 new Status(status),
@@ -50,7 +58,7 @@ public class AddCommand extends Command {
         );
     }
 
-    //TODO: Is code still used?
+    //TODO: If not used, delete
     public AddCommand(Person toAdd) {
         this.toAdd = toAdd;
     }

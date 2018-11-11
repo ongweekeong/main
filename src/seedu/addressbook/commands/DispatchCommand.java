@@ -1,8 +1,12 @@
 //@@author andyrobert3
 package seedu.addressbook.commands;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.javatuples.Pair;
 import org.json.JSONException;
+
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
@@ -12,9 +16,9 @@ import seedu.addressbook.data.person.Offense;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.inbox.NotificationWriter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
+/**
+ * TODO: Add Javadoc comment
+ */
 public class DispatchCommand extends Command {
     public static final String COMMAND_WORD = "dispatch";
 
@@ -24,12 +28,10 @@ public class DispatchCommand extends Command {
             + "Example: " + COMMAND_WORD
             + " PO1 gun PO3";
 
-    public static String MESSAGE_DISPATCH_SUCCESS = "Dispatch for %s backup is successful.\n";
+    private static String messageDispatchSuccess = "Dispatch for %s backup is successful.\n";
 
-    public static String MESSAGE_OFFICER_UNAVAILABLE = "Please choose another officer to send for backup.\n\t"
+    private static String messageOfficerUnavailable = "Please choose another officer to send for backup.\n\t"
             + "Use 'checkstatus' command to see engaged/free officers.";
-
-    public static String MESSAGE_BACKUP_DISPATCH_SAME = "Backup resource & Requester cannot be the same officer %s!";
 
     private final NotificationWriter writeNotificationToBackupOfficer;
     private final NotificationWriter writeNotificationToRequester;
@@ -54,11 +56,27 @@ public class DispatchCommand extends Command {
         this.destinationList = new ArrayList<>();
     }
 
-    private String generateStringMessage(String etaMessage, String patrolResourceId, boolean isRequester) {
-        return "ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
-                + patrolResourceId  + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsURL();
+    public static String getMessageDispatchSuccess() {
+        return messageDispatchSuccess;
     }
 
+    public static String getMessageOfficerUnavailable() {
+        return messageOfficerUnavailable;
+    }
+
+    public static String getMessageBackupDispatchSame() {
+        return "Backup resource & Requester cannot be the same officer %s!";
+    }
+
+    private String generateStringMessage(String etaMessage, String patrolResourceId, boolean isRequester) {
+        return "ETA " + etaMessage + ", Location of " + (isRequester ? "Requester: " : "Backup: ")
+                + patrolResourceId + ", " + PatrolResourceStatus.getLocation(requester).getGoogleMapsUrl();
+    }
+
+    /**
+     * TODO: Add Javadoc comment
+     * @return
+     */
     public CommandResult execute() {
 
         try {
@@ -86,15 +104,18 @@ public class DispatchCommand extends Command {
             writeNotificationToRequester.writeToFile(requesterMessage);
             writeNotificationToBackupOfficer.writeToFile(dispatchMessage);
         } catch (IOException ioe) {
-            return new CommandResult(Messages.MESSAGE_INTERNET_NOT_AVAILABLE + "/" + Messages.MESSAGE_SAVE_ERROR);
+            return new CommandResult(Messages.MESSAGE_INTERNET_NOT_AVAILABLE + "/"
+                    + Messages.MESSAGE_SAVE_ERROR);
         } catch (IllegalValueException ioe) {
-            return new CommandResult(String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), this.offense));
+            return new CommandResult(String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
+                    + Offense.getListOfValidOffences(), this.offense));
         } catch (JSONException jse) {
             return new CommandResult(Messages.MESSAGE_JSON_PARSE_ERROR);
         } catch (PatrolResourceUnavailableException prue) {
-            return new CommandResult(prue.getMessage() + "\n" + MESSAGE_OFFICER_UNAVAILABLE);
+            return new CommandResult(prue.getMessage() + "\n"
+                    + messageOfficerUnavailable);
         }
 
-        return new CommandResult(String.format(MESSAGE_DISPATCH_SUCCESS, requester));
+        return new CommandResult(String.format(messageDispatchSuccess, requester));
     }
 }

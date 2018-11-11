@@ -179,16 +179,16 @@ public class LogicTest {
     @Test
     public void execute_unknownCommandWord_forHQP() throws Exception {
         String unknownCommand = "uicfhmowqewca";
-        Password.unlockHQP();
+        Password.unlockHqp();
         assertCommandBehavior(unknownCommand, HelpCommand.MESSAGE_ALL_USAGES);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     @Test
     public void execute_help_forHQP() throws Exception {
-        Password.unlockHQP();
+        Password.unlockHqp();
         assertCommandBehavior("help", HelpCommand.MESSAGE_ALL_USAGES);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     //@@author iamputradanish
@@ -196,16 +196,16 @@ public class LogicTest {
     @Test
     public void execute_unknownCommandWord_forPO() throws Exception {
         String unknownCommand = "uicfhmowqewca";
-        unlockPO();
+        unlockPo();
         assertCommandBehavior(unknownCommand, HelpCommand.MESSAGE_PO_USAGES);
-        Password.lockIsPO();
+        Password.lockIsPo();
     }
 
     @Test
     public void execute_help_forPO() throws Exception {
-        unlockPO();
+        unlockPo();
         assertCommandBehavior("help", HelpCommand.MESSAGE_PO_USAGES);
-        Password.lockIsPO();
+        Password.lockIsPo();
     }
 
     @Test
@@ -252,7 +252,7 @@ public class LogicTest {
         assertCommandBehavior(
                 "add []\\[;] n/s1234567a d/1980 p/123456 s/clear w/none", Name.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "add Valid Name n/s123457a d/1980 p/123456 s/clear w/none", NRIC.MESSAGE_NAME_CONSTRAINTS);
+                "add Valid Name n/s123457a d/1980 p/123456 s/clear w/none", Nric.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/188 p/123456 s/clear w/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
         assertCommandBehavior(
@@ -260,9 +260,9 @@ public class LogicTest {
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rob"));
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
+                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.getWantedForWarning());
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.WANTED_FOR_WARNING);
+                "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.getWantedForWarning());
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/2099 p/123456 s/wanted w/none o/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
     }
@@ -352,7 +352,7 @@ public class LogicTest {
     }
 
     private void assertInvalidCommandFormatBehaviorForCommand(String commandWord) throws Exception {
-        String expectedMessage = NRIC.MESSAGE_NAME_CONSTRAINTS;
+        String expectedMessage = Nric.MESSAGE_NAME_CONSTRAINTS;
         TestDataHelper helper = new TestDataHelper();
         List<Person> lastShownList = helper.generatePersonList(false, true);
 
@@ -397,8 +397,8 @@ public class LogicTest {
     @Test
     public void execute_request_successful() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        String expectedMessage = String.format(RequestHelpCommand.MESSAGE_REQUEST_SUCCESS, "hqp");
-        Password.unlockHQP();
+        String expectedMessage = String.format(RequestHelpCommand.getMessageRequestSuccess(), "hqp");
+        Password.unlockHqp();
 
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " gun", expectedMessage);
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " theft", expectedMessage);
@@ -409,12 +409,12 @@ public class LogicTest {
     @Test
     public void execute_request_successful_checkMsg() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        Password.unlockHQP(); Password.lockIsPO();
+        Password.unlockHqp(); Password.lockIsPo();
 
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
         assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg());
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
 
@@ -442,19 +442,19 @@ public class LogicTest {
     public void execute_dispatch_successful() throws Exception {
         PatrolResourceStatus.resetPatrolResourceStatus();
         NotificationWriter.clearAllInbox();
-        String expectedMessage1 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po5");
+        String expectedMessage1 = String.format(DispatchCommand.getMessageDispatchSuccess(), "po5");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po5", expectedMessage1);
 
         PatrolResourceStatus.resetPatrolResourceStatus();
         NotificationWriter.clearAllInbox();
-        String expectedMessage2 = String.format(DispatchCommand.MESSAGE_DISPATCH_SUCCESS, "po4");
+        String expectedMessage2 = String.format(DispatchCommand.getMessageDispatchSuccess(), "po4");
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 gun po4", expectedMessage2);
     }
 
     @Test
     public void execute_dispatch_engagedOfficer() throws Exception {
         PatrolResourceStatus.setStatus("po3", true);
-        String baseMessage = "Patrol resource %s is engaged.\n" + DispatchCommand.MESSAGE_OFFICER_UNAVAILABLE;
+        String baseMessage = "Patrol resource %s is engaged.\n" + DispatchCommand.getMessageOfficerUnavailable();
 
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " hqp theft po3", String.format(baseMessage, "hqp"));
         assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po3 riot po2", String.format(baseMessage, "po3"));
@@ -462,8 +462,8 @@ public class LogicTest {
 
     @Test
     public void execute_dispatch_backupRequesterSameOfficer() throws Exception {
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1", String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME, "po1"));
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5", String.format(DispatchCommand.MESSAGE_BACKUP_DISPATCH_SAME, "po5"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1", String.format(DispatchCommand.getMessageBackupDispatchSame(), "po1"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5", String.format(DispatchCommand.getMessageBackupDispatchSame(), "po5"));
     }
 
     @Test
@@ -561,7 +561,7 @@ public class LogicTest {
     @Test
     public void execute_delete_invalidArgsFormat() throws Exception {
         String expectedMessage1 = String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE);
-        String expectedMessage2 = NRIC.MESSAGE_NAME_CONSTRAINTS;
+        String expectedMessage2 = Nric.MESSAGE_NAME_CONSTRAINTS;
         assertCommandBehavior("delete ", expectedMessage1);
         assertCommandBehavior("delete arg not number", expectedMessage2);
     }
@@ -636,7 +636,7 @@ public class LogicTest {
 
         assertCommandBehavior("edit n/s1234567a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         assertCommandBehavior(
-                "edit n/s123456a p/510247", NRIC.MESSAGE_NAME_CONSTRAINTS);
+                "edit n/s123456a p/510247", Nric.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
                 "edit n/s1234567a p/50247 w/murder o/gun", PostalCode.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
@@ -843,7 +843,7 @@ public class LogicTest {
 
     @Test
     public void execute_checkPOStatus_CorrectOutput() throws Exception {
-        List<String> allPos = CheckPOStatusCommand.extractEngagementInformation(PatrolResourceStatus.getPatrolResourceStatus());
+        List<String> allPos = CheckPoStatusCommand.extractEngagementInformation(PatrolResourceStatus.getPatrolResourceStatus());
         assertCommandBehavior("checkstatus",
                                 Command.getMessage(allPos));
     }
@@ -886,7 +886,7 @@ public class LogicTest {
         TestDataHelper helper = new TestDataHelper();
         Person test = helper.adam();
         Name name = test.getName();
-        NRIC nric = test.getNric();
+        Nric nric = test.getNric();
         PostalCode postalCode = test.getPostalCode();
         Status status = test.getStatus();
         Offense offense = test.getWantedFor();
@@ -913,7 +913,7 @@ public class LogicTest {
         String result = Password.unlockDevice("papa123",5);
         assertEquals(String.format(Password.MESSAGE_WELCOME , Password.MESSAGE_HQP)
                 + "\n" + Password.MESSAGE_ENTER_COMMAND , result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     @Test
@@ -922,13 +922,13 @@ public class LogicTest {
         assertEquals(String.format(Password.MESSAGE_WELCOME , Password.MESSAGE_PO + Password.MESSAGE_ONE)
                 + "\n" + Password.MESSAGE_UNAUTHORIZED
                 + "\n" + Password.MESSAGE_ENTER_COMMAND , result);
-        Password.lockIsPO();
+        Password.lockIsPo();
     }
 
     @Test
     public void execute_wrongPassword_firstTime() throws Exception{
-        Password.lockIsPO();
-        Password.lockIsHQP();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 5;
         Password.setWrongPasswordCounter(numberOfAttemptsLeft);
@@ -940,8 +940,8 @@ public class LogicTest {
     }
     @Test
     public void execute_wrongPassword_fourthTime() throws Exception{
-        Password.lockIsPO();
-        Password.lockIsHQP();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 1;
         Password.setWrongPasswordCounter(numberOfAttemptsLeft);
@@ -954,8 +954,8 @@ public class LogicTest {
 
     @Test
     public void execute_wrongPassword_lastTime() throws Exception{
-        Password.lockIsPO();
-        Password.lockIsHQP();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 0;
         Password.setWrongPasswordCounter(numberOfAttemptsLeft);
@@ -980,29 +980,29 @@ public class LogicTest {
 
     @Test
     public void execute_unlockHQPUser(){
-        unlockHQP();
-        boolean result = Password.isHQPUser();
+        unlockHqp();
+        boolean result = Password.isHqpUser();
         assertTrue(result);
     }
 
     @Test
     public void execute_unlockPOUser(){
-        unlockPO();
-        boolean result = Password.isPO();
+        unlockPo();
+        boolean result = Password.isPo();
         assertTrue(result);
     }
 
     @Test
     public void execute_lockHQPUser(){
-        Password.lockIsHQP();
-        boolean result = Password.isHQPUser();
+        Password.lockIsHqp();
+        boolean result = Password.isHqpUser();
         assertFalse(result);
     }
 
     @Test
     public void execute_lockPOUser(){
-        Password.lockIsPO();
-        boolean result = Password.isPO();
+        Password.lockIsPo();
+        boolean result = Password.isPo();
         assertFalse(result);
     }
 
@@ -1021,7 +1021,7 @@ public class LogicTest {
 
     @Test
     public void execute_wrongHQP(){
-        boolean result = correctHQP("hqp","-795402416" , 123);
+        boolean result = correctHqp("hqp","-795402416" , 123);
         assertFalse(result);
     }
 
@@ -1055,7 +1055,7 @@ public class LogicTest {
 
     @Test
     public void execute_correctHQP(){
-        boolean result = correctHQP("hqp","-795402416" , -795402416);
+        boolean result = correctHqp("hqp","-795402416" , -795402416);
         assertTrue(result);
     }
 
@@ -1099,29 +1099,29 @@ public class LogicTest {
     @Test
     public void execute_updatePassword_wrongPassword() throws Exception{
         Password password = new Password();
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         String result = password.updatePassword("thisiswrong", 5);
         assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
                 + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
                 + "\n" + MESSAGE_ENTER_PASSWORD,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     @Test
     public void execute_updatePassword_correctHQPPassword() throws Exception{
         Password password = new Password();
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         String result = password.updatePassword("papa123", 5);
         assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":" ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_tooShort() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "po1";
@@ -1131,26 +1131,26 @@ public class LogicTest {
                 + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
                 + "\n" + Password.MESSAGE_TRY_AGAIN
         ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingAlphabet() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "123456";
         String result = password.passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
                         + "\n" + Password.MESSAGE_TRY_AGAIN ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingNumber() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "popopo";
@@ -1158,13 +1158,13 @@ public class LogicTest {
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingNumberAndAlphabet() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "*********";
@@ -1172,13 +1172,13 @@ public class LogicTest {
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_alreadyExists() throws IOException {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "papa123";
@@ -1186,13 +1186,13 @@ public class LogicTest {
         assertEquals(Password.MESSAGE_PASSWORD_EXISTS
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_reenterPassword() throws Exception {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
         String userInput = "mama123";
@@ -1200,22 +1200,22 @@ public class LogicTest {
         String result = password.updatePassword(userInput,5);
         assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD_AGAIN,result);
         assertTrue(Password.isUpdatePasswordConfirmNow());
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
     }
 
     @Test
     public void execute_updatePasswordFinal_notSame() throws Exception {
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         Password password = new Password();
-        Password.setOTP("mama123");
+        Password.setOtp("mama123");
         String result = password.updatePasswordFinal("thisiswrong");
         assertEquals(Password.MESSAGE_NOT_SAME
                 + "\n" + Password.MESSAGE_TRY_AGAIN, result);
         assertFalse(isUpdatePasswordConfirmNow());
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
     }
@@ -1223,11 +1223,11 @@ public class LogicTest {
     @Test
     public void execute_updatePasswordFinal_success() throws Exception {
         Password password = new Password();
-        Password.unlockHQP();
+        Password.unlockHqp();
         Password.prepareUpdatePassword();
         password.updatePassword("papa123", 5);
         String userInput = "mama123";
-        Password.setOTP(userInput);
+        Password.setOtp(userInput);
         String result = password.updatePasswordFinal(userInput);
         assertFalse(isUpdatePasswordConfirmNow());
         assertFalse(getIsUpdatingPassword());
@@ -1235,32 +1235,32 @@ public class LogicTest {
                 + "\n" + MESSAGE_ENTER_COMMAND, result);
         password.updatePassword("mama123", 5);
         userInput = "papa123";
-        Password.setOTP(userInput);
+        Password.setOtp(userInput);
         password.updatePasswordFinal(userInput);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
     }
 
     @Test
     public void execute_getFullID(){
-        String result = getFullID(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
+        String result = getFullId(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
         assertEquals(Password.MESSAGE_HQP,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_1_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_1_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_ONE,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_2_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_2_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_TWO,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_3_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_3_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_THREE,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_4_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_4_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FOUR,result);
-        result = getFullID(PatrolResourceStatus.POLICE_OFFICER_5_ID);
+        result = getFullId(PatrolResourceStatus.POLICE_OFFICER_5_ID);
         assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE,result);
     }
 
     @Test
     public void execute_getFullID_ghost(){
-        String result = getFullID("nonsense");
+        String result = getFullId("nonsense");
         assertEquals("Ghost",result);
     }
 
@@ -1338,10 +1338,10 @@ public class LogicTest {
 
     @Test
     public void execute_getID_HQP(){
-        Password.unlockHQP();
-        String result = getID();
+        Password.unlockHqp();
+        String result = getId();
         assertEquals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID,result);
-        Password.lockIsHQP();
+        Password.lockIsHqp();
     }
 
     //@@author ongweekeong
@@ -1349,7 +1349,7 @@ public class LogicTest {
     public void execute_timeCommand() throws Exception {
         String command = DateTimeCommand.COMMAND_WORD;
         TimeAndDate timeAndDate = new TimeAndDate();
-        assertTimeCommandBehavior(command, timeAndDate.outputDATHrs());
+        assertTimeCommandBehavior(command, timeAndDate.outputDatHrs());
     }
 
     @Test
@@ -1357,7 +1357,7 @@ public class LogicTest {
         String result = "";
         try{
             NotificationReader testReader = new NotificationReader("Nonsense");
-            testReader.ReadFromFile();
+            testReader.readFromFile();
         }
         catch (IOException e){
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
@@ -1367,7 +1367,7 @@ public class LogicTest {
 
     @Test
     public void execute_inbox_noUnreadMessages() throws Exception {
-        Password.lockIsPO(); Password.lockIsPO();
+        Password.lockIsPo(); Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String inputCommand = InboxCommand.COMMAND_WORD;
         final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
@@ -1376,7 +1376,7 @@ public class LogicTest {
 
     @Test
     public void execute_inbox_successful_readAndUnread() throws Exception {
-        Password.lockIsPO(); Password.lockIsPO();
+        Password.lockIsPo(); Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final String test = "This is the unread test msg";
         Msg testMsg = generateMsgInInbox(test);
@@ -1391,7 +1391,7 @@ public class LogicTest {
 
     @Test
     public void execute_readMsg_withoutShowUnread() throws Exception {
-        Inbox.numUnreadMsgs = -1; // Set numUnreadMsgs to default state before inbox is accessed.
+        Inbox.setNumUnreadMsgs(-1); // Set numUnreadMsgs to default state before inbox is accessed.
         String inputCommand = ReadCommand.COMMAND_WORD + " 5";
         final String expected = Inbox.INBOX_NOT_READ_YET;
         assertCommandBehavior(inputCommand, expected);
@@ -1417,7 +1417,7 @@ public class LogicTest {
 
     @Test
     public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
-        Password.lockIsHQP(); Password.lockIsPO();
+        Password.lockIsHqp(); Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int messageNum = 1;
         String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
@@ -1432,7 +1432,7 @@ public class LogicTest {
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Password.lockIsPO(); Password.lockIsHQP();
+        Password.lockIsPo(); Password.lockIsHqp();
         logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
         final String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
@@ -1445,7 +1445,7 @@ public class LogicTest {
     @Test
     public void execute_readMsgWithOutOfBoundsIndex() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Password.lockIsHQP(); Password.lockIsPO(); //Set static boolean flags from other test cases back to original state.
+        Password.lockIsHqp(); Password.lockIsPo(); //Set static boolean flags from other test cases back to original state.
         final int numOfMsgs = 3;
         for (int i=0; i<numOfMsgs; i++){
             generateMsgInInbox("This is a test message.");
@@ -1566,18 +1566,18 @@ public class LogicTest {
 
     @Test
     public void execute_clearRecordedMsgWhenLogout() throws Exception{
-        Password.lockIsPO(); Password.lockIsHQP();
+        Password.lockIsPo(); Password.lockIsHqp();
         generateMsgInInbox("populate the inbox!");
         logic.execute(ShowUnreadCommand.COMMAND_WORD);
         assertFalse(Inbox.isRecordMsgsEmpty());
         logic.execute(LogoutCommand.COMMAND_WORD);
         assertTrue(Inbox.isRecordMsgsEmpty());
-        assertCommandBehavior(ReadCommand.COMMAND_WORD +" 1", Inbox.INBOX_NOT_READ_YET);
+        assertCommandBehavior(ReadCommand.COMMAND_WORD + " 1", Inbox.INBOX_NOT_READ_YET);
     }
 
     @Test
     public void execute_clearInbox_thenCheckInbox() throws Exception {
-        Password.lockIsHQP(); Password.lockIsPO();
+        Password.lockIsHqp(); Password.lockIsPo();
         generateMsgInInbox("populate the inbox!");
         logic.execute(ClearInboxCommand.COMMAND_WORD);
         assertTrue(Inbox.isRecordMsgsEmpty());
@@ -1593,7 +1593,7 @@ public class LogicTest {
 //@@author muhdharun -reused
         Person adam() throws Exception {
             Name name = new Name("Adam Brown");
-            NRIC nric = new NRIC("f1234567j");
+            Nric nric = new Nric("f1234567j");
             DateOfBirth dateOfBirth = new DateOfBirth("1900");
             PostalCode postalCode = new PostalCode("444444");
             Status status = new Status("xc");
@@ -1616,7 +1616,7 @@ public class LogicTest {
         Person generatePerson(int seed) throws Exception {
             return new Person(
                     new Name("Person " + seed),
-                    new NRIC("g999999" + abs(seed) + "t"),
+                    new Nric("g999999" + abs(seed) + "t"),
                     new DateOfBirth(Integer.toString(seed + Integer.parseInt("1901"))),
                     new PostalCode("77777" + seed),
                     new Status("xc"),
@@ -1628,7 +1628,7 @@ public class LogicTest {
         Person generateDummyPerson() throws Exception {
             return new Person(
                     new Name("Not a human"),
-                    new NRIC("f0000000z"),
+                    new Nric("f0000000z"),
                     new DateOfBirth("1900"),
                     new PostalCode("777777"),
                     new Status("xc"),
@@ -1645,7 +1645,7 @@ public class LogicTest {
 
             cmd.add(p.getName().toString());
             cmd.add("n/" + p.getNric());
-            cmd.add("d/" + p.getDateOfBirth().getDOB());
+            cmd.add("d/" + p.getDateOfBirth().getDob());
             cmd.add("p/" + p.getPostalCode());
             cmd.add("s/" + p.getStatus());
             cmd.add("w/" + p.getWantedFor().getOffense());
@@ -1723,7 +1723,7 @@ public class LogicTest {
         }
 
         /**
-         * Generates a random NRIC
+         * Generates a random Nric
          */
         //@@author muhdharun
         String generateRandomNric() {
@@ -1740,7 +1740,7 @@ public class LogicTest {
         Person generatePersonWithNric(String nric) throws Exception {
             return new Person(
                     new Name("Bob"),
-                    new NRIC(nric),
+                    new Nric(nric),
                     new DateOfBirth("2005"),
                     new PostalCode("123456"),
                     new Status("xc"),
@@ -1756,7 +1756,7 @@ public class LogicTest {
             String randomNric = generateRandomNric();
             return new Person(
                     new Name(name),
-                    new NRIC(randomNric),
+                    new Nric(randomNric),
                     new DateOfBirth("2005"),
                     new PostalCode("123456"),
                     new Status("xc"),
@@ -1842,7 +1842,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1859,7 +1859,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1870,13 +1870,13 @@ public class LogicTest {
                 "chickstatus",
                 "checkstatuts"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPOStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPoStatusCommand.MESSAGE_USAGE)).feedbackToUser;
         expected = expected.substring(expected.indexOf("!") + 1);
         for (String input: inputs) {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1893,7 +1893,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1912,7 +1912,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1929,7 +1929,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1947,7 +1947,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1964,7 +1964,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1982,7 +1982,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -1999,7 +1999,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2016,7 +2016,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2033,7 +2033,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2050,7 +2050,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2067,7 +2067,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2084,7 +2084,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2101,7 +2101,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2120,7 +2120,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2137,7 +2137,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2156,7 +2156,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 
@@ -2173,7 +2173,7 @@ public class LogicTest {
             String output = checker.checkDistance(input);
             String suggestion = String.format(dict.getCommandErrorMessage(), output);
             String displayCommand = correction.checkCommand(input);
-            assertEquals(String.format(dict.errorCommandMessage, output) + "\n" + expected,suggestion+"\n"+displayCommand);
+            assertEquals(String.format(dict.getCommandErrorMessage(), output) + "\n" + expected,suggestion+"\n"+displayCommand);
         }
     }
 }

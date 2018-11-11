@@ -98,14 +98,14 @@ public class StorageFileTest {
     private AddressBook getTestAddressBook() throws Exception {
         AddressBook ab = new AddressBook();
         ab.addPerson(new Person(new Name("John Doe"),
-                                new NRIC("s1234567a"),
+                                new Nric("s1234567a"),
                                 new DateOfBirth("1998"),
                                 new PostalCode("510244"),
                                 new Status("clear"),
                                 new Offense(),
                                 Collections.emptySet()));
         ab.addPerson(new Person(new Name("Betsy Crowe"),
-                                new NRIC("g7654321b"),
+                                new Nric("g7654321b"),
                                 new DateOfBirth("2000"),
                                 new PostalCode("123456"),
                                 new Status("wanted"),
@@ -120,7 +120,7 @@ public class StorageFileTest {
         String result = "";
         try{
             NotificationReader testReader = new NotificationReader("Nonsense");
-            TreeSet<Msg> testSet = testReader.ReadFromFile();
+            TreeSet<Msg> testSet = testReader.readFromFile();
         }
         catch (IOException e){
             result = MESSAGE_INBOX_FILE_NOT_FOUND;

@@ -1,45 +1,41 @@
 package seedu.addressbook.ui;
 
-
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import seedu.addressbook.autocorrect.AutoCorrect;
-import seedu.addressbook.autocorrect.CheckDistance;
-import seedu.addressbook.commands.*;
-import seedu.addressbook.logic.Logic;
-import seedu.addressbook.data.person.ReadOnlyPerson;
-import seedu.addressbook.commands.Dictionary;
-import seedu.addressbook.password.Password;
-import seedu.addressbook.timeanddate.TimeAndDate;
+import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.addressbook.common.Messages.MESSAGE_USING_STORAGE_FILE;
+import static seedu.addressbook.common.Messages.MESSAGE_WELCOME;
 
 import java.util.List;
 import java.util.Optional;
 
-import static seedu.addressbook.common.Messages.*;
+import javafx.event.ActionEvent;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
+import seedu.addressbook.autocorrect.AutoCorrect;
+import seedu.addressbook.autocorrect.CheckDistance;
+import seedu.addressbook.commands.CommandResult;
+import seedu.addressbook.commands.Dictionary;
+import seedu.addressbook.commands.HelpCommand;
+import seedu.addressbook.commands.IncorrectCommand;
+import seedu.addressbook.commands.LogoutCommand;
+import seedu.addressbook.commands.ShutdownCommand;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.logic.Logic;
+import seedu.addressbook.password.Password;
+import seedu.addressbook.timeanddate.TimeAndDate;
+
 
 /**
  * Main Window of the GUI.
  */
 public class MainWindow {
 
-    private Logic logic;
-    private Stoppable mainApp;
-
-    public MainWindow(){
-    }
-
-    public void setLogic(Logic logic){
-        this.logic = logic;
-    }
-
-    public void setMainApp(Stoppable mainApp){
-        this.mainApp = mainApp;
-    }
-
     private Password password = new Password();
     private TimeAndDate tad = new TimeAndDate();
+    private Logic logic;
+    private Stoppable mainApp;
 
     @FXML
     private TextArea outputConsole;
@@ -47,6 +43,13 @@ public class MainWindow {
     @FXML
     private TextField commandInput;
 
+    public MainWindow() {
+    }
+
+    /**
+     *
+     * @param event
+     */
     @FXML
     void onCommand(ActionEvent event) {
         try {
@@ -59,73 +62,78 @@ public class MainWindow {
         }
     }
 
+    void setLogic(Logic logic) {
+        this.logic = logic;
+    }
+
+    void setMainApp(Stoppable mainApp) {
+        this.mainApp = mainApp;
+    }
+
     //@@author iamputradanish
+
+    /**
+     * TODO: Add Javadoc comment
+     * @param userCommandText
+     * @throws Exception
+     */
     private void decipherUserCommandText(String userCommandText) throws Exception {
         Password.setupLogger();
-        if(toCloseApp(userCommandText)){
+        if (toCloseApp(userCommandText)) {
             password.lockDevice();
             mainApp.stop();
-        }
-        else if(isLockCommand(userCommandText)){
+        } else if (isLockCommand(userCommandText)) {
             CommandResult result = logic.execute(userCommandText);
             clearScreen();
             displayResult(result);
-        }
-        else if(Password.isLocked()) {
+        } else if (Password.isLocked()) {
             String unlockDeviceResult = Password.unlockDevice(userCommandText, Password.getWrongPasswordCounter());
             clearScreen();
             display(unlockDeviceResult);
-        }
-        else if(canUpdatePassword(userCommandText)){
+        } else if (canUpdatePassword(userCommandText)) {
             String prepareUpdatePasswordResult = Password.prepareUpdatePassword();
             clearScreen();
             display(prepareUpdatePasswordResult);
-        }
-        else if(password.isUpdatingPasswordNow()){
+        } else if (password.isUpdatingPasswordNow()) {
             String updatePasswordResult;
-            if(Password.isUpdatePasswordConfirmNow()) {
+            if (Password.isUpdatePasswordConfirmNow()) {
                 updatePasswordResult = password.updatePasswordFinal(userCommandText);
-            }
-            else{
+            } else {
                 updatePasswordResult = password.updatePassword(userCommandText, Password.getWrongPasswordCounter());
             }
             clearScreen();
             display(updatePasswordResult);
-        }
-
-        else if(password.isUnauthorizedAccess(userCommandText)){
+        } else if (password.isUnauthorizedAccess(userCommandText)) {
             clearScreen();
-            String unauthorizedCommandResult = password.invalidPOResult(userCommandText);
+            String unauthorizedCommandResult = password.invalidPoResult(userCommandText);
             display(unauthorizedCommandResult);
-        }
-        //@@author ShreyasKp
-        else {
+        } else {
+            //@@author ShreyasKp
             userCommandText = userCommandText.trim();
             CheckDistance checker = new CheckDistance();
             Dictionary dict = new Dictionary();
-            String arr[] = userCommandText.split(" ", 2);
+            String[] arr = userCommandText.split(" ", 2);
             String commandWordInput = arr[0];
-            if((checker.checkCommandDistance(commandWordInput)).equals(0)) {
+            if ((checker.checkCommandDistance(commandWordInput)).equals(0)) {
                 AutoCorrect correction = new AutoCorrect();
                 String displayCommand = correction.checkCommand(commandWordInput);
                 String output = checker.checkDistance(commandWordInput);
                 clearScreen();
-                if(!(output.equals("none"))) {
+                if (!(output.equals("none"))) {
                     display(String.format(dict.getCommandErrorMessage(), output));
                     display(displayCommand);
-                }
-                else {
-                    boolean isHQPFlag = password.isHQPUser();
-                    if(isHQPFlag) {
-                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
-                    }
-                    else {
-                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_PO_USAGES)).feedbackToUser;
+                } else {
+                    boolean isHqpFlag = Password.isHqpUser();
+                    if (isHqpFlag) {
+                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                                HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
+                    } else {
+                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                                HelpCommand.MESSAGE_PO_USAGES)).feedbackToUser;
                     }
                     display(displayCommand);
                 }
-            }
-            else{
+            } else {
                 clearScreen();
                 CommandResult result = logic.execute(userCommandText);
                 displayResult(result);
@@ -135,8 +143,8 @@ public class MainWindow {
     }
 
     //@@author iamputradanish
-    private boolean canUpdatePassword(String userCommandText){
-        return Password.isHQPUser() && isUpdatePasswordCommand(userCommandText);
+    private boolean canUpdatePassword(String userCommandText) {
+        return Password.isHqpUser() && isUpdatePasswordCommand(userCommandText);
     }
 
     //@@author
@@ -150,7 +158,7 @@ public class MainWindow {
         return userCommandText.equals(Password.UPDATE_PASSWORD_COMMAND_WORD);
     }
 
-    private boolean toCloseApp(String userCommandText){
+    private boolean toCloseApp(String userCommandText) {
         return isExitCommand(userCommandText) || password.isShutDown();
     }
 
@@ -165,12 +173,12 @@ public class MainWindow {
     }
 
     /** Clears the output display area */
-    private void clearOutputConsole(){
+    private void clearOutputConsole() {
         outputConsole.clear();
     }
 
     //@@author iamputradanish
-    private void clearScreen(){
+    private void clearScreen() {
         clearCommandInput();
         clearOutputConsole();
     }
@@ -180,15 +188,14 @@ public class MainWindow {
     private void displayResult(CommandResult result) {
         clearOutputConsole();
         final Optional<List<? extends ReadOnlyPerson>> resultPersons = result.getRelevantPersons();
-        if(resultPersons.isPresent()) {
-            display(resultPersons.get());
-        }
+        resultPersons.ifPresent(this::display);
         display(result.feedbackToUser);
     }
 
     void displayWelcomeMessage(String version, String storageFilePath) {
         String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
-        display(MESSAGE_WELCOME, version, storageFileInfo, tad.outputDatMainHrs() + "\n" , Password.MESSAGE_ENTER_PASSWORD);
+        display(MESSAGE_WELCOME, version, storageFileInfo, tad.outputDatMainHrs() + "\n" ,
+                Password.MESSAGE_ENTER_PASSWORD);
     }
 
     /**
@@ -199,15 +206,16 @@ public class MainWindow {
         display(new UiFormatter().format(persons));
     }
 
-    public void displayTimestamps(List<String> history){
-        display(new UiFormatter().formatForStrings(history));
-    }
-
     /**
      * Displays the given messages on the output display area, after formatting appropriately.
      */
     private void display(String... messages) {
         outputConsole.setText(outputConsole.getText() + new UiFormatter().format(messages));
+    }
+
+    //TODO: If not used, delete
+    public void displayTimestamps(List<String> history) {
+        display(new UiFormatter().formatForStrings(history));
     }
 
 }
