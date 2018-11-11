@@ -1,9 +1,9 @@
 package seedu.addressbook.data.person;
 
-import seedu.addressbook.data.exception.IllegalValueException;
-
 import java.util.Arrays;
 import java.util.List;
+
+import seedu.addressbook.data.exception.IllegalValueException;
 
 /**
  * Represents a Person's name.
@@ -13,7 +13,7 @@ public class Name {
 
     public static final String EXAMPLE = "John Doe";
     public static final String MESSAGE_NAME_CONSTRAINTS = "Person names should be spaces or alphanumeric characters";
-    public static final String NAME_VALIDATION_REGEX = "[\\p{Alnum} ]+";
+    private static final String NAME_VALIDATION_REGEX = "[\\p{Alnum} ]+";
 
     public final String fullName;
 
@@ -33,7 +33,7 @@ public class Name {
     /**
      * Returns true if a given string is a valid person name.
      */
-    public static boolean isValidName(String test) {
+    private static boolean isValidName(String test) {
         return test.matches(NAME_VALIDATION_REGEX);
     }
 

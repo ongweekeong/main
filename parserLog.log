@@ -2,10 +2,10 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2018-11-06T08:52:54.187304100Z</date>
-  <millis>1541494374187</millis>
-  <nanos>304100</nanos>
-  <sequence>203</sequence>
+  <date>2018-11-11T03:35:51.975916200Z</date>
+  <millis>1541907351975</millis>
+  <nanos>916200</nanos>
+  <sequence>474</sequence>
   <logger>seedu.addressbook.parser.Parser</logger>
   <level>INFO</level>
   <class>seedu.addressbook.parser.Parser</class>
@@ -14,10 +14,10 @@
   <message>Parsed the user input and matching commands.</message>
 </record>
 <record>
-  <date>2018-11-06T08:52:54.187304100Z</date>
-  <millis>1541494374187</millis>
-  <nanos>304100</nanos>
-  <sequence>204</sequence>
+  <date>2018-11-11T03:35:51.975916200Z</date>
+  <millis>1541907351975</millis>
+  <nanos>916200</nanos>
+  <sequence>475</sequence>
   <logger>seedu.addressbook.parser.Parser</logger>
   <level>WARNING</level>
   <class>seedu.addressbook.parser.Parser</class>
@@ -26,10 +26,10 @@
   <message>NRIC does not exist in argument</message>
 </record>
 <record>
-  <date>2018-11-06T08:52:54.187304100Z</date>
-  <millis>1541494374187</millis>
-  <nanos>304100</nanos>
-  <sequence>205</sequence>
+  <date>2018-11-11T03:35:51.975916200Z</date>
+  <millis>1541907351975</millis>
+  <nanos>916200</nanos>
+  <sequence>476</sequence>
   <logger>seedu.addressbook.parser.Parser</logger>
   <level>WARNING</level>
   <class>seedu.addressbook.parser.Parser</class>
@@ -41,32 +41,32 @@
     <frame>
       <class>seedu.addressbook.parser.Parser</class>
       <method>parseArgsAsNric</method>
-      <line>384</line>
+      <line>396</line>
     </frame>
     <frame>
       <class>seedu.addressbook.parser.Parser</class>
       <method>prepareDelete</method>
-      <line>258</line>
+      <line>252</line>
     </frame>
     <frame>
       <class>seedu.addressbook.parser.Parser</class>
       <method>parseCommand</method>
-      <line>146</line>
+      <line>136</line>
     </frame>
     <frame>
       <class>seedu.addressbook.parser.ParserTest</class>
       <method>parseAndAssertCommandType</method>
-      <line>438</line>
+      <line>463</line>
     </frame>
     <frame>
       <class>seedu.addressbook.parser.ParserTest</class>
       <method>parseAndAssertIncorrectWithMessage</method>
-      <line>425</line>
+      <line>450</line>
     </frame>
     <frame>
       <class>seedu.addressbook.parser.ParserTest</class>
       <method>deleteCommand_noArgs</method>
-      <line>112</line>
+      <line>114</line>
     </frame>
     <frame>
       <class>jdk.internal.reflect.NativeMethodAccessorImpl</class>

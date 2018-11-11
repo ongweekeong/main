@@ -10,19 +10,16 @@ import seedu.addressbook.ui.Stoppable;
 /**
  * Main entry point to the application.
  */
-public class Main extends Application implements Stoppable{
+public class Main extends Application implements Stoppable {
 
     /** Version info of the program. */
 
-    public static final String VERSION = "PRISM - Version 1.3";
-
-
-    private Gui gui;
+    private static final String VERSION = "PRISM - Version 1.3";
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        gui = new Gui(new Logic(), VERSION);
+    public void start(Stage primaryStage) throws Exception {
+        Gui gui = new Gui(new Logic(), VERSION);
         gui.start(primaryStage, this);
 
     }

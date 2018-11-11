@@ -1,5 +1,8 @@
 package seedu.addressbook.data.exception;
 
+/**
+ * TODO: Add Javadoc comment
+ */
 public class PatrolResourceUnavailableException extends Exception {
     /**
      * @param message should contain relevant information on the failed constraint(s)

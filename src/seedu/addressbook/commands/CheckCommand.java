@@ -1,13 +1,13 @@
 package seedu.addressbook.commands;
 
 //@@author muhdharun
-import seedu.addressbook.data.person.ReadOnlyPerson;
-import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.storage.StorageFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+
+import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.storage.StorageFile;
 
 /**
  * Returns the list of timestamps for when a person was screened using 'find' command, if person exists in the records
@@ -16,26 +16,26 @@ import java.util.List;
 public class CheckCommand extends Command {
 
     public static final String COMMAND_WORD = "check";
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n" + "Gets screening history of person with specified NRIC \n\t"
-            + "Parameters: NRIC ...\n\t"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
+            + "Gets screening history of person with specified Nric \n\t"
+            + "Parameters: Nric ...\n\t"
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nricKeyword;
-    private String FILE_NOT_FOUND_ERROR = "File not found";
-    private String SCREENING_DATABASE = "screeningHistory.txt";
+    private String fileNotFoundError = "File not found";
+    private String screeningDatabase = "screeningHistory.txt";
     private AddressBook addressBookForTest; //For testing
 
-    public CheckCommand(String nricToFind)
-    {
+    public CheckCommand(String nricToFind) {
         this.nricKeyword = nricToFind;
     }
 
-    public String getNricKeyword(){
+    public String getNricKeyword() {
         return nricKeyword;
     }
 
     public void setFile(String file) {
-        this.SCREENING_DATABASE = file;
+        this.screeningDatabase = file;
     }
 
 
@@ -44,12 +44,13 @@ public class CheckCommand extends Command {
         try {
             StorageFile storage = new StorageFile();
             this.addressBook = storage.load();
-        } catch(Exception e) {
+        } catch (Exception e) {
+            //TODO: Fix empty catch block
         }
     }
 
     public String getDbName() {
-        return SCREENING_DATABASE;
+        return screeningDatabase;
     }
 
     @Override
@@ -57,9 +58,9 @@ public class CheckCommand extends Command {
         final List<String> screeningHist;
         try {
             screeningHist = getPersonWithNric(nricKeyword);
-            return new CommandResult(getMessageForScreeningHistoryShownSummary(screeningHist,nricKeyword));
+            return new CommandResult(getMessageForScreeningHistoryShownSummary(screeningHist, nricKeyword));
         } catch (IOException e) {
-            return new CommandResult(FILE_NOT_FOUND_ERROR);
+            return new CommandResult(fileNotFoundError);
         }
 
     }
@@ -70,16 +71,16 @@ public class CheckCommand extends Command {
      * @return list of timestamps converted to strings
      */
 
-    private List<String> getPersonWithNric(String nric) throws IOException{
+    private List<String> getPersonWithNric(String nric) throws IOException {
         List<String> screeningHistory;
         //@@author ShreyasKp
-        for(ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
-            if(person.getNric().getIdentificationNumber().equals(nric)) {
-                screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
+        for (ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
+            if (person.getNric().getIdentificationNumber().equals(nric)) {
+                screeningHistory = addressBook.readDatabase(nric, screeningDatabase);
                 return screeningHistory;
             }
         }
-        //screeningHistory = addressBook.readDatabase(nric, SCREENING_DATABASE);
+        //screeningHistory = addressBook.readDatabase(nric, screeningDatabase);
 
         return null;
     }

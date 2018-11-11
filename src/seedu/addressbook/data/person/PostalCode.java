@@ -12,9 +12,9 @@ public class PostalCode {
 
     public static final String EXAMPLE = "510123";
     public static final String MESSAGE_NAME_CONSTRAINTS = "Postal Code must be 6 digits long";
-    public static final String NAME_VALIDATION_REGEX = "[0-9]{6}";
+    private static final String NAME_VALIDATION_REGEX = "[0-9]{6}";
 
-    public final String postalCode;
+    private final String postalCode;
 
     /**
      * Validates given Postal Code.
@@ -29,14 +29,14 @@ public class PostalCode {
         this.postalCode = pc;
     }
 
-    public String getPostalCode(){
+    public String getPostalCode() {
         return postalCode;
     }
 
     /**
-     * Returns true if a given string is a valid NRIC.
+     * Returns true if a given string is a valid Nric.
      */
-    public static boolean isValidPostalCode(String test) {
+    private static boolean isValidPostalCode(String test) {
         return test.matches(NAME_VALIDATION_REGEX);
     }
 
