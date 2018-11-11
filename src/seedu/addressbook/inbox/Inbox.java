@@ -1,47 +1,55 @@
 //@@author ongweekeong
 package seedu.addressbook.inbox;
 
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.TreeSet;
 
+/**
+ * Stores all messages read from user's inbox message storage file.
+ * Also keeps track of the total number of messages and unread messages.
+ */
 public class Inbox {
     // all messages will be stored here, notifications will appear based on severity and timestamp.
-    public static String MESSAGE_STORAGE_FILEPATH;
+    private static String MESSAGE_STORAGE_FILEPATH;
     public static final String INBOX_NOT_READ_YET = "You have not read your inbox! \n\t" +
             "Type \"showunread\" to view your unread messages.";
     public static final String INBOX_NO_UNREAD_MESSAGES = "You have no unread messages in your inbox.";
-    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. Enter message number from 1 to %1$d.";
+    public static final String INDEX_OUT_OF_BOUNDS = "Index entered is out of bounds. " +
+            "                                           Enter message number from 1 to %1$d.";
     public static final String MESSAGE_STORAGE_PATH_NOT_FOUND = "Cannot find file to write to.";
     public static final String MESSAGE_READ_STATUS_UPDATED = "Successful update";
     public static int numUnreadMsgs = -1;
-    protected static TreeSet<Msg> notificationsToPrint = new TreeSet<>();
-    protected static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
-    protected static ReadNotification readNotification;
-    protected static WriteNotification allMessages;
-    int messageIndex = 1;
-
-    static WriteNotification newMessages;
-
+    private TreeSet<Msg> notificationsToPrint = new TreeSet<>();
+    private static HashMap<Integer, Msg> recordNotifications = new HashMap<>();
+    private static NotificationReader notificationReader;
+    private static NotificationWriter allMessages;
 
     public Inbox(String policeOfficerId) {
         MESSAGE_STORAGE_FILEPATH = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
-        readNotification = new ReadNotification(MESSAGE_STORAGE_FILEPATH);
-        newMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, true);
-        allMessages = new WriteNotification(MESSAGE_STORAGE_FILEPATH, false);
+        notificationReader = new NotificationReader(MESSAGE_STORAGE_FILEPATH);
+        allMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, false);
     }
 
     public TreeSet<Msg> loadMsgs() throws IOException {
-        notificationsToPrint = readNotification.ReadFromFile();
-        messageIndex = 1;
+        notificationsToPrint = notificationReader.ReadFromFile();
+        int messageIndex = 1;
         for (Msg message : notificationsToPrint){
             recordNotifications.put(messageIndex++, message);
         }
-        numUnreadMsgs = readNotification.getNumUnreadMsgs();
+        numUnreadMsgs = notificationReader.getNumUnreadMsgs();
         return notificationsToPrint;
     }
 
+    /**
+     * Messages marked as read by the user will be updated in recordNotifications.
+     * Message storage file will be updated with the respective changes.
+     *
+     * @param index
+     * @return feedback to user indicating if execution was successful or not.
+     * @throws NullPointerException
+     * @throws IndexOutOfBoundsException
+     */
     public String markMsgAsRead(int index) throws NullPointerException, IndexOutOfBoundsException {
         try{
             if((index < 1) || (index > numUnreadMsgs)){
@@ -76,6 +84,11 @@ public class Inbox {
 
     public static void resetInboxWhenLogout(){
         numUnreadMsgs = -1;
+        recordNotifications.clear();
+    }
+
+    public static void clearInboxRecords (){
+        numUnreadMsgs = 0;
         recordNotifications.clear();
     }
 

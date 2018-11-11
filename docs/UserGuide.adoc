@@ -57,7 +57,7 @@ image::Ui.png[width="790"]
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`
 * Items in the `WANTEDFOR` parameter must be given if `STATUS` is "wanted"
-*  Items in square brackets are optional e.g `n/NAME [p/POSTALCODE] [s/STATUS]` can be used as `n/John Doe p/510246 s/xc` or `n/John Doe s/xc`
+* Items in square brackets are optional e.g `n/NAME [p/POSTALCODE] [s/STATUS]` can be used as `n/John Doe p/510246 s/xc` or `n/John Doe s/xc`
 * Items with `…`​ after them can be used multiple times including zero times e.g. `o/OFFENSE...` can be used as `{nbsp}` (i.e. 0 times), `o/theft`, `o/riot o/drugs` etc
 ====
 	
@@ -266,10 +266,10 @@ Examples:
 *	Please enter a password to change
 *   User then has to enter existing password and new alphanumeric password of minimum length 5
 
-=== Check notifications: `showunread` (HQP & PO)
+=== Check unread notifications: `showunread` (HQP & PO)
 
-For HQPs: Check inbox to see a list of dispatch requests made by POs, and are sorted based on severity first, and then time stamp.
-For POs: Check inbox to see who is responding to request for backup/ambulance/fire truck or to see if have any dispatch orders
+For HQPs: Check inbox to see a list of backup requests made by POs, and are sorted based on severity first, and then time stamp.
+For POs: Check inbox to see who is responding to request for backup/ambulance/fire truck or to see if there are any dispatch orders
 
 Format: 'showunread'
 
@@ -281,13 +281,30 @@ Examples (as a HQP):
 
 Examples (as a PO):
 *	'showunread'
+*	Shows any backup messages by HQ or response for backup if any
+
+=== Check all notifications: `inbox` (HQP & PO)
+
+For HQPs: Check inbox to see a list of backup requests made by POs, and are sorted based on severity first, and then time stamp.
+For POs: Check inbox to see who is responding to request for backup/ambulance/fire truck or to see if there are any dispatch orders
+
+Format: 'inbox'
+
+
+Examples (as a HQP):
+
+*	'inbox'
+*	Shows a list of backup requests (sorted by severity then timestamp) made by POs on the ground:
+
+Examples (as a PO):
+*	'inbox'
 *	Shows any dispatch messages by HQ or response for backup if any
 
 === Read message : `read`(HQP & PO)
 
-Updates the status of unread messages to read. Command to be used after `showunread` command
+Updates the status of unread messages to read. Command to be used after `showunread` or `inbox` command
 
-Format: 'read index'
+Format: 'read INDEX'
 
 Examples:
 *  read 1
@@ -352,20 +369,23 @@ E.g. delete g1952866q
 
 *	*Request for backup* : 'RB'
 
-*	*Dispatch* : 'dispatch PO(ID)'
+*	*Dispatch* : 'dispatch PO(ID) CASE PO(ID)'
 
-E.g. dispatch PO2
+E.g. dispatch po2 gun po4
 
 *	*Lock* : 'lock'
 
 *	*Update Password* : 'update password'
 
-*	*Check notifications* : 'showunread'
+*	*Check unread notifications* : 'showunread'
 
-*   *Read message* : 'read index'
-*   *Clear Inbox*  : 'clearinbox'
+*   *Check all notifications* : 'inbox'
+
+*   *Read message* : 'read INDEX'
 
 E.g  read 1
+
+*   *Clear Inbox*  : 'clearinbox'
 
 *	*Shutdown* : 'shutdown'
 

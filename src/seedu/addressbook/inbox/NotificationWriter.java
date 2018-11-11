@@ -7,37 +7,38 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.TreeSet;
+import java.util.logging.*;
 
-public class WriteNotification {
+/**
+ * Writes notifications sent from user to the specified recipient.
+ */
+public class NotificationWriter {
+    private final static Logger logger = Logger.getLogger(NotificationWriter.class.getName());
+
     private String path;
     private boolean isAppend;
 
-    public WriteNotification(String userId){
+    public NotificationWriter(String userId){
         path = MessageFilePaths.getFilePathFromUserId(userId);
-        this.isAppend = true;
+        isAppend = true;
     }
 
-    public WriteNotification(String filePath, boolean appendValue){
+    public NotificationWriter(String filePath, boolean appendValue){
         path = filePath;
         isAppend = appendValue;
     }
 
-    /**	Message format should look like this
-     *	Read/Unread (1 or 0)
-     *	Priority of Message
-     *	Timestamp of message
-     *	Message
-     *  ETA, if applicable
-     *  Location, if available
+    /**
+     * Writes message sent by user in a specific format in the inbox storage text file of the recipient.
      */
-
     public void writeToFile(Msg message) throws IOException{
+        logger.log(Level.INFO, String.format("Writing to \"%s\"", path));
         TimeAndDate dateFormatter = new TimeAndDate();
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
         myPrinter.println("> START OF MESSAGE <");
         myPrinter.println("Sender ID:" + message.getSenderId());
-        myPrinter.println("Read status:" + message.isRead);
+        myPrinter.println("Read status:" + message.hasBeenRead());
         myPrinter.println("Priority:" + message.getPriority());
         myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs());
         myPrinter.println("Message:" + message.getMsg());
@@ -57,8 +58,8 @@ public class WriteNotification {
     }
 
     // Create overload function for write to file to write a set of notifications.
-    public void writeToFile(TreeSet<Msg> msgSet) throws IOException {
-        TimeAndDate dateFormatter = new TimeAndDate();
+    void writeToFile(TreeSet<Msg> msgSet) throws IOException {
+        logger.log(Level.INFO, String.format("Updating \"%s\"", path));
         FileWriter write = new FileWriter (path, isAppend);
         PrintWriter myPrinter = new PrintWriter(write);
         int numMsg = msgSet.size();
@@ -67,9 +68,9 @@ public class WriteNotification {
             msg = msgSet.pollFirst();
             myPrinter.println("> START OF MESSAGE <");
             myPrinter.println("Sender ID:" + msg.getSenderId());
-            myPrinter.println("Read status:" + msg.isRead);
+            myPrinter.println("Read status:" + msg.hasBeenRead());
             myPrinter.println("Priority:" + msg.getPriority());
-            myPrinter.println("Timestamp:" + dateFormatter.outputDATHrs(msg.getTime()));
+            myPrinter.println("Timestamp:" + TimeAndDate.outputDATHrs(msg.getTime()));
             myPrinter.println("Message:" + msg.getMsg());
             if (msg.hasEta())
                 myPrinter.println("ETA:" + msg.getEta());
@@ -105,7 +106,6 @@ public class WriteNotification {
     private static void clearInboxFromPath(String myPath) throws IOException {
         FileWriter write = new FileWriter(myPath, false);
         PrintWriter myPrinter = new PrintWriter(write);
-        myPrinter.print("");
         myPrinter.close();
     }
 }

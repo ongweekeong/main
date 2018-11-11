@@ -173,8 +173,8 @@ These text files store messages directed to each individual who can log in and a
 It also implements the following operations:
 
 . execute() - executes the "showunread" command itself and displays the result to the user.
-. loadMessages() - Searches the text file storing messages for the specific police officer identified by the userID and loads it into a data structure, sorting the messages according to how urgent they should be attended to (sorted first by read status, followed by priority and then the time the message was written).
-. Loaded messages are then concatenated in a single string as `fullPrintedMessage` and passed to the main window through CommandResult.
+. loadMessages() - Searches the text file storing messages for the specific police officer identified by the userID and loads it into a data structure, sorting the messages according to how urgent they should be attended to (sorted first by read status, followed by priority and then the time the message was sent).
+. concatenateMsg() - Loaded messages are then concatenated in a single string as `fullPrintedMessage` and passed to the main window through CommandResult.
 
 The following is an example usage scenario of the "showunread" command:
 
@@ -182,11 +182,15 @@ Step 1: The user input his password and unlocks the system.
 
 Step 2: The user executes "showunread" command. The "showunread" command calls execute() which also calls getMessagesFor() method.
 
-Step 3: The getMessagesFor() method searches message storage file for the messages directed to the respective user, if any, and they are stored into a data structure.
+Step 3: The loadMessages() method searches message storage file for the messages directed to the respective user, if any, and they are stored into a data structure.
 
-Step 4: The messages that are found and are stored in a TreeSet, split by its read status, message priority, timestamp, and the message itself for sorting purposes. execute() returns a CommandResult using the messages list as its argument.
+Step 4: The messages that are found and are stored in a TreeSet, split by its read status, message priority, timestamp, and the message itself for sorting purposes.
 
-Step 5: The CommandResult object displays to the user the number of unread messages he has, and the list of unread messages sorted according to their urgency.
+Step 5: The concatenateMsg() method will then append all unread messages in sorted order to a string to be passed to the CommandResult object later.
+
+Step 6: execute() returns a CommandResult using the concatenated string as its argument.
+
+Step 7: The CommandResult object displays to the user the number of unread messages he has, and the list of unread messages sorted according to their urgency.
 
 
 Alternatives considered:
@@ -201,7 +205,13 @@ Eventually, we decided to use TreeSet in our implementation as we felt that the 
 ** Cons: Less efficient as it means more memory is required for storage per message stored (additional information of recipient of message required to be stored in the data structure itself when loaded).
 Eventually, we also used multiple message storage files, each dedicated to a specific user, as this allowed us to increase the time efficiency of the code as the getMessagesFor() method did not need to sort through the messages based on recipient anymore. This benefit becomes especially obvious as well when there is a large number of messages that has to be stored, directed towards multiple users.
 
-=== 3b. "read" command
+=== 3b. "inbox" command
+
+*Current Implementation*
+Inbox command has the same implementation as the "showunread" command - except that it shows you all the messages that are in your inbox (both read and unread).
+This is to allow you to access the messages that you have previously marked as read.
+
+=== 3c. "read" command
 
 *Current Implementation*
 
@@ -213,7 +223,7 @@ The following is an example usage scenario of the "read" command:
 
 Step 1: User inputs his password and unlocks the system.
 
-Step 2: User executes "showunread" command. If "showunread" command is successfully executed, a list of unread messages directed to the user will be displayed.
+Step 2: User executes "showunread" OR "inbox" command. If command is successfully executed, a list of unread messages directed to the user will be displayed.
 
 Step 3: Messages that are read from the user's inbox will also be recorded in a static HashMap called `recordNotifications`, with the message index used as the key.
 
@@ -223,9 +233,31 @@ Step 5: For the messages to be marked as read, the message itself is updated in 
 
 Step 6: The CommandResult object displays to the user a message indicating that the updating of the read status was successful or not.
 
+=== 3d. "clearinbox" command
+
+*Current Implementation*
+
+Once the system is unlocked, you can clear your own inbox should there be too many messages stored in it using this command.
+Once the command has been entered, ReadNotification object will first be generated to attempt reading from the text file storing messages in your inbox.
+This is to check that the file exists in the first place. If it reads from the text file successfully, a WriteNotification object will then be generated, instantiating a PrintWriter that overwrites the contents in the
+text file storing the messages in your inbox.
+
+It also implements the following methods:
+
+. execute() - executes the "clearinbox" command and displays the result to the user.
+. readFromFile() - method from ReadNotification object that attempts to access the contents of the text file.
+. clearInbox() - method from WriteNotification object that clears the content in the text file storing the user's messages.
+. clearInboxRecords() - clears any records of messages displayed to ensure that all traces of existing messages are also cleared.
+
+The following is an example usage scenario of the "clearinbox" command:
+
+Step 1: User inputs his password and unlocks the system.
+
+Step 2: User executes "clearinbox" command. If command is successfully executed, the feedback "Inbox cleared!" will be displayed to the user.
+
 // tag::request[]
 [[request]]
-=== 3c. "rb" command
+=== 3e. "rb" command
 
 *Current Implementation*
 
@@ -267,7 +299,7 @@ Step 7: CommandResult with successful message is returned to Logic class, which 
 
 // tag::dispatch[]
 [[dispatch]]
-=== 3d. "dispatch" command
+=== 3f. "dispatch" command
 
 *Current Implementation*
 
@@ -723,8 +755,8 @@ Use case ends.
 . System prompts user to enter his password.
 . User enters password.
 . System prompts user to enter his command.
-. User requests to display messages in inbox.
-. System prints the number of unread messages and list of messages.
+. User requests to display unread messages in inbox.
+. System prints the number of unread messages and list of unread messages.
 +
 Use case ends.
 
@@ -736,7 +768,62 @@ Use case ends.
 Use case ends.
 
 * 5b. There are no unread messages.
-** 5b1. System informs user that there are no unread messages and prints the last 5 messages stored.
+** 5b1. System informs user that there are no unread messages.
++
+Use case ends.
+
+* 5c. File containing user's inbox messages is missing.
+** 5c1. System informs user that there was an error loading messages.
++
+Use case ends.
+
+=== Use case: Show all messages
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User requests to display all messages in inbox.
+. System prints the total number of messages, number of unread messages and full list of messages.
++
+Use case ends.
+
+*Extensions*
+
+* 5a. There are no messages.
+** 5a1. System informs user that there are no messages available.
++
+Use case ends.
+
+* 5b. There are no unread messages.
+** 5b1. System informs user of his total number of messages, that there are 0 unread messages and the full list of messages.
++
+Use case ends.
+
+=== Use case: Clear Inbox
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User enters command to clear his inbox.
+. System informs user that his inbox has been cleared.
++
+Use case ends.
+
+*Extensions*
+
+* 5a. There are no messages.
+** 5a1. System informs user that inbox has been cleared.
++
+Use case ends.
+
+* 6a. File storing user's inbox messages cannot be found.
+** 6a1. System informs user that inbox clearance has been unsuccessful and that the storage file is missing.
 +
 Use case ends.
 
@@ -757,13 +844,16 @@ Use case ends.
 
 *Extensions*
 
-* 7a. User enters an invalid message number.
-** 7a1. System shows an error message and informs user of the valid number range.
+* 7a. User enters an invalid index.
+** 7a1. System shows an error message and informs user of the valid index range.
 +
 Use case ends.
 
-* 7b. There are no unread messages.
-** 7b1. System informs user that there are no unread messages.
+* 7b. User enters an extremely large number for the index.
+** 7b1. System informs user that the index entered is too large.
+
+* 7c. There are no unread messages.
+** 7c1. System informs user that there are no unread messages.
 +
 Use case ends.
 
