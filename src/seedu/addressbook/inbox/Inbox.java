@@ -24,13 +24,13 @@ public class Inbox {
     private static NotificationReader notificationReader;
     private static NotificationWriter allMessages;
     // all messages will be stored here, notifications will appear based on severity and timestamp.
-    private static String MESSAGE_STORAGE_FILEPATH;
+    private static String messageStorageFilepath;
     private TreeSet<Msg> notificationsToPrint = new TreeSet<>();
 
     public Inbox(String policeOfficerId) {
-        MESSAGE_STORAGE_FILEPATH = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
-        notificationReader = new NotificationReader(MESSAGE_STORAGE_FILEPATH);
-        allMessages = new NotificationWriter(MESSAGE_STORAGE_FILEPATH, false);
+        messageStorageFilepath = MessageFilePaths.getFilePathFromUserId(policeOfficerId);
+        notificationReader = new NotificationReader(messageStorageFilepath);
+        allMessages = new NotificationWriter(messageStorageFilepath, false);
     }
 
     public static void setNumUnreadMsgs(int numUnreadMsgs) {

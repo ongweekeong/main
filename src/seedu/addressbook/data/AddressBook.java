@@ -10,7 +10,7 @@ import java.util.List;
 import seedu.addressbook.data.person.Person;
 import seedu.addressbook.data.person.ReadOnlyPerson;
 import seedu.addressbook.data.person.UniquePersonList;
-import seedu.addressbook.data.person.UniquePersonList.DuplicatePersonException;
+import seedu.addressbook.data.person.UniquePersonList.DuplicateNricException;
 import seedu.addressbook.data.person.UniquePersonList.PersonNotFoundException;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
@@ -51,7 +51,7 @@ public class AddressBook {
     /**
      * Adds a person to the records.
      *
-     * @throws DuplicatePersonException if an equivalent person already exists.
+     * @throws DuplicateNricException if an equivalent person already exists.
      */
     public void addPerson(Person toAdd) throws UniquePersonList.DuplicateNricException {
         allPersons.add(toAdd);
@@ -80,7 +80,7 @@ public class AddressBook {
             String[] parts = line.split(" ", 3);
 
             if (parts[0].equals(nric)) {
-                if(parts[2].equals("null")) {
+                if (parts[2].equals("null")) {
                     continue;
                 }
                 data.add(parts[1] + " by " + parts[2]);
@@ -103,8 +103,9 @@ public class AddressBook {
         FileWriter write = new FileWriter(file, true);
         PrintWriter myPrinter = new PrintWriter(write);
         try {
-            while ((line = br.readLine()) !=  null) {
-                String[] parts = line.split(" ",3);
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(" ", 3);
+
                 if (parts[0].equals(tempNric)) {
                     myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
                     myPrinter.close();
@@ -117,15 +118,14 @@ public class AddressBook {
             myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
             myPrinter.close();
             br.close();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getId());
 
             myPrinter.close();
             br.close();
         }
     }
-//@@author
+    //@@author
     /**
      * Checks if an equivalent person exists in the records.
      */
@@ -149,10 +149,11 @@ public class AddressBook {
      * @throws PersonNotFoundException if no such Person could be found.
      * @throws DuplicatePersonException if an equivalent person already exists.
      */
-//    public void editPerson(ReadOnlyPerson toDelete, Person toAdd) throws PersonNotFoundException, DuplicatePersonException {
-//        removePerson(toDelete);
-//        addPerson(toAdd);
-//    }
+    //public void editPerson(ReadOnlyPerson toDelete, Person toAdd)
+    //throws PersonNotFoundException, DuplicatePersonException {
+    //removePerson(toDelete);
+    //addPerson(toAdd);
+    //}
 
     /**
      * Clears all persons from the records.

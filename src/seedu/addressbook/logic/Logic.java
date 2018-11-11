@@ -203,8 +203,8 @@ public class Logic {
             pw.close();
         }
         try {
-            File PO1File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO1_INBOX);
-            BufferedReader br = readerandwriter.openReader(PO1File);
+            File po1File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO1_INBOX);
+            BufferedReader br = readerandwriter.openReader(po1File);
             try {
                 br.close();
             } catch (IOException e) {
@@ -223,8 +223,8 @@ public class Logic {
             pw.close();
         }
         try {
-            File PO2File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO2_INBOX);
-            BufferedReader br = readerandwriter.openReader(PO2File);
+            File po2File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO2_INBOX);
+            BufferedReader br = readerandwriter.openReader(po2File);
             try {
                 br.close();
             } catch (IOException e) {
@@ -243,8 +243,8 @@ public class Logic {
             pw.close();
         }
         try {
-            File PO3File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO3_INBOX);
-            BufferedReader br = readerandwriter.openReader(PO3File);
+            File po3File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO3_INBOX);
+            BufferedReader br = readerandwriter.openReader(po3File);
             try {
                 br.close();
             } catch (IOException e) {
@@ -263,8 +263,8 @@ public class Logic {
             pw.close();
         }
         try {
-            File PO4File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO4_INBOX);
-            BufferedReader br = readerandwriter.openReader(PO4File);
+            File po4File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO4_INBOX);
+            BufferedReader br = readerandwriter.openReader(po4File);
             try {
                 br.close();
             } catch (IOException e) {
@@ -283,8 +283,8 @@ public class Logic {
             pw.close();
         }
         try {
-            File PO5File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO5_INBOX);
-            BufferedReader br = readerandwriter.openReader(PO5File);
+            File po5File = readerandwriter.fileToUse(MessageFilePaths.FILEPATH_PO5_INBOX);
+            BufferedReader br = readerandwriter.openReader(po5File);
             try {
                 br.close();
             } catch (IOException e) {

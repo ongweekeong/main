@@ -19,8 +19,14 @@ import javax.xml.bind.Unmarshaller;
 
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.Name;
 import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.UniquePersonList;
 import seedu.addressbook.storage.jaxb.AdaptedAddressBook;
 
 /**

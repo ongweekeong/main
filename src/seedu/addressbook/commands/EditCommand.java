@@ -6,8 +6,12 @@ import java.util.Set;
 import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
 import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.data.person.UniquePersonList;
 
 /**
  * Edits existing person in police records.

@@ -13,7 +13,7 @@ import seedu.addressbook.data.exception.IllegalValueException;
 //@@author muhdharun -reused
 public class Person implements ReadOnlyPerson {
 
-    private static String WANTED_FOR_WARNING = "State the offence if person's status is wanted";
+    private static String wantedForWarning = "State the offence if person's status is wanted";
 
     private Name name;
     private Nric nric;
@@ -28,7 +28,7 @@ public class Person implements ReadOnlyPerson {
      * Assumption: Every field must be present and not null.
      */
     public Person(Name name, Nric nric, DateOfBirth dateOfBirth, PostalCode postalCode, Status status ,
-                  Offense wantedFor, Set<Offense> PastOffenses) throws IllegalValueException {
+                  Offense wantedFor, Set<Offense> pastOffenses) throws IllegalValueException {
         this.name = name;
         this.nric = nric;
         this.dateOfBirth = dateOfBirth;
@@ -38,7 +38,7 @@ public class Person implements ReadOnlyPerson {
         if ((this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))
                 && ((this.wantedFor.getOffense().equals(Offense.NULL_OFFENSE))
                 || this.wantedFor == null)) {
-            throw new IllegalValueException(WANTED_FOR_WARNING);
+            throw new IllegalValueException(wantedForWarning);
         } else if (!(this.status.getCurrentStatus().equals(Status.WANTED_KEYWORD))) {
 
         } else if (!(this.status.getCurrentStatus().equals(this.status.WANTED_KEYWORD))) {
@@ -48,7 +48,7 @@ public class Person implements ReadOnlyPerson {
             this.wantedFor = wantedFor;
         }
 
-        this.pastOffenses.addAll(PastOffenses);
+        this.pastOffenses.addAll(pastOffenses);
     }
 
     /**
@@ -61,7 +61,7 @@ public class Person implements ReadOnlyPerson {
     }
 
     public static String getWantedForWarning() {
-        return WANTED_FOR_WARNING;
+        return wantedForWarning;
     }
 
     @Override

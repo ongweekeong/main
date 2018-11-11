@@ -11,8 +11,14 @@ import javax.xml.bind.annotation.XmlValue;
 
 import seedu.addressbook.common.Utils;
 import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.Name;
 import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.Status;
 
 /**
  * JAXB-friendly adapted person data holder class.
