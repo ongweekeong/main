@@ -21,8 +21,9 @@ public class EditCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
             + "Edits the person identified by the Nric number.\n\t"
-            + "Parameters: n/Nric [p/POSTALCODE] [s/STATUS] [w/WANTEDFOR] [o/PASTOFFENSES]...\n\t"
+            + "Parameters: n/NRIC [p/POSTALCODE] [s/STATUS] [w/WANTEDFOR] [o/PASTOFFENSES]...\n\t"
             + "At least one optional tag must be filled.\n\t"
+            + "Offenses are added not replaced.\n\t"
             + "Example: " + COMMAND_WORD
             + " n/s1234567a p/510247 s/wanted w/murder o/gun";
 
@@ -79,7 +80,11 @@ public class EditCommand extends Command {
         return wantedFor;
     }
     /**
+<<<<<<< HEAD
      * 
+=======
+     * Updates selected person identified by NRIC with entered attributes
+>>>>>>> 0421985031162e1ca667d0201dd7f6386bab45ee
      * @throws UniquePersonList.PersonNotFoundException
      */
     private void updatePerson() throws UniquePersonList.PersonNotFoundException {
@@ -120,6 +125,7 @@ public class EditCommand extends Command {
         }
     }
 
+    //@@ShreyasKp
     /**
      * Finds result of invalid NRIC input
      * @param predictedNricInput The prediction found

@@ -1,7 +1,7 @@
 package seedu.addressbook.data.exception;
 
 /**
- * TODO: Add Javadoc comment
+ * Signals that patrol resource selected is engaged
  */
 public class PatrolResourceUnavailableException extends Exception {
     /**

@@ -251,7 +251,7 @@ Examples:
 Generates message to dispatch an officer to backup a requesting officer
 Message would be sent to requester & backup officer which includes ETA(Real Time) & Location (Google Maps URL).
 
-Format: 'dispatch (BACKUP OFFICER) (OFFENSE) (REQUESTER OFFICER)'
+Format: 'dispatch BACKUP OFFICER OFFENSE REQUESTER OFFICER'
 
 *   dispatch po1 gun po3
 *   Sends a set of GPS coordinates, current case, ETA and Google Maps URL location of requester
