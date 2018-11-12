@@ -72,10 +72,12 @@ https://github.com/CS2113-AY1819S1-F10-3/main/pull/25[#25]
 |===
 
 include::../UserGuide.adoc[tag=edit]
+
 include::../UserGuide.adoc[tag=request]
+
 include::../UserGuide.adoc[tag=dispatch]
 
-== Contributions to the Developer GUide
+== Contributions to the Developer Guide
 |===
 |_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===

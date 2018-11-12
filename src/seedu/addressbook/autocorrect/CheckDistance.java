@@ -61,11 +61,11 @@ public class CheckDistance {
      */
     public Boolean predictionChecker(String commandInput) {
         int distance;
-        boolean check = false;
+        boolean check = true;
         for (String command : commandsList) {
             distance = EditDistance.computeDistance(commandInput, command);
             if (distance == 0) {
-                check = true;
+                check = false;
                 break;
             }
         }

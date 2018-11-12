@@ -111,7 +111,8 @@ public class MainWindow {
             //Extract the command from the user input
             String commandWordInput = AutoCorrect.getCommand(userCommandText);
 
-            //Checks if the command word is invalid. If invalid, it runs the autocorrection, if valid, it runs the Logic class
+            //Checks if the command word is invalid.
+            // If invalid, it runs the autocorrection, if valid, it runs the Logic class
             if ((checker.predictionChecker(commandWordInput))) {
                 clearScreen();
                 AutoCorrect correction = new AutoCorrect();

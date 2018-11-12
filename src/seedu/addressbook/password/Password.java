@@ -153,18 +153,18 @@ public class Password {
         return isUpdatingPassword;
     }
 
-    private void lockUpdatingPassword() {
+    private static void lockUpdatingPassword() {
         isUpdatingPassword = false;
     }
 
-    private void lockUpdatePasswordConfirm() {
+    private static void lockUpdatePasswordConfirm() {
         isUpdatePasswordConfirm = false;
     }
 
     /**
      * TODO: Add javadoc comment
      */
-    public void lockDevice() {
+    public static void lockDevice() {
         lockIsHqp();
         lockIsPo();
         lockUpdatePasswordConfirm();
