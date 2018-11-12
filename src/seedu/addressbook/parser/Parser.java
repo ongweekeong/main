@@ -50,9 +50,7 @@ import seedu.addressbook.password.Password;
  */
 public class Parser {
 
-    //TODO If not used, delete
-    public static final Pattern KEYWORDS_ARGS_FORMAT =
-            Pattern.compile("(?<keywords>\\S+(?:\\s+\\S+)*)"); // one or more keywords separated by whitespace
+
     //@@author muhdharun -reused
     public static final Pattern PERSON_DATA_ARGS_FORMAT = // '/' forward slashes are reserved for delimiter prefixes
             Pattern.compile("(?<name>[^/]+)"
@@ -64,8 +62,7 @@ public class Parser {
                     + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
     //@@author
 
-    //TODO If not used, delete
-    public static final Pattern PERSON_NAME_FORMAT = Pattern.compile("(?<name>[^/]+)");
+
 
     private static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
     private static final String PO_REGEX = "[Pp][Oo][0-9]+";
@@ -225,13 +222,7 @@ public class Parser {
         }
     }
     //@@author
-    /**
-     * TODO: If not used, delete
-     * Checks whether the private prefix of a contact detail in the add command's arguments string is present.
-     */
-    private static boolean isPrivatePrefixPresent(String matchedPrefix) {
-        return matchedPrefix.equals("p");
-    }
+
 
     /**
      * Extracts the new person's tags from the add command's tag arguments string.
@@ -465,9 +456,8 @@ public class Parser {
     }
 
     /**
-     * TODO: Add Javadoc comment
-     * @param args
-     * @return
+     * @param args full command args string
+     * @return the prepared command
      */
     private Command prepareFind(String args) {
         args = args.trim();
