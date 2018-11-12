@@ -13,7 +13,7 @@ import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 
 /**
- * TODO: Add Javadoc comment
+ * Sends request message to HQP Inbox
  */
 public class RequestHelpCommand extends Command {
     public static final String COMMAND_WORD = "rb";
