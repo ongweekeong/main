@@ -84,25 +84,32 @@ public class Parser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
 
-    private static final Logger logr = Logger.getLogger(Parser.class.getName());
-
     private static final Pattern PERSON_INDEX_ARGS_FORMAT = Pattern.compile("(?<targetIndex>.+)");
 
+    private static final Logger logger = Logger.getLogger(Parser.class.getName());
 
     private static void setupLogger() {
+        setupLoggerForAll(logger);
+    }
+
+    /**
+     * Logger setup that can be used across all classes to write to the same logger file.
+     * @param logger
+     */
+    public static void setupLoggerForAll(Logger logger) {
         LogManager.getLogManager().reset();
-        logr.setLevel(Level.ALL);
+        logger.setLevel(Level.ALL);
 
         ConsoleHandler ch = new ConsoleHandler();
         ch.setLevel(Level.INFO);
-        logr.addHandler(ch);
+        logger.addHandler(ch);
 
         try {
-            FileHandler fh = new FileHandler("parserLog.log");
+            FileHandler fh = new FileHandler("Logger.log", true);
             fh.setLevel(Level.FINE);
-            logr.addHandler(fh);
+            logger.addHandler(fh);
         } catch (IOException ioe) {
-            logr.log(Level.SEVERE, "File logger not working.", ioe);
+            logger.log(Level.SEVERE, "File logger not working.", ioe);
         }
     }
 
@@ -123,7 +130,7 @@ public class Parser {
         final String commandWord = matcher.group("commandWord");
         final String arguments = matcher.group("arguments");
 
-        logr.info("Parsed the user input and matching COMMANDS.");
+        logger.info("Parsed the user input and matching COMMANDS.");
 
         switch (commandWord) {
         case AddCommand.COMMAND_WORD:
@@ -253,11 +260,11 @@ public class Parser {
 
             return new DeleteCommand(new Nric(nric));
         } catch (ParseException e) {
-            logr.log(Level.WARNING, "Invalid delete command format.", e);
+            logger.log(Level.WARNING, "Invalid delete command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
 
         } catch (IllegalValueException ive) {
-            logr.log(Level.WARNING, "Invalid name/id inputted.", ive);
+            logger.log(Level.WARNING, "Invalid name/id inputted.", ive);
             return new IncorrectCommand(ive.getMessage());
         }
     }
@@ -318,7 +325,7 @@ public class Parser {
             );
 
         } catch (IllegalValueException ive) {
-            logr.log(Level.WARNING, "Invalid edit command format.", ive);
+            logger.log(Level.WARNING, "Invalid edit command format.", ive);
             return new IncorrectCommand(ive.getMessage());
         }
     }
@@ -335,7 +342,7 @@ public class Parser {
             final int targetIndex = parseArgsAsDisplayedIndex(args);
             return new ReadCommand(targetIndex);
         } catch (ParseException | NumberFormatException e) {
-            logr.log(Level.WARNING, "Invalid read command format.", e);
+            logger.log(Level.WARNING, "Invalid read command format.", e);
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     ReadCommand.MESSAGE_USAGE));
         }
@@ -371,7 +378,7 @@ public class Parser {
     private int parseArgsAsDisplayedIndex(String args) throws ParseException, NumberFormatException {
         final Matcher matcher = PERSON_INDEX_ARGS_FORMAT.matcher(args.trim());
         if (!matcher.matches()) {
-            logr.warning("Index number does not exist in argument");
+            logger.warning("Index number does not exist in argument");
             throw new ParseException("Could not find index number to parse");
         }
         try {
@@ -392,7 +399,7 @@ public class Parser {
     private String parseArgsAsNric(String args) throws ParseException {
         final Matcher matcher = PERSON_NRIC_FORMAT.matcher(args.trim());
         if (!matcher.matches()) {
-            logr.warning("Nric does not exist in argument");
+            logger.warning("Nric does not exist in argument");
             throw new ParseException("Could not find Nric to parse");
         }
         return matcher.group(0);
@@ -410,7 +417,7 @@ public class Parser {
         if (Nric.isValidNric(args)) {
             return new CheckCommand(args);
         } else {
-            logr.warning("Nric argument is invalid");
+            logger.warning("Nric argument is invalid");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE));
         }
     }
@@ -425,7 +432,7 @@ public class Parser {
         if (Nric.isValidNric(args)) {
             return new FindCommand(args);
         } else {
-            logr.warning("Nric argument is invalid");
+            logger.warning("Nric argument is invalid");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
     }
@@ -442,7 +449,7 @@ public class Parser {
         if (args.matches(PO_REGEX)) {
             return new UpdateStatusCommand(args);
         } else {
-            logr.warning("an existing or valid PO must be stated");
+            logger.warning("an existing or valid PO must be stated");
             return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     UpdateStatusCommand.MESSAGE_USAGE));
         }
