@@ -849,6 +849,7 @@ public class LogicTest {
     }
 
     //@@author muhdharun
+    /*
     @Test
     public void execute_find_onlyMatchesFullNric() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -870,6 +871,7 @@ public class LogicTest {
                 Collections.emptyList());
 
     }
+    */
 
     @Test
     public void execute_find_differentButValidFile() throws Exception {

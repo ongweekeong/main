@@ -367,7 +367,7 @@ public class Password {
     }
 
     /**
-     * Brings updating password sequence to stage 2
+     * Prompts user to enter existing password to change
      */
     public static String prepareUpdatePassword() {
         isUpdatingPassword = true;
@@ -376,7 +376,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Begins update password stage 1, tries to match password with existing password.
      */
     public static String updatePassword(String userCommandText, int number) throws Exception {
         logr.info("Update sequence stage 1 initiated.");
@@ -458,7 +458,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Brings update password sequence to stage 2.
      */
     public static String updatePasswordFinal(String userCommandText) throws IOException {
         logr.info("Update password sequence stage 2 initiated.");
@@ -552,7 +552,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Checks if input already exists in the System. Returns appropriate message for either case.
      */
     public static String passwordExistsChecker(String newEnteredPassword) throws IOException {
         logr.info("Checking password validity.");
@@ -580,7 +580,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Checks if input contains alphanumeric characters. Returns appropriate message for either case.
      */
     public static String passwordAlphanumericChecker(String newEnteredPassword) {
         String result;
@@ -600,7 +600,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Checks if input is at least 5 characters long. Returns appropriate message for either case.
      */
     public static String passwordLengthChecker(String newEnteredPassword) {
         String result = MESSAGE_VALID;
@@ -615,7 +615,8 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Bring input through existing, alphanumeric and length checkers to ensure validity.
+     * Returns appropriate message depending on the case.
      */
     public static String passwordValidityChecker(String newEnteredPassword) throws IOException {
         logr.info("New password checked for validity.");
@@ -655,7 +656,7 @@ public class Password {
         return isRejectPo(userCommandWord);
     }
     /**
-     * TODO: Add javadoc comment
+     * Returns true if an unauthorized PO command is input.
      */
     public static boolean isRejectPo(String userCommandWord) {
         logr.info("PO command unauthorized.");
