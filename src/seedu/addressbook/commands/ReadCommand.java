@@ -38,7 +38,8 @@ public class ReadCommand extends Command {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Sets the read status of message that was displayed to the user as read.
+     * Target index is based on its index when it was displayed to the user.
      * @return
      */
     @Override

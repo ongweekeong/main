@@ -485,7 +485,7 @@ public class LogicTest {
 
 
     /**
-     * TODO: Add JavaDoc Comment
+     * Generates a person list.
      * @param commandWord
      * @throws Exception
      */
@@ -1539,7 +1539,7 @@ public class LogicTest {
         final String input = InboxCommand.COMMAND_WORD;
         final String input1 = ShowUnreadCommand.COMMAND_WORD;
         final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
-        final String expected1 = Messages.MESSAGE_NO_UNREAD_MSGS; //TODO: Refactor all message strings
+        final String expected1 = Messages.MESSAGE_NO_UNREAD_MSGS;
         assertCommandBehavior(input, expected);
         assertCommandBehavior(input1, expected1);
     }

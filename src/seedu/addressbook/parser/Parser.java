@@ -64,9 +64,6 @@ public class Parser {
                     + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
     //@@author
 
-    //TODO If not used, delete
-    public static final Pattern PERSON_NAME_FORMAT = Pattern.compile("(?<name>[^/]+)");
-
     private static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
     private static final String PO_REGEX = "[Pp][Oo][0-9]+";
 
@@ -225,14 +222,6 @@ public class Parser {
         }
     }
     //@@author
-    /**
-     * TODO: If not used, delete
-     * Checks whether the private prefix of a contact detail in the add command's arguments string is present.
-     */
-    private static boolean isPrivatePrefixPresent(String matchedPrefix) {
-        return matchedPrefix.equals("p");
-    }
-
     /**
      * Extracts the new person's tags from the add command's tag arguments string.
      * Merges duplicate tag strings.
@@ -465,7 +454,7 @@ public class Parser {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Parses arguments in the context of the find person command.
      * @param args
      * @return
      */

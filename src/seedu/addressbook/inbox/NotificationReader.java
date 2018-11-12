@@ -91,7 +91,7 @@ public class NotificationReader {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Reads the priority that was saved in the storage file and sets the Msg priority accordingly.
      * @param priority
      */
     private void readMsgPriority(String priority) {
@@ -113,7 +113,7 @@ public class NotificationReader {
 
 
     /**
-     * TODO: Add Javadoc comment
+     * Parses the timestamp stored in storage file and converts it into a timestamp object.
      * @param timestamp
      */
     private void readMsgTimestamp(String timestamp) {
@@ -133,7 +133,7 @@ public class NotificationReader {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Reads coordinates of Msg stored and converts it into a Location object.
      * @param xyValue
      */
     private void readMsgLocation(String xyValue) {

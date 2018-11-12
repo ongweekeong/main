@@ -64,7 +64,7 @@ public class NotificationWriter {
     // Create overload function for write to file to write a set of notifications.
 
     /**
-     * TODO: Add Javadoc comment
+     * Writes a set of messages into the inbox storage text file.
      * @param msgSet
      * @throws IOException
      */
@@ -104,7 +104,8 @@ public class NotificationWriter {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Deletes all content found in the message storage text files of all users.
+     * Used mainly for test case purposes.
      * @throws IOException
      */
     public static void clearAllInbox() throws IOException {

@@ -38,7 +38,7 @@ public class Inbox {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Loads and stores the user's Msgs in sorted order.
      * @return
      * @throws IOException
      */
@@ -90,7 +90,8 @@ public class Inbox {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Clears record of messages displayed to user when inbox is opened.
+     * Also sets inbox into an unread state (numUnreadMsgs = -1).
      */
     public static void resetInboxWhenLogout() {
         numUnreadMsgs = -1;
@@ -98,7 +99,7 @@ public class Inbox {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Clears the record of messages that are displayed to user when inbox is opened
      */
     public static void clearInboxRecords() {
         numUnreadMsgs = 0;

@@ -30,7 +30,8 @@ public class Msg implements Comparable <Msg> {
     private boolean isLocationAvailable;
 
     /**
-     * TODO: Add Javadoc comment
+     * Enumerator to categorise messages based on the kind of message that is sent.
+     * Used for sorting of the Msgs bsaed on its content urgency.
      */
     public enum Priority {
         HIGH(3), // For messages that require HPQ intervention
@@ -103,7 +104,7 @@ public class Msg implements Comparable <Msg> {
         return compare;
     }
 
-    public boolean isLocationAvailable() {
+    boolean isLocationAvailable() {
         return isLocationAvailable;
     }
 
@@ -127,7 +128,7 @@ public class Msg implements Comparable <Msg> {
         return isRead;
     }
 
-    public void setReadStatus(boolean isRead) {
+    void setReadStatus(boolean isRead) {
         this.isRead = isRead;
     }
 
@@ -147,7 +148,7 @@ public class Msg implements Comparable <Msg> {
         return newMsg;
     }
 
-    public void setLocation(Location place) {
+    void setLocation(Location place) {
         location = place;
         isLocationAvailable = true;
     }
