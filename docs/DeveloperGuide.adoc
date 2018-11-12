@@ -552,7 +552,7 @@ The autocorrect mechanism is facilitated by use of dynamic programming.
 The algorithm called EditDistance checks the number of single character
 changes to be made to convert an invalid input into one expected by the
 system. Currently, changes involving one single character can be corrected
-by the system.
+by the system for commands and changes involving one or two single characters can be corrected by the system for NRICs.
 It implements the following operations:
 
 . checkDistance() - It returns the edit distance needed to convert one
@@ -560,18 +560,26 @@ string to the other. In this case, it returns the number of single character
 changes (either addition of a character, deletion of a character or changing
 a character) to convert invalid user input into its most probable correct
 implementation.
-. getCommands() - This function returns the list of possible commands that
-the user can input.
 
-The following is an example usage scenario of the autocorrection feature:
+.The following is an example usage scenario of the autocorrection feature for commands:
 
 Step 1: The user inputs his password and unlocks the system.
 
 Step 2: The user enters an invalid command.
 
 Step 3: The system predicts the most probable intended command the user
-would have wanted to input, based on a threshold and then prompts the user
+would have wanted to input and then prompts the user
 to use the prediction given in its valid format.
+
+.The following is an example usage scenario of the autocorrection feature for NRICs:
+
+Step 1: The user inputs his password and unlocks the system.
+
+Step 2: The user tries to edit, delete or check an invalid NRIC.
+
+Step 3: The system predicts the most probable intended NRIC the user
+would have wanted to input and then prompts the user
+to use the prediction given in the valid format of the command.
 
 The input is checked by the algorithm in the MainWindow before it is sent
 to the Parser class. This is to ensure invalid input can be caught by the
@@ -587,6 +595,53 @@ prediction to be reported efficiently.
 in ambiguity in the correction algorithm and increases chances of errors.
 
 //end::autocorrect[]
+
+=== 7a. "help" command
+
+*Current Implementation*
+
+The help command returns the list of commands which can be input by the user based on their level of access.
+A HQP user is shown all the commands while a PO user is shown only limited commands.
+
+It also implements these methods:
+
+1. execute() - executes the "help" command itself and displays result to user
+
+This is an example scenario of "help" command
+
+Step 1: The user inputs PO password and logs in as PO.
+
+Step 2: The user types "help" and executes it.
+
+Step 3: Parser class determines the command word and return the list of commands that can be input by a PO.
+
+=== 7b. "add" command
+
+*Current Implementation*
+
+Only a HQP may use this command. This command allows HQP to update the Police Records with a new subject. The subject can be added with the details- name, NRIC, date of birth, postal code, status, offense
+and optional past offences.
+
+It also implements these methods:
+
+1. execute() - executes the "add" command itself and displays result to user
+
+This is an example scenario of "add" command
+
+Step 1: The user inputs HQP password and logs in as HQP.
+
+Step 2: The user types "add John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs" and executes it.
+
+Step 3: Parser class determines the command word and runs the prepareAdd method
+
+Step 4: prepareAdd method in Parser class would parse the inputs
+        from the input text to instantiate the AddCommand class.
+
+Step 5: Logic class then calls the execute method on AddCommand Object.
+        Person with NRIC "s1234567a" is added in the addressbook.
+
+Step 6: CommandResult with successful message is returned to Logic class, which then displays
+        to user: "New person added: John Doe Nric: s1234567a DateOfBirth: 1996 Postal Code: 510246 Status: xc Wanted For: [none] Past Offences:[drugs][theft]".
 
 === Logging
 
@@ -1093,7 +1148,7 @@ Use case ends.
 //tag::usecase[]
 [[usecase]]
 
-=== Use case: Autocorrection
+=== Use case: Autocorrection of commands
 
 *MSS*
 
@@ -1101,8 +1156,8 @@ Use case ends.
 . System prompts user to enter his password.
 . User enters password.
 . System prompts user to enter his command.
-. User enters invalid input.
-. System predicts what the user would have wanted to type and displays the list of valid inputs, if any.
+. User enters invalid command.
+. System predicts what command the user would have wanted to type if it finds a correction and displays the valid implementation of the command.
 +
 Use case ends.
 
@@ -1113,19 +1168,38 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-* 5a. User enters an invalid input which is an invalid command.
-** 5a1. System also displays the valid usage of the command.
+* 6a. User enters an invalid command for which the system cannot find a prediction.
+** 6a1. System shows error message.
 +
 Use case ends.
 
-* 5b. User enters an invalid input for which the system cannot find a prediction.
-** 5b1. System shows error message.
+=== Use case: Autocorrection of NRICs
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User enters delete, edit or check command with invalid NRIC.
+. System predicts the NRIC the user would have wanted to type if it finds a correction and displays the valid implementation of the command.
 +
 Use case ends.
 
-* *a. At any time, user chooses to cancel the delete action.
-** *a1. System requests confirmation to cancel.
-** *a2. User confirms the cancellation.
+*Extensions*
+
+* 3a. User enters an invalid password.
+** 3a1. System shows an error message.
++
+Use case resumes at step 2.
+
+* 5a. User enters an invalid delete, edit or check command.
+** 5a1. System displays the valid usage of the command.
++
+Use case ends.
+
+* 6a. User enters an invalid NRIC for which the system cannot find a prediction.
+** 6a1. System shows error message.
 +
 Use case ends.
 
