@@ -4,20 +4,17 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.common.Messages;
+import seedu.addressbook.parser.Parser;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 
 //@@author iamputradanish
 
 /**
- * TODO: Add javadoc comment
+ * Password security for the system. All functionality related to password is stored here.
  */
 public class Password {
 
@@ -86,20 +83,7 @@ public class Password {
     private static boolean isLoginPO5 = false;
 
     public static void setupLogger() {
-        LogManager.getLogManager().reset();
-        logr.setLevel(Level.ALL);
-
-        ConsoleHandler ch = new ConsoleHandler();
-        ch.setLevel(Level.INFO);
-        logr.addHandler(ch);
-
-        try {
-            FileHandler fh = new FileHandler("Logger.log");
-            fh.setLevel(Level.FINE);
-            logr.addHandler(fh);
-        } catch (IOException ioe) {
-            logr.log(Level.SEVERE, "File logger not working.", ioe);
-        }
+        Parser.setupLoggerForAll(logr);
     }
 
     public static int getWrongPasswordCounter() {
@@ -114,7 +98,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Logs into System as all PO, for testing purposes
      */
     public static void unlockPo() {
         isPO1 = true;
@@ -129,7 +113,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Logs out of System for all PO, for testing purposes
      */
     public static void lockIsPo() {
         isPO1 = false;
@@ -162,7 +146,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Logs out user from System and resets boolean flags for updating passwords.
      */
     public static void lockDevice() {
         lockIsHqp();
@@ -183,14 +167,15 @@ public class Password {
     public static void notUpdatingFinal() {
         isUpdatePasswordConfirm = false;
     }
-    //TODO: Access can be private
 
     private static void setUpdatingFinal() {
         isUpdatePasswordConfirm = true;
     }
+
     /**
-     * //TODO java doc comment
+     * Resets to start of updating password for testing purposes
      */
+
     public static void logoutUser() {
         isLoginHqp = false;
         isLoginPO1 = false;
@@ -218,7 +203,8 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * The main implementation of logging into the System.
+     * Takes the user input and attempts to match with an existing password in the System.
      */
     public static String unlockDevice(String userCommandText, int number) throws IOException {
         logr.info("Unlocking the system.");
@@ -297,7 +283,9 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * When wrong password is entered, this method sequence runs.
+     * The number of tries left decreases with each wrong attempt.
+     * When wrong password is entered after 5 tries, System will shut down.
      */
     private static String wrongPasswordShutDown(int number) {
         String result;
@@ -331,7 +319,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when hqp password is entered
      */
     public static boolean correctHqp(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID)
@@ -339,7 +327,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po1 password is entered
      */
     public static boolean correctPO1(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_1_ID)
@@ -347,7 +335,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po2 password is entered
      */
     public static boolean correctPO2(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_2_ID)
@@ -355,7 +343,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po3 password is entered
      */
     public static boolean correctPO3(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_3_ID)
@@ -363,7 +351,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po4 password is entered
      */
     public static boolean correctPO4(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_4_ID)
@@ -371,7 +359,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po5 password is entered
      */
     public static boolean correctPO5(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_5_ID)
@@ -379,7 +367,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Brings updating password sequence to stage 2
      */
     public static String prepareUpdatePassword() {
         isUpdatingPassword = true;

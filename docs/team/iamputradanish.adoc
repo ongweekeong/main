@@ -1,14 +1,19 @@
 = Putra Danish - Project Portfolio
+
 :site-section: AboutUs
 :stylesDir: ../stylesheets
 
-== PROJECT: Police Records System
+== PROJECT: Police Records and Intelligent System (PRISM)
 
 ---
 
 == Overview
 
-The Police Records System is for police officers(PO) and headquarter personnel(HQP). Both groups will have varying access and authorization levels to this database. POs would be able to read from the database after screening someone while on patrol and choose his course of action base on the status/threat level of subject. HQP would have the added functions of adding and removing people from the database.
+The Addressbook is morphed to a police records system called PRISM with two types of users, Police Officers (PO) & Headquarter Personnel (HQP).
+Users have their own access levels with HQP having higher authorization compared to PO.
+Police officers can screen civilians during duty with their respective NRIC, their criminal history and status would be shown to the police officers.
+POs can also request for backup when needed, HQP would dispatch other POs at their discretion based on estimated time of arrival.
+Refer to Quick Start guide to get started.
 
 == Summary of contributions
 
@@ -47,33 +52,9 @@ The ability to lock anytime also helps to increase security in times of emergenc
 |_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-== Quick Start
-
-.	Type the password in the text box below and press kbd:[Enter] to enter system as a specific user.
-.	Defaults passwords for the users (Passwords are Case Sensitive):
-.. HQP: papa123
-.. PO1: popo1
-.. PO2: popo2
-.. PO3: popo3
-.. PO4: popo4
-.. PO5: popo5
-.	Type a command in the same text box and press kbd:[Enter] to excecute it.
-.	To display the full list of commands and a summary of their functions in the application, type 'help' and press kbd:[Enter].
-.	Refer to Section 3, “Features” for details of each command.
-
-=== Update Password : `update password` (HQP)
-
-Updates password of any existing user - only HQP can change the user's password
-
-Format: 'update password'
-
-Examples:
-
-*	update password
-*	Please enter a password to change
-*   User then has to enter existing password and new alphanumeric password of minimum length 5
-
-
+include::../UserGuide.adoc[tag=password]
+include::../UserGuide.adoc[tag=update password]
+include::../UserGuide.adoc[tag=logout]
 
 == Contributions to the Developer Guide
 
@@ -81,45 +62,6 @@ Examples:
 |_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
 
-=== 1a. Password Feature
-
-*Current Implementation*
-
-Users and passwords are stored in passwordStorage.txt in the format: USER (hashcoded)PASSWORD.
-This is to simplify reading the line by splitting the line using the whitespace.
-Each user and corresponding hashcoded password are in stored in one line.
-Since each line refers to one user, a buffered reader will loop through each line to check a match for a password.
-Headquarters Personnel have full access to all the commands while Police officers cannot Add, Clear, Check, Delete, Edit, Update Status nor Update password.
-
-When logged out of the device, User has to enter a specific password to grant user the level of access requested.
-A buffered reader reads through the whole file to match the password entered.
-If the password is wrong, the user has 5 attempts left. This number decreases with each wrong password.
-The system shuts down after 5 wrong passwords.
-This is to ensure that the system denies access to anyone who is not authorized.
-
-The User can enter the logout command at any time to ensure that the user is logged out of the device immediately.
-
-Alternatives considered:
-
-* Using an internal hashmap to store user and passwords. Difficult to observe how many POs are there.
-* Storing password in plaintext . Passwords can be seen in passwordStorage.txt.
-* Allowing any number of attempts to unlock device. Can be easily looped to try all permutations to access system.
-
-=== 1b. Update Password Feature
-
-*Current Implementation*
-
-Headquarters Personnel can update any existing password with the update password command.
-The buffered reader reads the passwordStorage.txt file for the specific password to update.
-Once the user has entered a new password, the user is prompted to enter the same password again.
-This is to ensure that the new password typed is accurate.
-However, the new password must be alphanumeric and at least 5 characters long.
-This is to ensure a strong password.
-The print writer then loops over the passwordStorage.txt file and places all existing passwords into a new temporary file, while placing the new password over the existing password that was requested to change.
-The temporary file is renamed to passwordStorage.txt and the original file containing the old password is deleted.
-
-Alternatives considered:
-
-* Update password one time, without secondary prompt to enter password. This will make the changes permanent even if a mistake is made.
-* Updating using any password, without validity. Password may be weak.
-* Overwriting passwordStorage.txt . This will cause errors in replacing password.
+include::../UserGuide.adoc[tag=password]
+include::../UserGuide.adoc[tag=update password]
+include::../UserGuide.adoc[tag=logout]
