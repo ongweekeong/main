@@ -23,6 +23,8 @@ public class ReadCommand extends Command {
     public static final String MESSAGE_UPDATE_SUCCESS = "Message mark as read!";
     public static final String MESSAGE_INPUT_INDEX_TOO_LARGE = "Index entered too large!";
 
+    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
+
     private int index;
 
     private Inbox myInbox = new Inbox(Password.getId());
@@ -31,10 +33,8 @@ public class ReadCommand extends Command {
         index = targetVisibleIndex;
     }
 
-    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
-
     private static void setupLogger() {
-        Parser.SetupLogger(logger);
+        Parser.setupLoggerForAll(logger);
     }
 
     /**

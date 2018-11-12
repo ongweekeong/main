@@ -10,7 +10,7 @@ import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.password.Password;
 
-import static seedu.addressbook.parser.Parser.SetupLogger;
+import static seedu.addressbook.parser.Parser.setupLoggerForAll;
 
 /** Prints out all unread notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
@@ -29,7 +29,7 @@ public class ShowUnreadCommand extends Command {
     private static final Logger logger = Logger.getLogger(ShowUnreadCommand.class.getName());
 
     private static void setupLogger() {
-        SetupLogger(logger);
+        setupLoggerForAll(logger);
     }
 
 

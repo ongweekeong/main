@@ -89,10 +89,14 @@ public class Parser {
     private static final Logger logger = Logger.getLogger(Parser.class.getName());
 
     private static void setupLogger() {
-        SetupLogger(logger);
+        setupLoggerForAll(logger);
     }
 
-    public static void SetupLogger(Logger logger) {
+    /**
+     * Logger setup that can be used across all classes to write to the same logger file.
+     * @param logger
+     */
+    public static void setupLoggerForAll(Logger logger) {
         LogManager.getLogManager().reset();
         logger.setLevel(Level.ALL);
 
