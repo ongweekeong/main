@@ -28,7 +28,6 @@ import seedu.addressbook.timeanddate.TimeAndDate;
  */
 public class MainWindow {
 
-    private Password password = new Password();
     private TimeAndDate tad = new TimeAndDate();
     private Logic logic;
     private Stoppable mainApp;
@@ -69,16 +68,16 @@ public class MainWindow {
     //@@author iamputradanish
 
     /**
-     * TODO: Add Javadoc comment
+     * Takes the user input, parses it, then displays result of input accordingly.
      * @param userCommandText
      * @throws Exception
      */
     private void decipherUserCommandText(String userCommandText) throws Exception {
         Password.setupLogger();
         if (toCloseApp(userCommandText)) {
-            password.lockDevice();
+            Password.lockDevice();
             mainApp.stop();
-        } else if (isLockCommand(userCommandText)) {
+        } else if (isLogoutCommand(userCommandText)) {
             CommandResult result = logic.execute(userCommandText);
             clearScreen();
             displayResult(result);
@@ -90,18 +89,18 @@ public class MainWindow {
             String prepareUpdatePasswordResult = Password.prepareUpdatePassword();
             clearScreen();
             display(prepareUpdatePasswordResult);
-        } else if (password.isUpdatingPasswordNow()) {
+        } else if (Password.isUpdatingPasswordNow()) {
             String updatePasswordResult;
             if (Password.isUpdatePasswordConfirmNow()) {
-                updatePasswordResult = password.updatePasswordFinal(userCommandText);
+                updatePasswordResult = Password.updatePasswordFinal(userCommandText);
             } else {
-                updatePasswordResult = password.updatePassword(userCommandText, Password.getWrongPasswordCounter());
+                updatePasswordResult = Password.updatePassword(userCommandText, Password.getWrongPasswordCounter());
             }
             clearScreen();
             display(updatePasswordResult);
-        } else if (password.isUnauthorizedAccess(userCommandText)) {
+        } else if (Password.isUnauthorizedAccess(userCommandText)) {
             clearScreen();
-            String unauthorizedCommandResult = password.invalidPoResult(userCommandText);
+            String unauthorizedCommandResult = Password.invalidPoResult(userCommandText);
             display(unauthorizedCommandResult);
         } else {
             //@@author ShreyasKp
@@ -122,6 +121,7 @@ public class MainWindow {
         }
     }
 
+    /** Returns true when user is HQP and given input is update password command*/
     //@@author iamputradanish
     private boolean canUpdatePassword(String userCommandText) {
         return Password.isHqpUser() && isUpdatePasswordCommand(userCommandText);
@@ -133,16 +133,19 @@ public class MainWindow {
         return userCommandText.equals(ShutdownCommand.COMMAND_WORD);
     }
 
+    /** Returns true if the input given is the update password command */
     //@@author iamputradanish
     private boolean isUpdatePasswordCommand(String userCommandText) {
         return userCommandText.equals(Password.UPDATE_PASSWORD_COMMAND_WORD);
     }
 
+    /** Returns true when shutting down system*/
     private boolean toCloseApp(String userCommandText) {
-        return isExitCommand(userCommandText) || password.isShutDown();
+        return isExitCommand(userCommandText) || Password.isShutDown();
     }
 
-    private boolean isLockCommand(String userCommandText) {
+    /** Returns true if the input given is a logout command */
+    private boolean isLogoutCommand(String userCommandText) {
         return userCommandText.equals(LogoutCommand.COMMAND_WORD);
     }
 
@@ -157,6 +160,7 @@ public class MainWindow {
         outputConsole.clear();
     }
 
+    /** Clears both command input box and the output display area*/
     //@@author iamputradanish
     private void clearScreen() {
         clearCommandInput();
@@ -191,11 +195,6 @@ public class MainWindow {
      */
     private void display(String... messages) {
         outputConsole.setText(outputConsole.getText() + new UiFormatter().format(messages));
-    }
-
-    //TODO: If not used, delete
-    public void displayTimestamps(List<String> history) {
-        display(new UiFormatter().formatForStrings(history));
     }
 
 }

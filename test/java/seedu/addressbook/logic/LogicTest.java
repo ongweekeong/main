@@ -422,8 +422,8 @@ public class LogicTest {
         location.setLatitude(newLatitude);
         location.setLongitude(newLongitude);
 
-        assertTrue(location.getLatitude() == newLatitude);
-        assertTrue(location.getLongitude() == newLongitude);
+        assertEquals(location.getLatitude(), newLatitude, 0.0);
+        assertEquals(location.getLongitude(), newLongitude, 0.0);
     }
 
     @Test
@@ -933,11 +933,11 @@ public class LogicTest {
         Status status = test.getStatus();
         Offense offense = test.getWantedFor();
 
-        assertTrue(test.getName().equals(name));
-        assertTrue(test.getNric().equals(nric));
-        assertTrue(test.getPostalCode().equals(postalCode));
-        assertTrue(test.getStatus().equals(status));
-        assertTrue(test.getWantedFor().equals(offense));
+        assertEquals(test.getName(), name);
+        assertEquals(test.getNric(), nric);
+        assertEquals(test.getPostalCode(), postalCode);
+        assertEquals(test.getStatus(), status);
+        assertEquals(test.getWantedFor(), offense);
 
     }
 
@@ -1140,10 +1140,9 @@ public class LogicTest {
 
     @Test
     public void execute_updatePassword_wrongPassword() throws Exception{
-        Password password = new Password();
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        String result = password.updatePassword("thisiswrong", 5);
+        String result = updatePassword("thisiswrong", 5);
         assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
                 + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
                 + "\n" + MESSAGE_ENTER_PASSWORD,result);
@@ -1152,10 +1151,9 @@ public class LogicTest {
 
     @Test
     public void execute_updatePassword_correctHQPPassword() throws Exception{
-        Password password = new Password();
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        String result = password.updatePassword("papa123", 5);
+        String result = updatePassword("papa123", 5);
         assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":" ,result);
         Password.lockIsHqp();
         Password.unprepareUpdatePassword();
@@ -1165,10 +1163,9 @@ public class LogicTest {
     public void execute_passwordValidityChecker_tooShort() throws IOException {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         String userInput = "po1";
         int minNumPassword = 5;
-        String result = password.passwordValidityChecker(userInput);
+        String result = passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_PASSWORD_LENGTH, userInput.length())
                 + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
                 + "\n" + Password.MESSAGE_TRY_AGAIN
@@ -1181,9 +1178,8 @@ public class LogicTest {
     public void execute_passwordValidityChecker_missingAlphabet() throws IOException {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         String userInput = "123456";
-        String result = password.passwordValidityChecker(userInput);
+        String result = passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
                         + "\n" + Password.MESSAGE_TRY_AGAIN ,result);
         Password.lockIsHqp();
@@ -1194,9 +1190,8 @@ public class LogicTest {
     public void execute_passwordValidityChecker_missingNumber() throws IOException {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         String userInput = "popopo";
-        String result = password.passwordValidityChecker(userInput);
+        String result = passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
@@ -1208,9 +1203,8 @@ public class LogicTest {
     public void execute_passwordValidityChecker_missingNumberAndAlphabet() throws IOException {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         String userInput = "*********";
-        String result = password.passwordValidityChecker(userInput);
+        String result = passwordValidityChecker(userInput);
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
@@ -1222,9 +1216,8 @@ public class LogicTest {
     public void execute_passwordValidityChecker_alreadyExists() throws IOException {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         String userInput = "papa123";
-        String result = password.passwordValidityChecker(userInput);
+        String result = passwordValidityChecker(userInput);
         assertEquals(Password.MESSAGE_PASSWORD_EXISTS
                         + "\n" + Password.MESSAGE_TRY_AGAIN
                 ,result);
@@ -1236,10 +1229,9 @@ public class LogicTest {
     public void execute_reenterPassword() throws Exception {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         String userInput = "mama123";
-        password.updatePassword("papa123",5);
-        String result = password.updatePassword(userInput,5);
+        updatePassword("papa123",5);
+        String result = updatePassword(userInput,5);
         assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD_AGAIN,result);
         assertTrue(Password.isUpdatePasswordConfirmNow());
         Password.lockIsHqp();
@@ -1251,9 +1243,8 @@ public class LogicTest {
     public void execute_updatePasswordFinal_notSame() throws Exception {
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        Password password = new Password();
         Password.setOtp("mama123");
-        String result = password.updatePasswordFinal("thisiswrong");
+        String result = updatePasswordFinal("thisiswrong");
         assertEquals(Password.MESSAGE_NOT_SAME
                 + "\n" + Password.MESSAGE_TRY_AGAIN, result);
         assertFalse(isUpdatePasswordConfirmNow());
@@ -1264,21 +1255,20 @@ public class LogicTest {
 
     @Test
     public void execute_updatePasswordFinal_success() throws Exception {
-        Password password = new Password();
         Password.unlockHqp();
         Password.prepareUpdatePassword();
-        password.updatePassword("papa123", 5);
+        updatePassword("papa123", 5);
         String userInput = "mama123";
         Password.setOtp(userInput);
-        String result = password.updatePasswordFinal(userInput);
+        String result = updatePasswordFinal(userInput);
         assertFalse(isUpdatePasswordConfirmNow());
         assertFalse(getIsUpdatingPassword());
         assertEquals(String.format(Password.MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP)
                 + "\n" + MESSAGE_ENTER_COMMAND, result);
-        password.updatePassword("mama123", 5);
+        updatePassword("mama123", 5);
         userInput = "papa123";
         Password.setOtp(userInput);
-        password.updatePasswordFinal(userInput);
+        updatePasswordFinal(userInput);
         Password.lockIsHqp();
         Password.unprepareUpdatePassword();
         Password.notUpdatingFinal();
@@ -1308,53 +1298,46 @@ public class LogicTest {
 
     @Test
     public void execute_passwordExistsChecker_exists() throws IOException {
-        Password password = new Password();
-        String result = password.passwordExistsChecker("papa123");
+        String result = passwordExistsChecker("papa123");
         assertEquals(Password.MESSAGE_PASSWORD_EXISTS,result);
     }
 
     @Test
     public void execute_passwordExistsChecker_valid() throws IOException {
-        Password password = new Password();
-        String result = password.passwordExistsChecker("police123");
+        String result = passwordExistsChecker("police123");
         assertEquals(Password.MESSAGE_VALID,result);
     }
 
     @Test
     public void execute_alphanumericChecker_missingAlphabet() {
-        Password password = new Password();
-        String result = password.passwordAlphanumericChecker("123132442");
+        String result = passwordAlphanumericChecker("123132442");
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet"), result);
     }
 
     @Test
     public void execute_alphanumericChecker_missingNumber() {
-        Password password = new Password();
-        String result = password.passwordAlphanumericChecker("papapaapap");
+        String result = passwordAlphanumericChecker("papapaapap");
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number"), result);
     }
 
     @Test
     public void execute_alphanumericChecker_notAlphanumeric() {
-        Password password = new Password();
-        String result = password.passwordAlphanumericChecker("*******");
+        String result = passwordAlphanumericChecker("*******");
         assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number"), result);
     }
 
     @Test
     public void execute_alphanumericChecker_valid() {
-        Password password = new Password();
-        String result = password.passwordAlphanumericChecker("papa123");
+        String result = passwordAlphanumericChecker("papa123");
         assertEquals(MESSAGE_VALID, result);
     }
 
     @Test
     public void execute_LengthChecker_tooShort(){
-        Password password = new Password();
         String newEnteredPassword = "";
         int lengthPassword = newEnteredPassword.length();
         int minNumPassword = 5;
-        String result = password.passwordLengthChecker(newEnteredPassword);
+        String result = passwordLengthChecker(newEnteredPassword);
         assertEquals(String.format(MESSAGE_PASSWORD_LENGTH, lengthPassword)
                 + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
                 , result);
@@ -1362,19 +1345,17 @@ public class LogicTest {
 
     @Test
     public void execute_LengthChecker_valid(){
-        Password password = new Password();
         String newEnteredPassword = "papa123";
-        String result = password.passwordLengthChecker(newEnteredPassword);
+        String result = passwordLengthChecker(newEnteredPassword);
         assertEquals(MESSAGE_VALID, result);
     }
 
     @Test
     public void execute_passwordValidityChecker_tooShortAndMissingAlphabet() throws IOException {
-        Password password = new Password();
         String newEnteredPassword = "p";
-        String result = password.passwordValidityChecker(newEnteredPassword);
-        assertEquals(password.passwordLengthChecker(newEnteredPassword)
-                + "\n" + password.passwordAlphanumericChecker(newEnteredPassword)
+        String result = passwordValidityChecker(newEnteredPassword);
+        assertEquals(passwordLengthChecker(newEnteredPassword)
+                + "\n" + passwordAlphanumericChecker(newEnteredPassword)
                 + "\n" + MESSAGE_TRY_AGAIN, result);
     }
 
