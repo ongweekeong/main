@@ -131,34 +131,66 @@ The following is an example usage scenario of the "find" command:
 
 Step 1: The user input his password and unlocks the system.
 
-Step 2: The user executes "find s1234567a" command where the first argument is the command word "find" and the second argument is the NRIC to be
-searched, which in this case is "s1234567a" (all letter are lower cased). The "find" command calls execute() which also calls getPersonWithNric() method.
+Step 2: The user executes "find s1234567a" command.
 
-Step 3: The getPersonWithNric() method searches the addressbook for the person with "s1234567a" if he exists and person is stored in a list.
+Step 3: Parser class determines the command word and runs prepareFind method.
 
-Step 4: The person is found and is stored in a matchedPerson list variable. execute() returns a CommandResult using the matchedPerson list as its argument.
+Step 4: prepareFind determines string is a valid nric, then instantiates a new FindCommand.
 
-Step 5: The CommandResult object displays to the user the searched person and his details, all of which in string form.
+Step 5: Logic class calls the execute() method on the FindCommand object.
+
+Step 6: The getPersonWithNric() method called in execute() searches the addressbook for the person with "s1234567a" if he exists and person is stored in a list.
+
+Step 7: The person is found and is stored in a matchedPerson list variable. execute() returns a CommandResult using the matchedPerson list as its argument.
+
+Step 8: The CommandResult object displays to the user the searched person and his details, all of which in string form.
+
+
+Alternatives considered:
+
+*  Continue to use the original way of finding by name
+** However, there could be multiple people with the same name
+** Using nric to find people would be better as each person has a unique nric
 
 === 2b. "check" command
 
 *Current Implementation*
 
-Only a HQP may use this command. This command displays the timestamps of which a person with the specified NRIC was screened using the "find" command.
+Only HQP may use this command. This command displays the timestamps of which a person with the specified NRIC was screened using the "find" command.
 The "check" command makes some use of the "find" command. Every time the "find" command successfully finds a person, a line in the format of:
 "NRIC timestamp" is printed in a text file called "screeningHistory.txt". The "check" command will read this file and retrieve the timestamps
-corresponding to the specified NRIC. Below is an example of its usage:
+corresponding to the specified NRIC.
+
+It also implements the following operations:
+
+. execute() - executes the "check" command itself and displays the result to the user.
+. getPersonWithNric() - Searches the addressbook to retrieve the person with the specified NRIC.
+
+Below is an example of its usage:
 
 Step 1: The user(a HQP) input his password and unlocks the system.
 
-Step 2: The user executes "check s1234567a" where the first argument is the command word "check" and the second is the NRIC to be checked which in is "s1234567a".
+Step 2: The user executes "check s1234567a"
 
-Step 3: The "check" command calls execute() which calls the getPersonWithNric() method. This method will read the screeningHistory.txt line by line, where each line
-is in the format of "NRIC timestamp", for example "s1234567a 18/10/2018-20:38:42". Each line is split into the NRIC and timestamp. If line[0] is the NRIC specified,
+Step 3: Parser class determines the command word and runs prepareCheck method.
+
+Step 4: prepareCheck determines string is a valid nric, then instantiates a new CheckCommand.
+
+Step 5: Logic class calls the execute() method on the CheckCommand object.
+
+Step 6: execute() also calls the getPersonWithNric() method. This method will read the screeningHistory.txt line by line, where each line
+is in the format of "NRIC timestamp", for example "s1234567a 18/10/2018-2038hrs by hqp". Each line is split into the NRIC and timestamp. If line[0] is the NRIC specified,
 the corresponding timestamp is stored in a list.
 
-Step 4: The list from step 3 gets returned by execute() to create a CommandResult object which displays all the timestamps to the user.
+Step 7: The list from step 6 gets returned by execute() to create a CommandResult object which displays all the timestamps to the user.
 
+
+Alternatives considered:
+
+* Having a text file for each person, stored in a 'persons' folder
+** Each timestamp would then be stored in the respective text file
+** Pros: Retrieving timestamps would be much more efficient
+** Cons: Space complexity would increase especially if the number of persons increased drastically
 // tag::edit[]
 [[edit]]
 === 2c. "edit" command
@@ -368,11 +400,73 @@ Step 8: CommandResult with successful message is returned to Logic class, which 
         to user: "Dispatch for PO3 backup is successful."
 // end::dispatch[]
 
-// tag::autocorrect[]
+=== 4a. "updatestatus" command
 
+*Current Implementation*
+
+Only HQP can use this command. This command sets the engagement status(the "isEngaged" boolean) of a PO to false.
+It also implements the following methods:
+
+. execute() - executes the "updatestatus po[id]" command, sets the isEngaged boolean to false and displays the result to the user
+
+The following is an example usage scenario of the "updatestatus" command:
+
+Step 1: User inputs password and unlocks the system
+
+Step 2: User executes "updatestatus po1" (example PO here is "po1")
+
+Step 3: Parser class identifies command as "updatestatus" and runs prepareUpdateStatus method.
+
+Step 4: prepareUpdateStatus checks is po1 is a valid PO ID through a regex expression and instantiates a new UpdateStatus command.
+
+Step 5: Logic class calls the execute() method in the UpdateStatusCommand object.
+
+Step 6: execute() also calls for the setStatus() method in PatrolResourceStatus class sets the isEngaged boolean of "po1", in this case, to false.
+
+Step 7: A CommandResult object with the successful message is created to be displayed to the user.
+
+
+Alternatives considered:
+
+* Using a text file to store the statuses of the POs
+** Pros: The statuses are saved even after exiting the system
+** Cons: Time and space complexity increases especially if there are many POs to manage
+
+=== 4b. "checkstatus" command
+
+*Current Implementation*
+
+This command lists out all the POs and their current engagement statuses. The POs and their details are stored in an Arraylist as the assumption here is the system will be running continuously for the whole working time, or shift, for example.
+It also implements the following methods:
+
+. execute() - executes the "checkstatus" command and stores all POs in a list
+. extractEngagementInformation() - iterates through the ArrayList of POs and only store and return their ID and engagement statuses
+
+The following is an example usage scenario of the "checkstatus" command:
+
+Step 1: User inputs password and unlocks the system.
+
+Step 2: User executes "checkstatus".
+
+Step 3: Parser class identifies command as "checkstatus" and returns a new CheckPOStatusCommand object.
+
+Step 4: Logic class calls the execute() method in the CheckPOStatusCommand object.
+
+Step 5: execute() also calls for the extractEngagementInformation() method and stores the PO Ids and the engagement status in a list.
+
+Step 6: A CommandResult object is created and displays the list to the user.
+
+
+Alternatives considered:
+
+* Similar to what was mentioned in "updatestatus" command section, use a text file for each PO and store their status
+** Pros: Easier to identify a PO, just look for the text file with their ID
+** Cons: Space would be an issue especially when there are many POs to manage
+
+// tag::autocorrect[]
 [[autocorrect]]
 
-=== 4. Autocorrection feature
+=== 5. Autocorrection feature
 
 *Current Implementation*
 
@@ -695,13 +789,7 @@ Use case resumes at step 6.
 +
 Use case ends.
 
-* *a. At any time, User chooses to cancel the delete action.
-** *a1. System requests confirmation to cancel.
-** *a2. User confirms the cancellation.
-+
-Use case ends.
-
-=== Use case: Check
+=== Use case: Check person
 
 *MSS*
 
@@ -743,15 +831,66 @@ Use case ends.
 +
 Use case ends.
 
-* *a. At any time, User chooses to cancel the delete action.
-** *a1. System requests confirmation to cancel.
-** *a2. User confirms the cancellation.
+=== Use case: Update status of a PO
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User requests to update the engagement status of a PO (e.g "po1") to free
+. System prompts User to specify the PO
+. User enters the PO
+. System shows the user that the PO's status has been updated
++
+Use case ends.
+
+*Extensions*
+
+* 3a. User enters an invalid password.
+** 3a1. System shows an error message.
++
+Use case ends.
+
+* 5a. User enters Command in an invalid format.
+** 5a1. System shows an error message
++
+Use case ends.
+
+* 7a. User enters an invalid PO ID or a PO that does not exist.
+** 7a1. System shows an error message
++
+Use case ends.
+
+=== Use case: Check status of all POs
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User requests to see all POs and their current engagement status
+. System shows the user a list of POs and each of their engagement status
++
+Use case ends.
+
+*Extensions*
+
+* 3a. User enters an invalid password.
+** 3a1. System shows an error message.
++
+Use case ends.
+
+* 5a. User enters Command in an invalid format.
+** 5a1. System shows an error message
 +
 Use case ends.
 
 //tag::usecase[]
-
 [[usecase]]
+
 === Use case: Autocorrection
 
 *MSS*
