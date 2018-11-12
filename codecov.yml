@@ -1,0 +1,2 @@
+ignore:
+  - "Main\src\seedu\addressbook\ui"  # ignore folders and all its contents
