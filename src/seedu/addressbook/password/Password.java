@@ -283,7 +283,9 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * When wrong password is entered, this method sequence runs.
+     * The number of tries left decreases with each wrong attempt.
+     * When wrong password is entered after 5 tries, System will shut down.
      */
     private static String wrongPasswordShutDown(int number) {
         String result;
@@ -317,7 +319,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when hqp password is entered
      */
     public static boolean correctHqp(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID)
@@ -325,7 +327,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po1 password is entered
      */
     public static boolean correctPO1(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_1_ID)
@@ -333,7 +335,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po2 password is entered
      */
     public static boolean correctPO2(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_2_ID)
@@ -341,7 +343,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po3 password is entered
      */
     public static boolean correctPO3(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_3_ID)
@@ -349,7 +351,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po4 password is entered
      */
     public static boolean correctPO4(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_4_ID)
@@ -357,7 +359,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Returns true when po5 password is entered
      */
     public static boolean correctPO5(String user, String storedCurrPassword, int hashedEnteredPassword) {
         return user.equals(PatrolResourceStatus.POLICE_OFFICER_5_ID)
@@ -365,7 +367,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Brings updating password sequence to stage 2
      */
     public static String prepareUpdatePassword() {
         isUpdatingPassword = true;
