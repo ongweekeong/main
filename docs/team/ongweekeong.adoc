@@ -11,7 +11,7 @@
 :note-caption: :information_source:
 :warning-caption: :warning:
 :experimental:
-= PROJECT: Police Records System
+= PROJECT: Police Records Intelligent System (PRISM)
 
 == Introduction
 The purpose of this portfolio is to document the specific contributions that I have made to this project. The project, with the end product being called “Police Records System” (PRS), was done over the course of one semester in National University of Singapore (NUS), under the module CS2113T, which aims to teach Software Engineering principles and Object-Oriented Programming. PRS was done by a team of 5 people including myself, and 4 other course mates. 
