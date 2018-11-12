@@ -976,7 +976,7 @@ public class LogicTest {
     @Test
     public void execute_messages_constructor() throws Exception {
         Messages test = new Messages();
-        String testMessage = test.MESSAGE_WELCOME;
+        String testMessage = test.MESSAGE_WELCOME_INITIAL;
         assertEquals(testMessage, "Welcome to the Police Records and Intelligent System.");
     }
 
