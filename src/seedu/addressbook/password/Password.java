@@ -94,7 +94,7 @@ public class Password {
         logr.addHandler(ch);
 
         try {
-            FileHandler fh = new FileHandler("passwordLog.log");
+            FileHandler fh = new FileHandler("Logger.log");
             fh.setLevel(Level.FINE);
             logr.addHandler(fh);
         } catch (IOException ioe) {
@@ -186,6 +186,15 @@ public class Password {
     //TODO: Access can be private
     private static void setUpdatingFinal() {
         isUpdatePasswordConfirm = true;
+    }
+
+    public static void logoutUser(){
+        isLoginHqp = false;
+        isLoginPO1 = false;
+        isLoginPO2 = false;
+        isLoginPO3 = false;
+        isLoginPO4 = false;
+        isLoginPO5 = false;
     }
 
 

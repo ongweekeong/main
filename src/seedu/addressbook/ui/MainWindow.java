@@ -1,7 +1,7 @@
 package seedu.addressbook.ui;
 
 import static seedu.addressbook.common.Messages.MESSAGE_USING_STORAGE_FILE;
-import static seedu.addressbook.common.Messages.MESSAGE_WELCOME;
+import static seedu.addressbook.common.Messages.MESSAGE_WELCOME_INITIAL;
 
 import java.util.List;
 import java.util.Optional;
@@ -178,7 +178,7 @@ public class MainWindow {
 
     void displayWelcomeMessage(String version, String storageFilePath) {
         String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
-        display(MESSAGE_WELCOME, version, storageFileInfo, tad.outputDatMainHrs() + "\n" ,
+        display(MESSAGE_WELCOME_INITIAL, version, storageFileInfo, tad.outputDatMainHrs() + "\n" ,
                 Password.MESSAGE_ENTER_PASSWORD);
     }
 
