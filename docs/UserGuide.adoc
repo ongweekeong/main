@@ -325,7 +325,7 @@ Format: 'read INDEX'
 Examples:
 *  read 1
 
-=== Clear inbox: `clearinbox`
+=== Clear inbox: `clearinbox` (HQP & PO)
 
 Clears the text file containing all the messages (both read and unread) for the user.
 

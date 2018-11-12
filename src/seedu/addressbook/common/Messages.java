@@ -15,15 +15,10 @@ public class Messages {
     public static final String MESSAGE_NO_UNREAD_MSGS = "You have no unread messages.";
     public static final String MESSAGE_INBOX_FILE_NOT_FOUND = "Inbox storage file not found.";
     public static final String MESSAGE_INTERNET_NOT_AVAILABLE = "Internet not available for Google Maps API.";
-
-    //    public static final String MESSAGE_PROGRAM_LAUNCH_ARGS_USAGE = "Launch command format: " +
-    //        "java seedu.addressbook.Main [STORAGE_FILE_PATH]";
-    public static final String MESSAGE_WELCOME = "Welcome to the Police Records and Intelligent System.";
+    public static final String MESSAGE_WELCOME_INITIAL = "Welcome to the Police Records and Intelligent System.";
     public static final String MESSAGE_USING_STORAGE_FILE = "Using storage file : %1$s";
-    public static final String MESSAGE_BATTERY_PERCENTAGE = "Battery level left: %d";
     public static final String MESSAGE_JSON_PARSE_ERROR = "HttpResponse could not be parsed in JSON format.";
     public static final String MESSAGE_SAVE_ERROR = "System could not save to storage";
     public static final String MESSAGE_ERROR = "An error has occurred.";
-    public static final String MESSAGE_STORAGE_ERROR = "System could not load storage file.";
     public static final String MESSAGE_FILE_NOT_FOUND = "File not found";
 }

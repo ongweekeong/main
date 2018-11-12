@@ -67,7 +67,7 @@ Set up Travis to perform Continuous Integration (CI) for your fork. See <<UsingT
 == Design
 The diagram below shows a high level architecture design of the current classes that are used in the project.
 
-image::mainClassDiagram.png[]
+image::mainClassDiagramFULLedited.png[]
 
 == Implementation
 This section describes some of the more important details of certain features implemented.
