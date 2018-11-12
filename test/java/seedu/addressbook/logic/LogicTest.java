@@ -1231,10 +1231,10 @@ public class LogicTest {
 
     @Test
     public void execute_updatePassword_wrongPassword() throws Exception {
-        Password password = new Password();
-        Password.unlockHqp();
+        unlockHqp();
         Password.prepareUpdatePassword();
-        String result = password.updatePassword("thisiswrong", 5);
+        Password.logoutUser();
+        String result = Password.updatePassword("thisiswrong", 5);
         assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
                 + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
                 + "\n" + MESSAGE_ENTER_PASSWORD, result);
@@ -1503,7 +1503,7 @@ public class LogicTest {
 
     @Test
     public void execute_inboxSuccessful_readAndUnread() throws Exception {
-        Password.lockIsPo();
+        Password.lockIsHqp();
         Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final String test = "This is the unread test msg";
