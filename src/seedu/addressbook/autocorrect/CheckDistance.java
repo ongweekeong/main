@@ -12,7 +12,7 @@ public class CheckDistance {
 
     private Dictionary dictionary = new Dictionary();
 
-    private ArrayList<String> commandList = Dictionary.getCommands();
+    private ArrayList<String> commandsList = Dictionary.getCommands();
 
     private ArrayList<String> detailsList = dictionary.getDetails();
 
@@ -25,18 +25,14 @@ public class CheckDistance {
      */
     public String checkDistance(String commandInput) {
         int distance;
-        int check = 0;
-        for (String command : commandList) {
+        for (String command : commandsList) {
             distance = EditDistance.computeDistance(commandInput, command);
             if (distance == 1) {
                 prediction = command;
-                check = 1;
                 break;
             }
         }
-        if (check == 0) {
-            prediction = "none";
-        }
+
         return prediction;
     }
 
@@ -47,18 +43,14 @@ public class CheckDistance {
      */
     public String checkInputDistance(String input) {
         int distance;
-        int check = 0;
         for (String nric : detailsList) {
             distance = EditDistance.computeDistance(input, nric);
             if (distance == 1 || distance == 2) {
                 prediction = nric;
-                check = 1;
                 break;
             }
         }
-        if (check == 0) {
-            prediction = "none";
-        }
+
         return prediction;
     }
 
@@ -70,7 +62,7 @@ public class CheckDistance {
     public Integer checkCommandDistance(String commandInput) {
         int distance;
         int check = 0;
-        for (String command : commandList) {
+        for (String command : commandsList) {
             distance = EditDistance.computeDistance(commandInput, command);
             if (distance == 0) {
                 check = 1;

@@ -22,7 +22,6 @@ public class CheckCommand extends Command {
             + "Example: " + COMMAND_WORD + " s1234567a";
 
     private String nricKeyword;
-    private String fileNotFoundError = "File not found";
     private String screeningDatabase = "screeningHistory.txt";
     private AddressBook addressBookForTest; //For testing
 
@@ -60,6 +59,7 @@ public class CheckCommand extends Command {
             screeningHist = getPersonWithNric(nricKeyword);
             return new CommandResult(getMessageForScreeningHistoryShownSummary(screeningHist, nricKeyword));
         } catch (IOException e) {
+            String fileNotFoundError = "File not found";
             return new CommandResult(fileNotFoundError);
         }
 
@@ -67,21 +67,30 @@ public class CheckCommand extends Command {
 
     /**
      *
-     * @param nric
+     * @param nric NRIC input
      * @return list of timestamps converted to strings
      */
 
     private List<String> getPersonWithNric(String nric) throws IOException {
-        List<String> screeningHistory;
-        //@@author ShreyasKp
-        for (ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
-            if (person.getNric().getIdentificationNumber().equals(nric)) {
-                screeningHistory = addressBook.readDatabase(nric, screeningDatabase);
-                return screeningHistory;
+        List<String> screeningHistory = null;
+        if (this.addressBookForTest != null) {
+            for (ReadOnlyPerson person : addressBookForTest.getAllPersons().immutableListView()) {
+                if (person.getNric().getIdentificationNumber().equals(nric)) {
+                    screeningHistory = addressBook.readDatabase(nric, screeningDatabase);
+                    break;
+                }
+            }
+        } else {
+            //@@author ShreyasKp
+            for (ReadOnlyPerson person : relevantPersons) {
+                if (person.getNric().getIdentificationNumber().equals(nric)) {
+                    screeningHistory = addressBook.readDatabase(nric, screeningDatabase);
+                    break;
+
+                }
             }
         }
-        //screeningHistory = addressBook.readDatabase(nric, screeningDatabase);
 
-        return null;
+        return screeningHistory;
     }
 }
