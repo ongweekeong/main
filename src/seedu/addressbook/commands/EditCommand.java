@@ -80,7 +80,7 @@ public class EditCommand extends Command {
         return wantedFor;
     }
     /**
-     * TODO: Add Javadoc comment
+     * Updates selected person identified by NRIC with entered attributes
      * @throws UniquePersonList.PersonNotFoundException
      */
     private void updatePerson() throws UniquePersonList.PersonNotFoundException {

@@ -16,7 +16,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * TODO: Add Javadoc comment
+ * Stores each Police Resource location and get ETA time
+ * from different locations with Google Maps API
  */
 public class Location {
     private static final String DISTANCE_MATRIX_BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?";
@@ -29,7 +30,7 @@ public class Location {
     public Location(double latitude, double longitude) {
         this.longitude = longitude;
         this.latitude = latitude;
-        googleMapsApiKey = getGoogleMapsApiKey();
+        this.googleMapsApiKey = getGoogleMapsApiKey();
     }
 
     public double getLongitude() {
