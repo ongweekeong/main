@@ -224,6 +224,9 @@ Step 6: CommandResult with successful message is returned to Logic class, which 
         to user: "Edited person: s1234567a".
 // end::edit[]
 
+// tag::wkFeatures[]
+[[wkFeatures]]
+
 === 3a. "showunread" command
 
 *Current Implementation*
@@ -315,6 +318,7 @@ The following is an example usage scenario of the "clearinbox" command:
 Step 1: User inputs his password and unlocks the system.
 
 Step 2: User executes "clearinbox" command. If command is successfully executed, the feedback "Inbox cleared!" will be displayed to the user.
+// end::wkFeatures[]
 
 // tag::request[]
 [[request]]
@@ -929,6 +933,9 @@ Use case ends.
 
 //end::usecase[]
 
+// tag::inbox[]
+[[inbox]]
+
 === Use case: Show unread messages
 
 *MSS*
@@ -1043,6 +1050,7 @@ Use case ends.
 * *a. At anytime, user chooses to stop marking messages as read.
 +
 Use case ends.
+// end::inbox[]
 
 // tag::request[]
 [[request]]
@@ -1143,16 +1151,44 @@ Use case resumes at step 4.
 . Performance requirements: The system should respond within two seconds.
 . Security requirements: The system should be password locked.
 . Data requirements:
-.. Data should be constant, not volatile.
+.. Data should persist, and not volatile.
 .. Data should be recoverable from last save point
 
 //end:nfr[]
 
+// tag::glossary[]
+[[glossary]]
+
 [appendix]
 == Glossary
+
+[[HeadquartersPersonnel]] Headquarters Personnel (HQP)::
+A PO with a high level of authorised access (read and write) to the information of subjects.
+
+[[ID]] ID::
+Refers to the identity of the user of the program based on the password he uses the log in. Currently, there can be 6 possible users - 1 HQP and 5 POs.
 
 [[mainstream-os]] Mainstream OS::
 Windows, Linux, Unix, OS-X
 
-[[private-contact-detail]] Private contact detail::
-A contact detail that is not meant to be shared with others.
+[[NRIC]] NRIC::
+Stands for National Registration Identity Card. It is a 7-digit number preceded and succeeded by a letter. This forms a sequence of characters unique to each person and is used for identification purposes.
+
+[[PoliceOfficer]] Police Officer (PO)::
+A police officer that is on patrol duty. Has low level of authorised access (read only) to subject's information.
+
+[[PoliceRecords]] Police Records::
+Refers to the database of information that the system has of people, which includes their NRIC, name, address, past offences and status.
+
+[[Status]] Status::
+A status that is used to describe the engagement level of POs on duty.
+He can either be engaged (true) or free (false).
+It is also used to describe a subject, should he have a criminal record: wanted, xc (ex-convict), and clear.
+
+[[Subject]] Subject::
+A person that is being screened by a PO.
+
+[[System]] System::
+Refers to the `PRISM` Application itself (i.e. when a user exits the system, he closes the application).
+
+// end::glossary[]
