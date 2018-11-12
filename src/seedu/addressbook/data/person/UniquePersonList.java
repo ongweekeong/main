@@ -22,9 +22,7 @@ public class UniquePersonList implements Iterable<Person> {
 
     /**
      * Signals that an operation would have violated the 'no duplicates' property of the list.
-     * TODO: If not used, delete
      */
-    private static Timestamp screeningTimeStamp;
     private static final SimpleDateFormat timestampFormatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     private final List<Person> internalList = new ArrayList<>();
@@ -60,7 +58,7 @@ public class UniquePersonList implements Iterable<Person> {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Signals that an operation of adding a person would fail because it would result in duplicate persons
      */
     public static class DuplicatePersonException extends DuplicateDataException {
         DuplicatePersonException() {

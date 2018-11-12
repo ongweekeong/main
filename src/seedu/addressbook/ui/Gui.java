@@ -30,7 +30,6 @@ public class Gui {
     }
 
     /**
-     * TODO: Add Javadoc comment
      * @param stage
      * @param mainApp
      * @throws IOException
@@ -41,7 +40,6 @@ public class Gui {
     }
 
     /**
-     * TODO: Add Javadoc comment
      * @param stage
      * @param mainApp
      * @return

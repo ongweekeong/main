@@ -1764,8 +1764,7 @@ public class LogicTest {
         }
 
         /**
-         * TODO: More javadocs comments
-         * @return
+         * @return a dummy person with the given parameters
          * @throws Exception
          */
         Person generateDummyPerson() throws Exception {

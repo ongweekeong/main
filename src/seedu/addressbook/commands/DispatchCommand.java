@@ -86,7 +86,7 @@ public class DispatchCommand extends Command {
     public String getOffense() {
         return offense;
     }
-    
+
     @Override
     public CommandResult execute() {
         try {
