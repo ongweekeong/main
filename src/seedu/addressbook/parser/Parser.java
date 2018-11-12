@@ -61,7 +61,7 @@ public class Parser {
                     + " w/(?<wantedFor>[^/]+)"
                     + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
     //@@author
-    
+
     private static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
     private static final String PO_REGEX = "[Pp][Oo][0-9]+";
 
@@ -220,11 +220,6 @@ public class Parser {
         }
     }
     //@@author
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 374b2bdf29856462f5754e086c059f5168bed080
     /**
      * Extracts the new person's tags from the add command's tag arguments string.
      * Merges duplicate tag strings.
