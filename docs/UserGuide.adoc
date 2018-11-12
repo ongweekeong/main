@@ -13,7 +13,7 @@ ifdef::env-github[]
 endif::[]
 :repoURL: https://github.com/CS2113-AY1819S1-F10-3/main
 
-By: `Team F10-3`      Since: `Aug 2018'
+By: `Team F10-3`      Since: `Aug 2018`
 
 == Introduction
 
@@ -46,7 +46,7 @@ image::Ui.png[width="790"]
 .. PO5: popo5
 .	Type a command in the same text box and press kbd:[Enter] to excecute it.
 .	To display the full list of commands and a summary of their functions in the application, type 'help' and press kbd:[Enter].
-.	Refer to Section 3, “Features” for details of each command.
+.	Refer to Section 3, “Features” for details of each feature.
 
 
 [[Features]]
@@ -60,23 +60,39 @@ image::Ui.png[width="790"]
 * Items in square brackets are optional e.g `n/NAME [p/POSTALCODE] [s/STATUS]` can be used as `n/John Doe p/510246 s/xc` or `n/John Doe s/xc`
 * Items with `…`​ after them can be used multiple times including zero times e.g. `o/OFFENSE...` can be used as `{nbsp}` (i.e. 0 times), `o/theft`, `o/riot o/drugs` etc
 ====
-	
+
 === Viewing help : `help` (HQP & PO)
 
-Lists all the features in a user friendly format for users and how to use them.
+Lists all the commands in a user friendly format for users and how to use them.
 
 [NOTE]
 ====
 *   You will be unable to see the list of available commands until logged in, due to the sensitivity of the data
+*   You will be shown a different set of commands depending on the type of access to the system- HQP or PO
 ====
 
 Format: 'help'
 
+Examples:
+
+*	help
+*	Displays all commands which can be used by the user
+
+// tag::time[]
+
+[[time]]
 === Display date and time : `time` (HQP & PO)
 
-Shows the current date and time.
+Shows the current System date and time.
 
 Format: 'time'
+
+Examples:
+
+*	time
+*	Displays the current date, and time in hrs
+
+// end::time[]
 
 === Adding a person: `add` (HQP only)
 
@@ -124,7 +140,7 @@ Format: 'edit n/NRIC p/[POSTAL_CODE] s/[STATUS] w/[WANTED_FOR] o/[PAST_OFFENCES]
 
 Examples:
 
-*	edit g1952866Q p/510246
+*	edit n/g1952866q p/510246
 *	Edits the postal code of the person with the specified NRIC to be 510246
 // end::edit[]
 
@@ -325,10 +341,34 @@ Examples:
 *   shutdown
 *   Police Records shuts down
 
-=== AutoCorrect feature
+// tag::autocorrect[]
+[[autocorrect]]
+=== AutoCorrect feature (HQP & PO)
 
-AutoCorrect feature predicts expected input when the user enters invalid input.
-Currently all commands are covered by the feature.
+Predicts expected input when the user enters invalid input that is close to input expected by the Police Records System.
+Currently all non-password commands and NRICs are covered by the feature.
+
+[NOTE]
+====
+*   The feature predicts correction for commands that are a single character away from valid command
+*   The feature predicts correction for NRICs that are one or two characters away from valid NRIC
+====
+
+****
+ The feature works differently depending on the type of user.
+
+*	For HQP, all commands as well as NRICs under edit, check and delete command are covered by the feature.
+*   For POs, only commands they are authorized to use are covered by the feature.
+*	The autocorrect feature does not cover the update password command, and NRICs under commands accessible by POs to
+maintain security.
+
+****
+
+Examples:
+
+*	lost
+*	Predicts that the user meant to use the command `list` and shows valid implementation of the list command
+// end::autocorrect[]
 
 == Commands List
  

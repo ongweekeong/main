@@ -35,6 +35,35 @@ In order to start the setup, you are required to install the following:
 .. Due to an ongoing https://youtrack.jetbrains.com/issue/IDEA-189060[issue] with some of the newer versions of IntelliJ, code errors may be detected even if the project can be built and run successfully
 .. To resolve this, place your cursor over any of the code section highlighted in red. Press kbd:[ALT + ENTER], and select `Add '--add-modules=java.xml.bind' to module compiler options`
 
+=== Configurations to do before writing code
+
+==== Configuring the coding style
+
+This project follows https://github.com/oss-generic/process/blob/master/docs/CodingStandards.adoc[oss-generic coding standards]. IntelliJ's default style is mostly compliant with ours but it uses a different import order from ours. To rectify,
+
+. Go to `File` > `Settings...` (Windows/Linux), or `IntelliJ IDEA` > `Preferences...` (macOS)
+. Select `Editor` > `Code Style` > `Java`
+. Click on the `Imports` tab to set the order
+
+* For `Class count to use import with '\*'` and `Names count to use static import with '*'`: Set to `999` to prevent IntelliJ from contracting the import statements
+* For `Import Layout`: The order is `import static all other imports`, `import java.\*`, `import javax.*`, `import org.\*`, `import com.*`, `import all other imports`. Add a `<blank line>` between each `import`
+
+Optionally, you can follow the <<UsingCheckstyle#, UsingCheckstyle.adoc>> document to configure Intellij to check style-compliance as you write code.
+
+==== Updating documentation to match your fork
+
+After forking the repo, the documentation will still have the SE-EDU branding and refer to the `se-edu/addressbook-level3` repo.
+
+If you plan to develop this fork as a separate product (i.e. instead of contributing to `se-edu/addressbook-level3`), you should do the following:
+
+. Configure the <<Docs-SiteWideDocSettings, site-wide documentation settings>> in link:{repoURL}/build.gradle[`build.gradle`], such as the `site-name`, to suit your own project.
+
+. Replace the URL in the attribute `repoURL` in link:{repoURL}/docs/DeveloperGuide.adoc[`DeveloperGuide.adoc`] and link:{repoURL}/docs/UserGuide.adoc[`UserGuide.adoc`] with the URL of your fork.
+
+==== Setting up CI
+
+Set up Travis to perform Continuous Integration (CI) for your fork. See <<UsingTravis#, UsingTravis.adoc>> to learn how to set it up.
+
 == Design
 The diagram below shows a high level architecture design of the current classes that are used in the project.
 
@@ -434,6 +463,9 @@ Alternatives considered:
 ** Pros: Easier to identify a PO, just look for the text file with their ID
 ** Cons: Space would be an issue especially when there are many POs to manage
 
+// tag::autocorrect[]
+[[autocorrect]]
+
 === 5. Autocorrection feature
 
 *Current Implementation*
@@ -476,6 +508,8 @@ prediction to be reported efficiently.
 * Include predictions with more than one character changes- This will bring
 in ambiguity in the correction algorithm and increases chances of errors.
 
+//end::autocorrect[]
+
 == Use Cases
 The use cases for the current features and commands implemented can be found in Appendix B.
 
@@ -484,7 +518,11 @@ To run tests for the project, complete the step below.
 
 * In IntelliJ, right-click on the `test` folder and choose `Run 'All Tests'`
 
+// tag::stories[]
+
 [appendix]
+
+[[stories]]
 == User Stories
 
 Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (unlikely to have) - `*`
@@ -505,6 +543,7 @@ HQP- Headquarters Personnel
 |`*` |PO |know the serial number and battery level |to return it to HQ and charge it when necessary
 |===========================================================================================================================================
 
+// end::stories[]
 [appendix]
 == Use Cases
 
@@ -849,6 +888,8 @@ Use case ends.
 +
 Use case ends.
 
+//tag::usecase[]
+[[usecase]]
 
 === Use case: Autocorrection
 
@@ -885,6 +926,8 @@ Use case ends.
 ** *a2. User confirms the cancellation.
 +
 Use case ends.
+
+//end::usecase[]
 
 === Use case: Show unread messages
 
@@ -1083,6 +1126,10 @@ Use case resumes at step 4.
 
 [appendix]
 
+//tag:nfr[]
+
+[[nfr]]
+
 == Non Functional Requirements
 
 . Should work on any <<mainstream-os, mainstream OS>> as long as it has Java 9 or higher installed.
@@ -1098,6 +1145,8 @@ Use case resumes at step 4.
 . Data requirements:
 .. Data should be constant, not volatile.
 .. Data should be recoverable from last save point
+
+//end:nfr[]
 
 [appendix]
 == Glossary

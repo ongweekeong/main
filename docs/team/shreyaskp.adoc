@@ -1,20 +1,10 @@
 = Shreyas Kuthanoor Prakash - Project Portfolio
-:site-section: AboutUs
-:imagesDir: ../images/
-:stylesDir: ../stylesheets
-
-image::shreyaskp.png[width="150", align="left"]
 
 == PROJECT: Police Records and Intelligence System (PRISM)
 
 ---
 
 == Overview
-
-1. Try to personalise
-2. Must be in PDF and follow required number of pages
-3. Refer to marking rubric
-4. DO IT WELL
 
 This document serves to showcase my contributions towards the CS2113T Software Engineering Project, as well as the role I served.
 My team and I have built PRISM using AddressBook - Level 3, provided by the se-edu team as a base.
@@ -61,16 +51,28 @@ Thus, the AutoCorrect feature is extremely useful in cases where minute errors a
 == Contributions to the User Guide
 
 |===
-|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users.For the User Guide, I added information on the AutoCorrect functionality._
+|_Given below are sections I contributed to the User Guide.
+They showcase my ability to write documentation targeting end-users.
+For the User Guide, I added information on the AutoCorrect functionality._
 |===
 
-include::../UserGuide.adoc[tag=password]
+include::../UserGuide.adoc[tag=autocorrect]
+
+include::../UserGuide.adoc[tag=time]
 
 == Contributions to the Developer Guide
 
 |===
-|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project.For the Developer Guide, I added the user stories, implementation and use cases of AutoCorrect feature and helped clean the whole document._
+|_Given below are sections I contributed to the Developer Guide.
+They showcase my ability to write technical documentation and the technical depth of my contributions to the project.
+For the Developer Guide, I added the user stories, implementation
+and use cases of AutoCorrect feature, non functional requirements and helped clean the whole document._
 |===
 
-include::../DeveloperGuide.adoc[tag=use cases]
+include::../DeveloperGuide.adoc[tag=stories]
 
+include::../DeveloperGuide.adoc[tag=autocorrect]
+
+include::../DeveloperGuide.adoc[tag=usecase]
+
+include::../DeveloperGuide.adoc[tag=nfr]
