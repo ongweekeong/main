@@ -48,7 +48,7 @@ public class DeleteCommand extends Command {
      * @param predictedNricInput The prediction found
      * @return The result of command
      */
-    private CommandResult resultDeletePrediction(String predictedNricInput) {
+    public CommandResult resultDeletePrediction(String predictedNricInput) {
 
         Dictionary dictionary = new Dictionary();
         if (!predictedNricInput.equals("none")) {

@@ -4,6 +4,7 @@ import static java.lang.Math.abs;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static seedu.addressbook.commands.Command.findPrediction;
 import static seedu.addressbook.common.Messages.MESSAGE_FILE_NOT_FOUND;
 import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
 import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
@@ -300,6 +301,20 @@ public class LogicTest {
         }
     }
 
+    /**
+     * Creates people in the addressbook
+     * @return List of people to be added to the addressbook
+     * @throws Exception
+     */
+    private List<Person> generateAddressbookForAutocorrect() throws Exception {
+        //add people into addressbook
+        TestDataHelper helper = new TestDataHelper();
+        Person firstPerson = helper.generatePerson(1);
+        Person secondPerson = helper.adam();
+
+        return helper.generatePersonList(firstPerson, secondPerson);
+
+    }
     //@@author iamputradanish
     @Test
     public void execute_unknownCommandWord_forHqp() throws Exception {
@@ -2306,5 +2321,80 @@ public class LogicTest {
         boolean isHqp = false;
         String expected = AutoCorrect.getInvalidCommandMessage(isHqp);
         assertCommandBehaviourAutocorrectInvalid(expected, inputs);
+    }
+
+    @Test
+    public void execute_editCommand_invalidNricPrediction() throws Exception {
+        //add people into addressbook
+        TestDataHelper helper = new TestDataHelper();
+
+        List<Person> lastShownList = generateAddressbookForAutocorrect();
+
+        helper.addToAddressBook(addressBook, lastShownList);
+
+        String nric = lastShownList.get(1).getNric().toString();
+
+        EditCommand editCommand = new EditCommand(nric, "444444", null, null, null);
+
+        String prediction = findPrediction(nric);
+
+        String expected = editCommand.resultEditPrediction(prediction).feedbackToUser;
+
+        assertCommandBehavior("edit n/f1234566a p/444555 s/xc w/theft o/theft",
+                expected,
+                addressBook,
+                false,
+                Collections.emptyList());
+
+    }
+
+    @Test
+    public void execute_deleteCommand_invalidNricPrediction() throws Exception {
+        //add people into addressbook
+        TestDataHelper helper = new TestDataHelper();
+
+        List<Person> lastShownList = generateAddressbookForAutocorrect();
+
+        helper.addToAddressBook(addressBook, lastShownList);
+
+        String nric = lastShownList.get(1).getNric().toString();
+
+        Nric nricObject = new Nric(nric);
+
+        DeleteCommand deleteCommand = new DeleteCommand(nricObject);
+
+        String prediction = findPrediction(nric);
+
+        String expected = deleteCommand.resultDeletePrediction(prediction).feedbackToUser;
+
+        assertCommandBehavior("delete f1234566a",
+                expected,
+                addressBook,
+                false,
+                Collections.emptyList());
+
+    }
+
+    @Test
+    public void execute_checkCommand_invalidNricPrediction() throws Exception {
+        //add people into addressbook
+        TestDataHelper helper = new TestDataHelper();
+
+        List<Person> lastShownList = generateAddressbookForAutocorrect();
+
+        helper.addToAddressBook(addressBook, lastShownList);
+
+        String nric = lastShownList.get(1).getNric().toString();
+
+        String prediction = Command.findPrediction(nric);
+
+        String expected = Command.invalidCheckCommandResult(prediction);
+
+        assertCommandBehavior("check f1234566a",
+                expected,
+                addressBook,
+                false,
+                Collections.emptyList());
+
     }
 }
