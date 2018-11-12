@@ -19,7 +19,7 @@ Refer to Quick Start guide to get started.
 * *Responsibility*: Integration
 * *Major enhancements*:
 ** *Edit Command*
-*** What it does: Allows HQP to update a civilian’s postal code, offense list, wanted status.
+*** What it does: Allows HQP to update selected parameters such as a civilian’s postal code, offense list, wanted for and wanted status.
 *** Justification: : Individual data in Police Records System would need to be updated as people change addresses, commit crimes, serve their sentence.
 *** Highlights: Due to each NRIC being assigned to a specific individual for their whole lives, they cannot be changed.
 
@@ -75,7 +75,7 @@ include::../UserGuide.adoc[tag=edit]
 include::../UserGuide.adoc[tag=request]
 include::../UserGuide.adoc[tag=dispatch]
 
-== Contributions to the Developer GUide
+== Contributions to the Developer Guide
 |===
 |_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===

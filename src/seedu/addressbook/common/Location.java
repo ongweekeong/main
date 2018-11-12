@@ -104,8 +104,7 @@ public class Location {
             }
 
         } catch (JSONException jsonE) {
-            // TODO: Handle exception better
-            jsonE.printStackTrace();
+            jsonE.getMessage();
         }
 
         return etaList;

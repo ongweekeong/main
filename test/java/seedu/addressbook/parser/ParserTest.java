@@ -148,20 +148,26 @@ public class ParserTest {
 
     @Test
     public void editCommand_validArgs_parsedCorrectly() {
-        final String nric = "s1234567a";
-        final String postalCode = "510247";
-        final String status = "wanted";
-        final String wanted = "murder";
-        final String offense = "gun";
-        final String keywords = String.format("n/%s p/%s s/%s w/%s o/%s", nric, postalCode, status, wanted, offense);
-        final String input = "edit " + keywords;
+        final String[] inputs = {
+                // no nric prefix
+                String.format("edit $s p/$s s/$s w/$s", Nric.EXAMPLE, PostalCode.EXAMPLE,
+                        Status.EXAMPLE, Offense.EXAMPLE),
+                // no postalCode prefix
+                String.format("edit n/$s $s s/$s w/$s", Nric.EXAMPLE, PostalCode.EXAMPLE,
+                        Status.EXAMPLE, Offense.EXAMPLE),
+                // no status prefix
+                String.format("edit n/$s p/$s /$s w/$s", Nric.EXAMPLE, PostalCode.EXAMPLE,
+                        Status.EXAMPLE, Offense.EXAMPLE),
+                // no offense(for wantedFor) prefix
+                String.format("edit n/$s p/$s s/$s /$s", Nric.EXAMPLE, PostalCode.EXAMPLE,
+                        Status.EXAMPLE, Offense.EXAMPLE)
+        };
+        final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
 
-        final EditCommand result =
-                parseAndAssertCommandType(input, EditCommand.class);
-        assertEquals(nric, result.getNric().getIdentificationNumber());
-        assertEquals(postalCode, result.getPostalCode().getPostalCode());
-        assertEquals(status, result.getStatus().getCurrentStatus());
-        assertEquals(wanted, result.getWantedFor().getOffense());
+        for (String input : inputs) {
+            parseAndAssertIncorrectWithMessage(resultMessage, input);
+        }
+
     }
 
 
@@ -170,6 +176,14 @@ public class ParserTest {
         final String[] inputs = { "rb", "rb "};
         final String resultMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE);
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
+    }
+
+    @Test
+    public void requestCommand_invalidOffense() {
+        final String invalidOffense = "bob";
+        final String input = "rb " + invalidOffense;
+
+
     }
 
     @Test
@@ -189,37 +203,41 @@ public class ParserTest {
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
     }
 
-//    @Test
-//    public void dispatchCommand_validArgs_parsedCorrectly() {
-//        final String caseType = "cheating";
-//        final String backupOfficer = "po1";
-//        final String requester = "po3";
-//
-//        final String input = "dispatch" + backupOfficer
-//    }
+    @Test
+    public void dispatchCommand_validArgs_parsedCorrectly() {
+        final String caseType = "cheating";
+        final String backupOfficer = "po1";
+        final String requester = "po3";
 
-
+        final String input = "dispatch " + backupOfficer + " "
+            + caseType + " " + requester;
+        final DispatchCommand result =
+                parseAndAssertCommandType(input, DispatchCommand.class);
+        assertEquals(caseType, result.getOffense());
+        assertEquals(backupOfficer, result.getBackupOfficer());
+        assertEquals(requester, result.getRequester());
+    }
 
     //@@iamputradanish
     @Test
-    public void execute_isRejectPO_allowed(){
+    public void execute_isRejectPO_allowed() {
         Password password = new Password();
         boolean result = password.isRejectPo("list");
         assertFalse(result);
     }
 
     @Test
-    public void execute_isRejectPO(){
+    public void execute_isRejectPO() {
         Password password = new Password();
         boolean result = password.isRejectPo("add");
         assertTrue(result);
     }
 
     @Test
-    public void execute_getUnauthorizedPOCommand_getAdd(){
+    public void execute_getUnauthorizedPOCommand_getAdd() {
         Password password = new Password();
         String result =  password.getUnauthorizedPoCommand("add 1");
-        assertEquals("add",result);
+        assertEquals("add", result);
     }
 
 
@@ -241,8 +259,7 @@ public class ParserTest {
         parseAndAssertIncorrectWithMessage(resultMessage, inputs);
     }
 
-//@@author ongweekeong
-
+    //@@author ongweekeong
     @Test
     public void showUnreadCommand_parsedCorrectly(){
         final String input = "showunread";
