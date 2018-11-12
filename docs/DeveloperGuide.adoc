@@ -125,9 +125,9 @@ Step 1: User enters password for HQP.
 
 Step 2: User enters "update password" command.
 
-Step 3: unlockDevice() in Password class is called.
+Step 3: decipherUserCommandText() in MainWindow class identifies the command as "update password" and begins update password sequence.
 
-Step 4: The user input, userCommandText, is then hashcoded using userCommandText.hashCode().
+Step 4: User enters password for HQP.
 
 Step 5: Using a Buffered reader from the readAndWrite class, a loop through passwordStorage.txt tries to match the hashcoded input with an existing password.
 
@@ -511,7 +511,7 @@ The following is an example usage scenario of the "logout" command:
 
 Step 1: User executes "logout".
 
-Step 2: decipherText() in MainWindow class identifies command as "logout".
+Step 2: decipherUserCommandText() in MainWindow class identifies command as "logout".
 
 Step 3: Boolean flags for isHQP, isPO1, isPO2, isPO3, isPO4, isPO5 in the Password class is set to false. This is done using the lockIsHqp() and lockIsPo() methods in the Password class.
 
