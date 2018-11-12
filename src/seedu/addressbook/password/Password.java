@@ -184,11 +184,14 @@ public class Password {
         isUpdatePasswordConfirm = false;
     }
     //TODO: Access can be private
+
     private static void setUpdatingFinal() {
         isUpdatePasswordConfirm = true;
     }
-
-    public static void logoutUser(){
+    /**
+     * //TODO java doc comment
+     */
+    public static void logoutUser() {
         isLoginHqp = false;
         isLoginPO1 = false;
         isLoginPO2 = false;
