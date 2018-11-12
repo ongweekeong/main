@@ -203,7 +203,8 @@ public class Password {
     }
 
     /**
-     * The main implementation of logging into the System. Takes the user input and attempts to match with an existing password in the System.
+     * The main implementation of logging into the System.
+     * Takes the user input and attempts to match with an existing password in the System.
      */
     public static String unlockDevice(String userCommandText, int number) throws IOException {
         logr.info("Unlocking the system.");
