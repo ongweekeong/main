@@ -77,10 +77,7 @@ public class DispatchCommand extends Command {
 
 
 
-    /**
-     * TODO: Add Javadoc comment
-     * @return
-     */
+    @Override
     public CommandResult execute() {
         try {
             destinationList.add(PatrolResourceStatus.getLocation(requester));

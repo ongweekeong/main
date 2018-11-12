@@ -27,9 +27,8 @@ public class CheckPoStatusCommand extends Command {
     }
 
     /**
-     * TODO: Add Javadoc comment
-     * @param pos
-     * @return
+     * @param pos is the ArrayList of POs and their details of ID,Location and engagement status
+     * @return a list of just POs and their respective engagement status
      */
     public static List<String> extractEngagementInformation(ArrayList<Triplet<String, Location, Boolean>> pos) {
         List<String> allPos = new ArrayList<>();
