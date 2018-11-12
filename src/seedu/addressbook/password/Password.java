@@ -4,14 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.common.Messages;
+import seedu.addressbook.parser.Parser;
 import seedu.addressbook.readandwrite.ReaderAndWriter;
 
 //@@author iamputradanish
@@ -86,20 +83,7 @@ public class Password {
     private static boolean isLoginPO5 = false;
 
     public static void setupLogger() {
-        LogManager.getLogManager().reset();
-        logr.setLevel(Level.ALL);
-
-        ConsoleHandler ch = new ConsoleHandler();
-        ch.setLevel(Level.INFO);
-        logr.addHandler(ch);
-
-        try {
-            FileHandler fh = new FileHandler("Logger.log");
-            fh.setLevel(Level.FINE);
-            logr.addHandler(fh);
-        } catch (IOException ioe) {
-            logr.log(Level.SEVERE, "File logger not working.", ioe);
-        }
+        Parser.setupLoggerForAll(logr);
     }
 
     public static int getWrongPasswordCounter() {
@@ -114,7 +98,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Logs into System as all PO, for testing purposes
      */
     public static void unlockPo() {
         isPO1 = true;
@@ -129,7 +113,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Logs out of System for all PO, for testing purposes
      */
     public static void lockIsPo() {
         isPO1 = false;
@@ -162,7 +146,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * Logs out user from System and resets boolean flags for updating passwords.
      */
     public static void lockDevice() {
         lockIsHqp();
@@ -183,14 +167,15 @@ public class Password {
     public static void notUpdatingFinal() {
         isUpdatePasswordConfirm = false;
     }
-    //TODO: Access can be private
 
     private static void setUpdatingFinal() {
         isUpdatePasswordConfirm = true;
     }
+
     /**
-     * //TODO java doc comment
+     * Resets to start of updating password for testing purposes
      */
+
     public static void logoutUser() {
         isLoginHqp = false;
         isLoginPO1 = false;
@@ -218,7 +203,7 @@ public class Password {
     }
 
     /**
-     * TODO: Add javadoc comment
+     * The main implementation of logging into the System. Takes the user input and attempts to match with an existing password in the System.
      */
     public static String unlockDevice(String userCommandText, int number) throws IOException {
         logr.info("Unlocking the system.");
