@@ -1,6 +1,5 @@
 package seedu.addressbook.data.person;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;

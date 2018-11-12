@@ -80,11 +80,7 @@ public class EditCommand extends Command {
         return wantedFor;
     }
     /**
-<<<<<<< HEAD
-     * 
-=======
      * Updates selected person identified by NRIC with entered attributes
->>>>>>> 0421985031162e1ca667d0201dd7f6386bab45ee
      * @throws UniquePersonList.PersonNotFoundException
      */
     private void updatePerson() throws UniquePersonList.PersonNotFoundException {
