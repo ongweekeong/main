@@ -463,12 +463,12 @@ Use case resumes at step 1.
 +
 Use case ends.
 
-=== Use case: Lock System
+=== Use case: Logout
 
 *MSS*
 
-. User locks the System at any point.
-. System sets all commands to inaccessible, displays System lock message and prompts User for password.
+. User logs out of the System at any point.
+. System sets all commands to inaccessible, displays System logout message and prompts User for password.
 
 Use case ends.
 

@@ -17,7 +17,7 @@ import seedu.addressbook.readandwrite.ReaderAndWriter;
 //@@author iamputradanish
 
 /**
- * TODO: Add javadoc comment
+ * Password security for the system. All functionality related to password is stored here.
  */
 public class Password {
 
