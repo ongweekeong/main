@@ -10,7 +10,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 
 /**
- * Http Client needed for RESTful APIs. Currently, only GET request is supported.
+ * Http Client needed for RESTful APIs
  */
 public class HttpRestClient {
     private HttpClient httpClient;
@@ -20,9 +20,9 @@ public class HttpRestClient {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     * Sends HTTP GET Request to specified URL
      * @param url
-     * @return
+     * @return HttpResponse from GET Request
      * @throws IOException
      */
     public HttpResponse requestGetResponse(String url) throws IOException {

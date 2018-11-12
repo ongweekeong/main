@@ -106,8 +106,13 @@ public class MainWindow {
             //@@author ShreyasKp
             userCommandText = userCommandText.trim();
             CheckDistance checker = new CheckDistance();
+
+            //Extract the command from the user input
             String commandWordInput = AutoCorrect.getCommand(userCommandText);
-            if ((checker.checkCommandDistance(commandWordInput)).equals(0)) {
+
+            //Checks if the command word is invalid.
+            // If invalid, it runs the autocorrection, if valid, it runs the Logic class
+            if ((checker.predictionChecker(commandWordInput))) {
                 clearScreen();
                 AutoCorrect correction = new AutoCorrect();
                 String displayCommand = correction.getResultOfInvalidCommand(commandWordInput);

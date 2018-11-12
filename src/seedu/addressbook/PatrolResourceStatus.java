@@ -10,7 +10,7 @@ import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.exception.IllegalValueException;
 
 /**
- * TODO: Add Javadoc comment
+ * Stores the status of each patrol resource during runtime
  */
 public class PatrolResourceStatus {
     public static final String HEADQUARTER_PERSONNEL_ID = "hqp";

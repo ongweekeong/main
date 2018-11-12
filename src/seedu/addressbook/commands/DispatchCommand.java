@@ -24,7 +24,7 @@ public class DispatchCommand extends Command {
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ":\n"
             + "Headquarters Personnel would dispatch backup officer to requesting officer.\n\t"
-            + "Parameters: dispatch [BACKUP_OFFICER_ID] [OFFENSE] [REQUESTER_OFFICER_ID] \n\t"
+            + "Parameters: dispatch 'BACKUP_OFFICER_ID' + 'OFFENSE' + 'REQUESTER_OFFICER_ID' \n\t"
             + "Example: " + COMMAND_WORD
             + " PO1 gun PO3";
 
@@ -75,12 +75,19 @@ public class DispatchCommand extends Command {
         return "Backup resource & Requester cannot be the same officer %s!";
     }
 
+    public String getBackupOfficer() {
+        return backupOfficer;
+    }
 
+    public String getRequester() {
+        return requester;
+    }
 
-    /**
-     * TODO: Add Javadoc comment
-     * @return
-     */
+    public String getOffense() {
+        return offense;
+    }
+
+    @Override
     public CommandResult execute() {
         try {
             destinationList.add(PatrolResourceStatus.getLocation(requester));
