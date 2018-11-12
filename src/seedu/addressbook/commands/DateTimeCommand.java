@@ -24,16 +24,16 @@ public class DateTimeCommand extends Command {
     private TimeAndDate timeAndDate;
 
     public DateTimeCommand() {
-        timeAndDate = new TimeAndDate();
+        setupLogger();
+        this.timeAndDate = new TimeAndDate();
     }
-    private static void setupLogger() {
+    private void setupLogger() {
         setupLoggerForAll(logger);
     }
 
     @Override
     public CommandResult execute() {
-        setupLogger();
-        logger.log(Level.INFO, "Time command works");
+        logger.log(Level.INFO, "Current date and time- " + timeAndDate.outputDatMainHrs());
         return new CommandResult(timeAndDate.outputDatMainHrs());
     }
 }

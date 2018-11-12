@@ -72,50 +72,86 @@ image::mainClassDiagramFULLedited.png[]
 == Implementation
 This section describes some of the more important details of certain features implemented.
 
-=== 1a. Password Feature
+// tag::password[]
+[[password]]
+=== 1a. Password feature
 
 *Current Implementation*
 
-Users and passwords are stored in passwordStorage.txt in the format: USER (hashcoded)PASSWORD.
-This is to simplify reading the line by splitting the line using the whitespace.
-Each user and corresponding hashcoded password are in stored in one line.
-Since each line refers to one user, a buffered reader will loop through each line to check a match for a password.
-Headquarters Personnel have full access to all the commands while Police officers cannot Add, Clear, Check, Delete, Edit, Update Status nor Update password.
+This feature provides different access levels of commands to the user, depending on the password entered.
 
-When logged out of the device, User has to enter a specific password to grant user the level of access requested.
-A buffered reader reads through the whole file to match the password entered.
-If the password is wrong, the user has 5 attempts left. This number decreases with each wrong password.
-The system shuts down after 5 wrong passwords.
-This is to ensure that the system denies access to anyone who is not authorized.
+. unlockDevice() - attempts to match a hashcoded user input with an existing password in the passwordStorage.txt file.
 
-The User can enter the logout command at any time to ensure that the user is logged out of the device immediately.
+The following is an example usage scenario of the password feature.
 
-Alternatives considered:
+Step 1: User enters password for HQP.
 
-* Using an internal hashmap to store user and passwords. Difficult to observe how many POs are there.
-* Storing password in plaintext . Passwords can be seen in passwordStorage.txt.
-* Allowing any number of attempts to unlock device. Can be easily looped to try all permutations to access system.
+Step 2: decipherUserCommandText() in MainWindow class identifies command as a password input, through the use of isLocked() method in the Password class.
+
+Step 3: unlockDevice() in Password class is called.
+
+Step 4: The user input, userCommandText, is then hashcoded using userCommandText.hashCode().
+
+Step 5: Using a Buffered reader from the readAndWrite class, a loop through passwordStorage.txt tries to match the hashcoded input with an existing password.
+
+Step 6: The user and password are stored in passwordStorage.txt in this format : "userID (hashcoded)password".
+
+Step 7: When matched, the userID is returned and a welcome message is displayed for the particular user.
+
+
+==== Design Considerations
+
+===== Aspect: How password feature is implemented
+
+* **Alternative 1 (current choice):** Using a password with no need for username
+** Pros: Reduce user's keyboard input
+** Cons: Slow buffered reader has to loop through all passwords in the text file
+* **Alternative 2:** Using username and password
+** Pros: Can use a hashmap for quick look up, with the userID as key and hashcoded password as the value
+** Cons: More input from user, and difficult to store in an external text file.
 
 === 1b. Update Password Feature
 
 *Current Implementation*
 
-Headquarters Personnel can update any existing password with the update password command.
-The buffered reader reads the passwordStorage.txt file for the specific password to update.
-Once the user has entered a new password (stage 1), the user is prompted to enter the same password again(stage 2).
-This is to ensure that the new password typed is accurate.
-However, the new password must be alphanumeric and at least 5 characters long.
-This is to ensure a strong password.
-The print writer then loops over the passwordStorage.txt file and places all existing passwords into a new temporary file, while placing the new password over the existing password that was requested to change.
-The temporary file is renamed to passwordStorage.txt and the original file containing the old password is deleted.
+This feature enables only HQP to update any existing password.
 
-Alternatives considered:
+. updatePassword() - user enters existing password to update.
+. updatePasswordFinal() - user enters new alphanumeric password to replace existing password.
 
-* Update password one time, without secondary prompt to enter password. This will make the changes permanent even if a mistake is made.
-* Updating using any password, without validity. Password may be weak.
-* Overwriting passwordStorage.txt . This will cause errors in replacing password.
+The following is an example usage scenario of the update password feature.
+
+Step 1: User enters password for HQP.
+
+Step 2: User enters "update password" command.
+
+Step 3: decipherUserCommandText() in MainWindow class identifies the command as "update password" and begins update password sequence.
+
+Step 4: User enters password for HQP.
+
+Step 5: Similar to the password feature, the process of the user input to match the existing HQP password maintains.
+
+Step 6: User enters new 5-character long alphanumeric password.
+
+Step 7: The new entered password runs through passwordValidityChecker() to check if the password is at least 5 characters long and at least alphanumeric. This password is stored as oneTimePassword String.
+
+Step 8: The user enters the same new password. It matches with the oneTimePassword.
+
+Step 9: The Buffered reader then reads reads through passwordStorage.txt, and a Print writer from the ReadAndWrite class writes existing passwords to a temporary file, while writing the new password in place of the old password to change.
 
 
+==== Design Considerations
+
+===== Aspect: How password feature is implemented
+
+* **Alternative 1 (current choice):** Using a password with no need for username
+** Pros: Reduce user's keyboard input
+** Cons: Slow buffered reader has to loop through all passwords in the text file
+* **Alternative 2:** Using username and password
+** Pros: Can use a hashmap for quick look up, with the userID as key and hashcoded password as the value
+** Cons: More input from user, and difficult to store in an external text file.
+
+// end::password[]
 
 === 2a. "find" command (edited)
 
@@ -193,6 +229,7 @@ Alternatives considered:
 ** Cons: Space complexity would increase especially if the number of persons increased drastically
 // tag::edit[]
 [[edit]]
+
 === 2c. "edit" command
 
 *Current Implementation*
@@ -467,10 +504,47 @@ Alternatives considered:
 ** Pros: Easier to identify a PO, just look for the text file with their ID
 ** Cons: Space would be an issue especially when there are many POs to manage
 
+//tag::logout[]
+[[logout]]
+
+=== 5. "logout" command
+
+*Current Implementation*
+
+This command logs the current user out of the System.
+
+. execute() - executes the "logout" command and returns all boolean flags related to passwords are set to false.
+
+The following is an example usage scenario of the "logout" command:
+
+Step 1: User executes "logout".
+
+Step 2: decipherUserCommandText() in MainWindow class identifies command as "logout".
+
+Step 3: Boolean flags for isHQP, isPO1, isPO2, isPO3, isPO4, isPO5 in the Password class is set to false. This is done using the lockIsHqp() and lockIsPo() methods in the Password class.
+
+Step 4: isUpdatePasswordConfirm and isUpdatingPassword flags are also set to false through lockUpdatePasswordConfirm() and lockUpdatingPassword() in the Password class is also set to false.
+
+Step 5: A CommandResult object is created and displays a message that the user is logged out of the System and prompts for a password.
+
+
+==== Design Considerations
+
+===== Aspect: How logout executes
+
+* **Alternative 1 (current choice):** Logout extends command.
+** Pros: Easy to implement.
+** Cons: Using MainWindow instead of parser to detect that it is the logout command.
+* **Alternative 2:** Logout as a method in password class.
+** Pros: Can access boolean flags privately in the same class.
+** Cons: Not using abstract class of command.
+
+// end::logout[]
+
 // tag::autocorrect[]
 [[autocorrect]]
 
-=== 5. Autocorrection feature
+=== 6. Autocorrection feature
 
 *Current Implementation*
 
@@ -478,7 +552,7 @@ The autocorrect mechanism is facilitated by use of dynamic programming.
 The algorithm called EditDistance checks the number of single character
 changes to be made to convert an invalid input into one expected by the
 system. Currently, changes involving one single character can be corrected
-by the system.
+by the system for commands and changes involving one or two single characters can be corrected by the system for NRICs.
 It implements the following operations:
 
 . checkDistance() - It returns the edit distance needed to convert one
@@ -486,18 +560,26 @@ string to the other. In this case, it returns the number of single character
 changes (either addition of a character, deletion of a character or changing
 a character) to convert invalid user input into its most probable correct
 implementation.
-. getCommands() - This function returns the list of possible commands that
-the user can input.
 
-The following is an example usage scenario of the autocorrection feature:
+.The following is an example usage scenario of the autocorrection feature for commands:
 
 Step 1: The user inputs his password and unlocks the system.
 
 Step 2: The user enters an invalid command.
 
 Step 3: The system predicts the most probable intended command the user
-would have wanted to input, based on a threshold and then prompts the user
+would have wanted to input and then prompts the user
 to use the prediction given in its valid format.
+
+.The following is an example usage scenario of the autocorrection feature for NRICs:
+
+Step 1: The user inputs his password and unlocks the system.
+
+Step 2: The user tries to edit, delete or check an invalid NRIC.
+
+Step 3: The system predicts the most probable intended NRIC the user
+would have wanted to input and then prompts the user
+to use the prediction given in the valid format of the command.
 
 The input is checked by the algorithm in the MainWindow before it is sent
 to the Parser class. This is to ensure invalid input can be caught by the
@@ -513,6 +595,177 @@ prediction to be reported efficiently.
 in ambiguity in the correction algorithm and increases chances of errors.
 
 //end::autocorrect[]
+
+=== 7a. "help" command
+
+*Current Implementation*
+
+The help command returns the list of commands which can be input by the user based on their level of access.
+A HQP user is shown all the commands while a PO user is shown only limited commands.
+
+It also implements these methods:
+
+1. execute() - executes the "help" command itself and displays result to user
+
+This is an example scenario of "help" command
+
+Step 1: The user inputs PO password and logs in as PO.
+
+Step 2: The user types "help" and executes it.
+
+Step 3: Parser class determines the command word and return the list of commands that can be input by a PO.
+
+=== 7b. "add" command
+
+*Current Implementation*
+
+Only a HQP may use this command. This command allows HQP to update the Police Records with a new subject. The subject can be added with the details- name, NRIC, date of birth, postal code, status, offense
+and optional past offences.
+
+It also implements these methods:
+
+1. execute() - executes the "add" command itself and displays result to user
+
+This is an example scenario of "add" command
+
+Step 1: The user inputs HQP password and logs in as HQP.
+
+Step 2: The user types "add John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs" and executes it.
+
+Step 3: Parser class determines the command word and runs the prepareAdd method
+
+Step 4: prepareAdd method in Parser class would parse the inputs
+        from the input text to instantiate the AddCommand class.
+
+Step 5: Logic class then calls the execute method on AddCommand Object.
+        Person with NRIC "s1234567a" is added in the addressbook.
+
+Step 6: CommandResult with successful message is returned to Logic class, which then displays
+        to user: "New person added: John Doe Nric: s1234567a DateOfBirth: 1996 Postal Code: 510246 Status: xc Wanted For: [none] Past Offences:[drugs][theft]".
+
+=== Logging
+
+We are using `java.util.logging` package for logging. The `Parser` class is used to manage the logging levels and logging destinations.
+
+* The logging level can be controlled using the `logLevel` setting in the configuration file (See <<Implementation-Configuration>>)
+* The `Logger` for a class can be obtained using `Parser.getLogger(Class)` which will log messages according to the specified logging level
+* Currently log messages are output through: `Console` and to a `.log` file.
+
+*Logging Levels*
+
+* `SEVERE` : Critical problem detected which may possibly cause the termination of the application
+* `WARNING` : Can continue, but with caution
+* `INFO` : Information showing the noteworthy actions by the App
+* `FINE` : Details that is not usually noteworthy but may be useful in debugging e.g. print the actual list instead of just its size
+
+=== Configuration
+
+Certain properties of the application can be controlled (e.g App name, logging level) through the configuration file (default: `config.json`).
+
+== Documentation
+
+We use asciidoc for writing documentation.
+
+[NOTE]
+We chose asciidoc over Markdown because asciidoc, although a bit more complex than Markdown, provides more flexibility in formatting.
+
+=== Editing Documentation
+
+See <<UsingGradle#rendering-asciidoc-files, UsingGradle.adoc>> to learn how to render `.adoc` files locally to preview the end result of your edits.
+Alternatively, you can download the AsciiDoc plugin for IntelliJ, which allows you to preview the changes you have made to your `.adoc` files in real-time.
+
+=== Publishing Documentation
+
+See <<UsingTravis#deploying-github-pages, UsingTravis.adoc>> to learn how to deploy GitHub Pages using Travis.
+
+=== Converting Documentation to PDF format
+
+We use https://www.google.com/chrome/browser/desktop/[Google Chrome] for converting documentation to PDF format, as Chrome's PDF engine preserves hyperlinks used in webpages.
+
+Here are the steps to convert the project documentation files to PDF format.
+
+.  Follow the instructions in <<UsingGradle#rendering-asciidoc-files, UsingGradle.adoc>> to convert the AsciiDoc files in the `docs/` directory to HTML format.
+.  Go to your generated HTML files in the `build/docs` folder, right click on them and select `Open with` -> `Google Chrome`.
+.  Within Chrome, click on the `Print` option in Chrome's menu.
+.  Set the destination to `Save as PDF`, then click `Save` to save a copy of the file in PDF format. For best results, use the settings indicated in the screenshot below.
+
+.Saving documentation as PDF files in Chrome
+image::chrome_save_as_pdf.png[width="300"]
+
+[[Docs-SiteWideDocSettings]]
+=== Site-wide Documentation Settings
+
+The link:{repoURL}/build.gradle[`build.gradle`] file specifies some project-specific https://asciidoctor.org/docs/user-manual/#attributes[asciidoc attributes] which affects how all documentation files within this project are rendered.
+
+[TIP]
+Attributes left unset in the `build.gradle` file will use their *default value*, if any.
+
+[cols="1,2a,1", options="header"]
+.List of site-wide attributes
+|===
+|Attribute name |Description |Default value
+
+|`site-name`
+|The name of the website.
+If set, the name will be displayed near the top of the page.
+|_not set_
+
+|`site-githuburl`
+|URL to the site's repository on https://github.com[GitHub].
+Setting this will add a "View on GitHub" link in the navigation bar.
+|_not set_
+
+|`site-seedu`
+|Define this attribute if the project is an official SE-EDU project.
+This will render the SE-EDU navigation bar at the top of the page, and add some SE-EDU-specific navigation items.
+|_not set_
+
+|===
+
+[[Docs-PerFileDocSettings]]
+=== Per-file Documentation Settings
+
+Each `.adoc` file may also specify some file-specific https://asciidoctor.org/docs/user-manual/#attributes[asciidoc attributes] which affects how the file is rendered.
+
+Asciidoctor's https://asciidoctor.org/docs/user-manual/#builtin-attributes[built-in attributes] may be specified and used as well.
+
+[TIP]
+Attributes left unset in `.adoc` files will use their *default value*, if any.
+
+[cols="1,2a,1", options="header"]
+.List of per-file attributes, excluding Asciidoctor's built-in attributes
+|===
+|Attribute name |Description |Default value
+
+|`site-section`
+|Site section that the document belongs to.
+This will cause the associated item in the navigation bar to be highlighted.
+One of: `UserGuide`, `DeveloperGuide`, ``LearningOutcomes``{asterisk}, `AboutUs`, `ContactUs`
+
+_{asterisk} Official SE-EDU projects only_
+|_not set_
+
+|`no-site-header`
+|Set this attribute to remove the site navigation bar.
+|_not set_
+
+|===
+
+=== Site Template
+
+The files in link:{repoURL}/docs/stylesheets[`docs/stylesheets`] are the https://developer.mozilla.org/en-US/docs/Web/CSS[CSS stylesheets] of the site.
+You can modify them to change some properties of the site's design.
+
+The files in link:{repoURL}/docs/templates[`docs/templates`] controls the rendering of `.adoc` files into HTML5.
+These template files are written in a mixture of https://www.ruby-lang.org[Ruby] and http://slim-lang.com[Slim].
+
+[WARNING]
+====
+Modifying the template files in link:{repoURL}/docs/templates[`docs/templates`] requires some knowledge and experience with Ruby and Asciidoctor's API.
+You should only modify them if you need greater control over the site's layout than what stylesheets can provide.
+The SE-EDU team does not provide support for modified template files.
+====
+
 
 == Use Cases
 The use cases for the current features and commands implemented can be found in Appendix B.
@@ -895,7 +1148,7 @@ Use case ends.
 //tag::usecase[]
 [[usecase]]
 
-=== Use case: Autocorrection
+=== Use case: Autocorrection of commands
 
 *MSS*
 
@@ -903,8 +1156,8 @@ Use case ends.
 . System prompts user to enter his password.
 . User enters password.
 . System prompts user to enter his command.
-. User enters invalid input.
-. System predicts what the user would have wanted to type and displays the list of valid inputs, if any.
+. User enters invalid command.
+. System predicts what command the user would have wanted to type if it finds a correction and displays the valid implementation of the command.
 +
 Use case ends.
 
@@ -915,19 +1168,38 @@ Use case ends.
 +
 Use case resumes at step 2.
 
-* 5a. User enters an invalid input which is an invalid command.
-** 5a1. System also displays the valid usage of the command.
+* 6a. User enters an invalid command for which the system cannot find a prediction.
+** 6a1. System shows error message.
 +
 Use case ends.
 
-* 5b. User enters an invalid input for which the system cannot find a prediction.
-** 5b1. System shows error message.
+=== Use case: Autocorrection of NRICs
+
+*MSS*
+
+. User opens System.
+. System prompts user to enter his password.
+. User enters password.
+. System prompts user to enter his command.
+. User enters delete, edit or check command with invalid NRIC.
+. System predicts the NRIC the user would have wanted to type if it finds a correction and displays the valid implementation of the command.
 +
 Use case ends.
 
-* *a. At any time, user chooses to cancel the delete action.
-** *a1. System requests confirmation to cancel.
-** *a2. User confirms the cancellation.
+*Extensions*
+
+* 3a. User enters an invalid password.
+** 3a1. System shows an error message.
++
+Use case resumes at step 2.
+
+* 5a. User enters an invalid delete, edit or check command.
+** 5a1. System displays the valid usage of the command.
++
+Use case ends.
+
+* 6a. User enters an invalid NRIC for which the system cannot find a prediction.
+** 6a1. System shows error message.
 +
 Use case ends.
 

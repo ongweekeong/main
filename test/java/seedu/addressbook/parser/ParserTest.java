@@ -477,8 +477,7 @@ public class ParserTest {
     }
 
     /**
-     * //TODO javadoc comment
-     * @return
+     * @return a test person with the given parameters
      */
     //@@author muhdharun -reused
     private static Person generateTestPerson() {
@@ -498,8 +497,7 @@ public class ParserTest {
     }
 
     /**
-     * //TODO javadoc comment
-     * @return
+     * @return an add command with the person in string form
      */
     private static String convertPersonToAddCommandString(ReadOnlyPerson person) {
         String addCommand = "add "

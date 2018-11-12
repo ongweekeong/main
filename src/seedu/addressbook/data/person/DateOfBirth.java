@@ -42,9 +42,8 @@ public class DateOfBirth {
     }
 
     /**
-     * TODO: Add Javadoc comment
-     * @param test
-     * @return
+     * @param test NRIC in string form
+     * @return true if NRIC is valid
      */
     private boolean isValidDateOfBirth(String test) {
         return test.matches(DATE_OF_BIRTH_VALIDATION_REGEX)

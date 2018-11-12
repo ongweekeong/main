@@ -50,9 +50,7 @@ import seedu.addressbook.password.Password;
  */
 public class Parser {
 
-    //TODO If not used, delete
-    public static final Pattern KEYWORDS_ARGS_FORMAT =
-            Pattern.compile("(?<keywords>\\S+(?:\\s+\\S+)*)"); // one or more keywords separated by whitespace
+
     //@@author muhdharun -reused
     public static final Pattern PERSON_DATA_ARGS_FORMAT = // '/' forward slashes are reserved for delimiter prefixes
             Pattern.compile("(?<name>[^/]+)"
@@ -63,7 +61,7 @@ public class Parser {
                     + " w/(?<wantedFor>[^/]+)"
                     + "(?<pastOffenseArguments>(?: o/[^/]+)*)"); // variable number of offenses
     //@@author
-
+    
     private static final Pattern PERSON_NRIC_FORMAT = Pattern.compile("(?<nric>[^/]+)");
     private static final String PO_REGEX = "[Pp][Oo][0-9]+";
 
@@ -222,6 +220,11 @@ public class Parser {
         }
     }
     //@@author
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 374b2bdf29856462f5754e086c059f5168bed080
     /**
      * Extracts the new person's tags from the add command's tag arguments string.
      * Merges duplicate tag strings.
@@ -454,9 +457,14 @@ public class Parser {
     }
 
     /**
+<<<<<<< HEAD
      * Parses arguments in the context of the find person command.
      * @param args
      * @return
+=======
+     * @param args full command args string
+     * @return the prepared command
+>>>>>>> 374b2bdf29856462f5754e086c059f5168bed080
      */
     private Command prepareFind(String args) {
         args = args.trim();

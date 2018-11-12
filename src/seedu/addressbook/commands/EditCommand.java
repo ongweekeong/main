@@ -121,13 +121,13 @@ public class EditCommand extends Command {
         }
     }
 
-    //@@ShreyasKp
+    //@@author ShreyasKp
     /**
      * Finds result of invalid NRIC input
      * @param predictedNricInput The prediction found
      * @return The result of command
      */
-    private CommandResult resultEditPrediction(String predictedNricInput) {
+    public CommandResult resultEditPrediction(String predictedNricInput) {
 
         Dictionary dictionary = new Dictionary();
         if (!predictedNricInput.equals("none")) {

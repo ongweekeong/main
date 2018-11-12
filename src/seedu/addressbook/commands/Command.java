@@ -56,7 +56,7 @@ public abstract class Command {
      * @param predictedNricInput The prediction found
      * @return The result of command
      */
-    private static String invalidCheckCommandResult(String predictedNricInput) {
+    public static String invalidCheckCommandResult(String predictedNricInput) {
 
         Dictionary dictionary = new Dictionary();
         if (!predictedNricInput.equals("none")) {

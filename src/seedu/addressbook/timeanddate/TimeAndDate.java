@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 //@@author iamputradanish
 
 /**
- * TODO: Add Javadoc comment
+ * Class for generating timestamps in different formats (in string form)
  */
 public class TimeAndDate {
     private static SimpleDateFormat timeStampFormatter = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss:SSS");
@@ -22,9 +22,9 @@ public class TimeAndDate {
     }
 
     /**
-     * TODO: Add Javadoc comment
+     *
      * @param theTime
-     * @return
+     * @return the timestamp in string
      */
     public static String outputDatHrs(Timestamp theTime) {
         String outputDat = timeStampFormatter.format(theTime);
@@ -36,9 +36,8 @@ public class TimeAndDate {
     }
 
     /**
-     * TODO: Add Javadoc comment
      * @param theTime
-     * @return
+     * @return the timestamp in string
      */
     public static String outputDatHrsForMain(Timestamp theTime) {
         String outputDat = timeStampForMain.format(theTime);
