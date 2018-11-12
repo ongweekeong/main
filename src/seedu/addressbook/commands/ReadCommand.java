@@ -5,7 +5,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import seedu.addressbook.inbox.Inbox;
+import seedu.addressbook.parser.Parser;
 import seedu.addressbook.password.Password;
+
 
 /**
  * Updates read status of message identified using it's last displayed index from the user's inbox.
@@ -21,8 +23,6 @@ public class ReadCommand extends Command {
     public static final String MESSAGE_UPDATE_SUCCESS = "Message mark as read!";
     public static final String MESSAGE_INPUT_INDEX_TOO_LARGE = "Index entered too large!";
 
-    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
-
     private int index;
 
     private Inbox myInbox = new Inbox(Password.getId());
@@ -31,11 +31,19 @@ public class ReadCommand extends Command {
         index = targetVisibleIndex;
     }
 
+    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
+
+    private static void setupLogger() {
+        Parser.SetupLogger(logger);
+    }
+
     /**
      * TODO: Add Javadoc comment
      * @return
      */
+    @Override
     public CommandResult execute() {
+        setupLogger();
         if (index == Integer.MAX_VALUE) {
             logger.log(Level.INFO, "Index entered too large.");
 

@@ -3,13 +3,14 @@ package seedu.addressbook.commands;
 
 import java.io.IOException;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.password.Password;
+
+import static seedu.addressbook.parser.Parser.SetupLogger;
 
 /** Prints out all unread notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
@@ -27,9 +28,14 @@ public class ShowUnreadCommand extends Command {
 
     private static final Logger logger = Logger.getLogger(ShowUnreadCommand.class.getName());
 
+    private static void setupLogger() {
+        SetupLogger(logger);
+    }
+
+
     @Override
     public CommandResult execute() {
-
+        setupLogger();
         Inbox myInbox = new Inbox(Password.getId());
         TreeSet<Msg> allMsgs;
         int myUnreadMsgs;

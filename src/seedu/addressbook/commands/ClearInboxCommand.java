@@ -11,6 +11,8 @@ import seedu.addressbook.inbox.NotificationReader;
 import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 
+import static seedu.addressbook.parser.Parser.SetupLogger;
+
 /**
  * Clears the text file storing the messages sent to user.
  */
@@ -24,8 +26,12 @@ public class ClearInboxCommand extends Command {
 
     public static final String MESSAGE_CLEARINBOX_SUCCESSFUL = "Inbox cleared!";
     public static final String MESSAGE_CLEARINBOX_UNSUCCESSFUL = "Unable to clear inbox. Missing inbox storage file.";
+    private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
 
-    private static final Logger logger = Logger.getLogger(ClearInboxCommand.class.getName());
+    private static void setupLogger() {
+        SetupLogger(logger);
+    }
+
     private String myInbox;
 
     public ClearInboxCommand(){
@@ -37,6 +43,7 @@ public class ClearInboxCommand extends Command {
 
     @Override
     public CommandResult execute() {
+        setupLogger();
         try {
             if (myInbox == null) {
                 myInbox = MessageFilePaths.getFilePathFromUserId(Password.getId());

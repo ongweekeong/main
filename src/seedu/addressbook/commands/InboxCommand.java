@@ -3,8 +3,7 @@ package seedu.addressbook.commands;
 
 import java.io.IOException;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.MessageFilePaths;
@@ -12,6 +11,7 @@ import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.timeanddate.TimeAndDate;
 
+import static seedu.addressbook.parser.Parser.SetupLogger;
 
 
 /** Prints out total number of notifications, and all notifications ordered by read status, priority, then timestamp
@@ -30,9 +30,13 @@ public class InboxCommand extends Command {
 
     private static final Logger logger = Logger.getLogger(InboxCommand.class.getName());
 
+    private static void setupLogger() {
+        SetupLogger(logger);
+    }
+
     @Override
     public CommandResult execute() {
-
+        setupLogger();
         Inbox myInbox = new Inbox(Password.getId());
         TreeSet<Msg> allMsgs;
         int myUnreadMsgs;
