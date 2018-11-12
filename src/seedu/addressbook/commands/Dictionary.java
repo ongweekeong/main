@@ -24,7 +24,7 @@ public class Dictionary extends Command {
             StorageFile storage = new StorageFile();
             this.addressBook = storage.load();
         } catch (Exception e) {
-            //TODO: Fix empty catch block
+            //This constructor is only used to access the addressbook, and thus will never throw an exception
         } finally {
             COMMANDS.add(AddCommand.COMMAND_WORD);
             COMMANDS.add(CheckCommand.COMMAND_WORD);
