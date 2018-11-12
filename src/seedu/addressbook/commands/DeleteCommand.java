@@ -1,6 +1,5 @@
 package seedu.addressbook.commands;
 
-import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.person.Nric;
 import seedu.addressbook.data.person.ReadOnlyPerson;
@@ -36,19 +35,29 @@ public class DeleteCommand extends Command {
             return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, target));
         } catch (PersonNotFoundException pnfe) {
             //@@author ShreyasKp
-            CheckDistance checker = new CheckDistance();
 
             String nric = toDelete.toString();
-            String prediction = checker.checkInputDistance(nric);
+            String prediction = findPrediction(nric);
 
-            if (!prediction.equals("none")) {
-                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
-                        + "\n"
-                        + "Did you mean to use "
-                        + prediction);
-            } else {
-                return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK);
-            }
+            return resultDeletePrediction(prediction);
+        }
+    }
+
+    /**
+     * Finds result of invalid NRIC input
+     * @param predictedNricInput The prediction found
+     * @return The result of command
+     */
+    private CommandResult resultDeletePrediction(String predictedNricInput) {
+
+        Dictionary dictionary = new Dictionary();
+        if (!predictedNricInput.equals("none")) {
+            return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK
+                    + "\n"
+                    + String.format(dictionary.getErrorMessage(), predictedNricInput)
+                    + "\n\n" + COMMAND_WORD + " " + predictedNricInput);
+        } else {
+            return new CommandResult(Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK);
         }
     }
 

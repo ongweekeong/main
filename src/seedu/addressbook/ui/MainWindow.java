@@ -1,6 +1,5 @@
 package seedu.addressbook.ui;
 
-import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.addressbook.common.Messages.MESSAGE_USING_STORAGE_FILE;
 import static seedu.addressbook.common.Messages.MESSAGE_WELCOME;
 
@@ -16,9 +15,6 @@ import javafx.scene.control.TextField;
 import seedu.addressbook.autocorrect.AutoCorrect;
 import seedu.addressbook.autocorrect.CheckDistance;
 import seedu.addressbook.commands.CommandResult;
-import seedu.addressbook.commands.Dictionary;
-import seedu.addressbook.commands.HelpCommand;
-import seedu.addressbook.commands.IncorrectCommand;
 import seedu.addressbook.commands.LogoutCommand;
 import seedu.addressbook.commands.ShutdownCommand;
 import seedu.addressbook.data.person.ReadOnlyPerson;
@@ -111,28 +107,12 @@ public class MainWindow {
             //@@author ShreyasKp
             userCommandText = userCommandText.trim();
             CheckDistance checker = new CheckDistance();
-            Dictionary dict = new Dictionary();
-            String[] arr = userCommandText.split(" ", 2);
-            String commandWordInput = arr[0];
+            String commandWordInput = AutoCorrect.getCommand(userCommandText);
             if ((checker.checkCommandDistance(commandWordInput)).equals(0)) {
-                AutoCorrect correction = new AutoCorrect();
-                String displayCommand = correction.checkCommand(commandWordInput);
-                String output = checker.checkDistance(commandWordInput);
                 clearScreen();
-                if (!(output.equals("none"))) {
-                    display(String.format(dict.getCommandErrorMessage(), output));
-                    display(displayCommand);
-                } else {
-                    boolean isHqpFlag = Password.isHqpUser();
-                    if (isHqpFlag) {
-                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                                HelpCommand.MESSAGE_ALL_USAGES)).feedbackToUser;
-                    } else {
-                        displayCommand = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                                HelpCommand.MESSAGE_PO_USAGES)).feedbackToUser;
-                    }
-                    display(displayCommand);
-                }
+                AutoCorrect correction = new AutoCorrect();
+                String displayCommand = correction.getResultOfInvalidCommand(commandWordInput);
+                display(displayCommand);
             } else {
                 clearScreen();
                 CommandResult result = logic.execute(userCommandText);
