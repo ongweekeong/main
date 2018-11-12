@@ -318,11 +318,11 @@ public class Logic {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            pw.println("s1234567a 20/10/2018-16:11:45 Headquarters Personnel\n"
-                    + "s1234567a 28/10/2018-03:02:00 Headquarters Personnel\n"
-                    + "s1234567a 29/10/2018-12:45:13 Headquarters Personnel\n"
-                    + "s1234567a 29/11/2018-22:02:00 Headquarters Personnel\n"
-                    + "s1234567a 01/11/2018-22:02:00 Headquarters Personnel");
+            pw.println("s8012345a 20/10/2018-1611hrs Headquarters Personnel\n"
+                    + "s8012345a 28/10/2018-0302hrs Police Officer Tango Hotel Romeo Echo Echo\n"
+                    + "s8012345a 29/10/2018-1245hrs Police Officer Tango Whiskey Oscar\n"
+                    + "s8012345a 29/10/2018-2232hrs Police Officer Foxtrot India Victor Echo\n"
+                    + "s8012345a 01/11/2018-2202hrs Headquarters Personnel");
             pw.flush();
             pw.close();
         }

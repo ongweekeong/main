@@ -1,7 +1,16 @@
 = Putra Danish - Project Portfolio
-
-:site-section: AboutUs
+:site-section: ProjectPortfolio
+:toc:
+:toc-title:
+:sectnums:
+:imagesDir: ../images
 :stylesDir: ../stylesheets
+:xrefstyle: full
+
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:warning-caption: :warning:
+:experimental:
 
 == PROJECT: Police Records and Intelligent System (PRISM)
 
@@ -29,12 +38,12 @@ The ability to lock anytime also helps to increase security in times of emergenc
 * *Minor enhancement*: added a lock command that allows any user to lock (log out) the device immediately at any time.
 
 === Code Contributed:
-*	Functional & test code: https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=ong...ong&sort=displayName&since=2018-09-12&until=2018-10-30&timeframe=day&reverse=false&repoSort=true
+*	https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=danish[Functional & test code]
 
 === Other Contributions:
 
 ** Project management:
-*** Managed project pre-releases `v1.1` - `v1.2` and project release 'v1.3' on GitHub
+*** Managed project pre-releases `v1.1` - `v1.2` and project release 'v1.3-1.4' on GitHub
 *** Managed all versions of product, and disseminated almost all issues to team members
 ** Enhancements to existing features:
 *** Updated the GUI color scheme (Pull requests https://github.com/CS2113-AY1819S1-F10-3/main/pull/98[#98])
@@ -53,8 +62,8 @@ The ability to lock anytime also helps to increase security in times of emergenc
 |===
 
 include::../UserGuide.adoc[tag=password]
-include::../UserGuide.adoc[tag=update password]
 include::../UserGuide.adoc[tag=logout]
+include::../UserGuide.adoc[tag=shutdown]
 
 == Contributions to the Developer Guide
 
@@ -62,6 +71,6 @@ include::../UserGuide.adoc[tag=logout]
 |_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
 
-include::../UserGuide.adoc[tag=password]
-include::../UserGuide.adoc[tag=update password]
-include::../UserGuide.adoc[tag=logout]
+include::../DeveloperGuide.adoc[tag=password]
+include::../DeveloperGuide.adoc[tag=logout]
+include::../DeveloperGuide.adoc[tag=shutdown]

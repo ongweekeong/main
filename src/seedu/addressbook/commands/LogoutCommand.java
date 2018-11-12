@@ -9,7 +9,7 @@ import seedu.addressbook.timeanddate.TimeAndDate;
 //@@author iamputradanish
 
 /**
- * TODO: Add Javadoc comment
+ * Logs the user out of the System immediately. Resets all boolean flags to start up state.
  */
 public class LogoutCommand extends Command {
     public static final String COMMAND_WORD = "logout";
