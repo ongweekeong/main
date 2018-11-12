@@ -29,7 +29,7 @@ The ability to lock anytime also helps to increase security in times of emergenc
 * *Minor enhancement*: added a lock command that allows any user to lock (log out) the device immediately at any time.
 
 === Code Contributed:
-*	Functional & test code: https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=ong...ong&sort=displayName&since=2018-09-12&until=2018-10-30&timeframe=day&reverse=false&repoSort=true
+*	https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=Putra%sDanish[Functional & test code]
 
 === Other Contributions:
 

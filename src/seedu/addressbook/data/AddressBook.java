@@ -107,7 +107,7 @@ public class AddressBook {
                 String[] parts = line.split(" ", 3);
 
                 if (parts[0].equals(tempNric)) {
-                    myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
+                    myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getFullId(Password.getId()));
                     myPrinter.close();
                     br.close();
                     return;
@@ -115,11 +115,11 @@ public class AddressBook {
                 line = br.readLine();
                 continue;
             }
-            myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getId());
+            myPrinter.println(tempNric + " " + tempTimestamp + " " + Password.getFullId(Password.getId()));
             myPrinter.close();
             br.close();
         } catch (Exception e) {
-            myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getId());
+            myPrinter.print(tempNric + " " + tempTimestamp + " " + Password.getFullId(Password.getId()));
 
             myPrinter.close();
             br.close();
