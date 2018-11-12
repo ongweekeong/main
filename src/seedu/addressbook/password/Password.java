@@ -78,12 +78,12 @@ public class Password {
 
     private static ReaderAndWriter readerandwriter = new ReaderAndWriter();
 
-    private boolean isLoginHqp = false;
-    private boolean isLoginPO1 = false;
-    private boolean isLoginPO2 = false;
-    private boolean isLoginPO3 = false;
-    private boolean isLoginPO4 = false;
-    private boolean isLoginPO5 = false;
+    private static boolean isLoginHqp = false;
+    private static boolean isLoginPO1 = false;
+    private static boolean isLoginPO2 = false;
+    private static boolean isLoginPO3 = false;
+    private static boolean isLoginPO4 = false;
+    private static boolean isLoginPO5 = false;
 
     public static void setupLogger() {
         LogManager.getLogManager().reset();
@@ -94,7 +94,7 @@ public class Password {
         logr.addHandler(ch);
 
         try {
-            FileHandler fh = new FileHandler("passwordLog.log");
+            FileHandler fh = new FileHandler("Logger.log");
             fh.setLevel(Level.FINE);
             logr.addHandler(fh);
         } catch (IOException ioe) {
@@ -149,22 +149,22 @@ public class Password {
         return (isPO1 || isPO2 || isPO3 || isPO4 || isPO5);
     }
 
-    public boolean isUpdatingPasswordNow() {
+    public static boolean isUpdatingPasswordNow() {
         return isUpdatingPassword;
     }
 
-    private void lockUpdatingPassword() {
+    private static void lockUpdatingPassword() {
         isUpdatingPassword = false;
     }
 
-    private void lockUpdatePasswordConfirm() {
+    private static void lockUpdatePasswordConfirm() {
         isUpdatePasswordConfirm = false;
     }
 
     /**
      * TODO: Add javadoc comment
      */
-    public void lockDevice() {
+    public static void lockDevice() {
         lockIsHqp();
         lockIsPo();
         lockUpdatePasswordConfirm();
@@ -184,20 +184,32 @@ public class Password {
         isUpdatePasswordConfirm = false;
     }
     //TODO: Access can be private
+
     private static void setUpdatingFinal() {
         isUpdatePasswordConfirm = true;
     }
+    /**
+     * //TODO java doc comment
+     */
+    public static void logoutUser() {
+        isLoginHqp = false;
+        isLoginPO1 = false;
+        isLoginPO2 = false;
+        isLoginPO3 = false;
+        isLoginPO4 = false;
+        isLoginPO5 = false;
+    }
 
 
-    private boolean isNotLogin() {
+    private static boolean isNotLogin() {
         return (!isLoginHqp && !isLoginPo());
     }
-    private boolean isLoginPo() {
+    private static boolean isLoginPo() {
         return (isLoginPO1 || isLoginPO2 || isLoginPO3 || isLoginPO4 || isLoginPO5);
     }
 
 
-    public boolean isShutDown() {
+    public static boolean isShutDown() {
         return isShutDown;
     }
 
@@ -378,7 +390,7 @@ public class Password {
     /**
      * TODO: Add javadoc comment
      */
-    public String updatePassword(String userCommandText, int number) throws Exception {
+    public static String updatePassword(String userCommandText, int number) throws Exception {
         logr.info("Update sequence stage 1 initiated.");
         String result = null;
 
@@ -453,14 +465,14 @@ public class Password {
         return result;
     }
 
-    private boolean isEqualPassword (String secondPassword) {
+    private static boolean isEqualPassword(String secondPassword) {
         return secondPassword.equals(oneTimePassword);
     }
 
     /**
      * TODO: Add javadoc comment
      */
-    public String updatePasswordFinal (String userCommandText) throws IOException {
+    public static String updatePasswordFinal(String userCommandText) throws IOException {
         logr.info("Update password sequence stage 2 initiated.");
         String result = null;
         int lineNumber = 0;
@@ -545,7 +557,7 @@ public class Password {
         return result;
     }
 
-    private void reprintLine(BufferedReader br, PrintWriter pw) throws IOException {
+    private static void reprintLine(BufferedReader br, PrintWriter pw) throws IOException {
         String line = br.readLine();
         pw.println(line);
         pw.flush();
@@ -554,7 +566,7 @@ public class Password {
     /**
      * TODO: Add javadoc comment
      */
-    public String passwordExistsChecker(String newEnteredPassword) throws IOException {
+    public static String passwordExistsChecker(String newEnteredPassword) throws IOException {
         logr.info("Checking password validity.");
         String result = MESSAGE_VALID;
 
@@ -582,7 +594,7 @@ public class Password {
     /**
      * TODO: Add javadoc comment
      */
-    public String passwordAlphanumericChecker(String newEnteredPassword) {
+    public static String passwordAlphanumericChecker(String newEnteredPassword) {
         String result;
         if (newEnteredPassword.matches(".*\\d+.*") && newEnteredPassword.matches(".*[a-zA-Z]+.*")) {
             result = MESSAGE_VALID;
@@ -602,7 +614,7 @@ public class Password {
     /**
      * TODO: Add javadoc comment
      */
-    public String passwordLengthChecker(String newEnteredPassword) {
+    public static String passwordLengthChecker(String newEnteredPassword) {
         String result = MESSAGE_VALID;
         int lengthPassword = newEnteredPassword.length();
         int minNumPassword = 5;
@@ -617,7 +629,7 @@ public class Password {
     /**
      * TODO: Add javadoc comment
      */
-    public String passwordValidityChecker(String newEnteredPassword) throws IOException {
+    public static String passwordValidityChecker(String newEnteredPassword) throws IOException {
         logr.info("New password checked for validity.");
         String result = MESSAGE_VALID;
         if (!passwordExistsChecker(newEnteredPassword).equals(MESSAGE_VALID)) {
@@ -634,7 +646,7 @@ public class Password {
         return (result.equals(MESSAGE_VALID)) ? MESSAGE_VALID : result + "\n" + MESSAGE_TRY_AGAIN;
     }
 
-    public String getUnauthorizedPoCommand(String input) {
+    public static String getUnauthorizedPoCommand(String input) {
         logr.info("Checking if PO command is unauthorized.");
         String commandWord;
         if (isRejectPo(input)) {
@@ -646,18 +658,18 @@ public class Password {
         return commandWord;
     }
 
-    public boolean isUnauthorizedAccess(String input) {
+    public static boolean isUnauthorizedAccess(String input) {
         return isPo() && invalidPoCommand(input);
     }
 
-    private boolean invalidPoCommand(String input) {
+    private static boolean invalidPoCommand(String input) {
         String userCommandWord = getUnauthorizedPoCommand(input);
         return isRejectPo(userCommandWord);
     }
     /**
      * TODO: Add javadoc comment
      */
-    public boolean isRejectPo(String userCommandWord) {
+    public static boolean isRejectPo(String userCommandWord) {
         logr.info("PO command unauthorized.");
         return (userCommandWord.equals("add")
                 || userCommandWord.equals("check")
@@ -669,7 +681,7 @@ public class Password {
                 || userCommandWord.equals("updatestatus"));
     }
 
-    public String invalidPoResult(String userCommandText) {
+    public static String invalidPoResult(String userCommandText) {
         return String.format(MESSAGE_TRY_UNAUTHORIZED, getUnauthorizedPoCommand(userCommandText));
     }
     public static String getId() {

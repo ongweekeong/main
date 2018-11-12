@@ -1,6 +1,8 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
+import static seedu.addressbook.parser.Parser.setupLoggerForAll;
+
 import java.io.IOException;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -27,9 +29,14 @@ public class ShowUnreadCommand extends Command {
 
     private static final Logger logger = Logger.getLogger(ShowUnreadCommand.class.getName());
 
+    private static void setupLogger() {
+        setupLoggerForAll(logger);
+    }
+
+
     @Override
     public CommandResult execute() {
-
+        setupLogger();
         Inbox myInbox = new Inbox(Password.getId());
         TreeSet<Msg> allMsgs;
         int myUnreadMsgs;

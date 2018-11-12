@@ -20,13 +20,13 @@ The Police Records System is for police officers(PO) and headquarter personnel(H
 ** Justification: Since we don't want POs to alter the records, certain commands are disabled for them. The ability to update passwords regularly allows for greater security. 
 The ability to lock anytime also helps to increase security in times of emergencies. Together, the features ensure a secure information-sensitive product.
 ** Highlights: Passwords had to be stored with encryption, and only allows user to enter incorrect passwords 5 times before shutting down.
-** Credits: NIL
 
 * *Minor enhancement*: added a lock command that allows any user to lock (log out) the device immediately at any time.
 
-* *Code contributed*: [https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/collated/functional/iamputradanish.md[Functional code]] [https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/collated/test/iamputradanish.md[Test code]]
+=== Code Contributed:
+*	Functional & test code: https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=ong...ong&sort=displayName&since=2018-09-12&until=2018-10-30&timeframe=day&reverse=false&repoSort=true
 
-* *Other contributions*:
+=== Other Contributions:
 
 ** Project management:
 *** Managed project pre-releases `v1.1` - `v1.2` and project release 'v1.3' on GitHub
