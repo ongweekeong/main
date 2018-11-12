@@ -1,16 +1,17 @@
 //@@author ongweekeong
 package seedu.addressbook.commands;
 
+import static seedu.addressbook.parser.Parser.setupLoggerForAll;
+
 import java.io.IOException;
 import java.util.TreeSet;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.inbox.Inbox;
 import seedu.addressbook.inbox.Msg;
 import seedu.addressbook.password.Password;
-
-import static seedu.addressbook.parser.Parser.setupLoggerForAll;
 
 /** Prints out all unread notifications ordered by read status, priority, then timestamp
  * (earlier message has higher priority).
