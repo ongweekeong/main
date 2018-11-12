@@ -3,6 +3,21 @@ package seedu.addressbook.ui;
 import static seedu.addressbook.common.Messages.MESSAGE_USING_STORAGE_FILE;
 import static seedu.addressbook.common.Messages.MESSAGE_WELCOME_INITIAL;
 
+import static seedu.addressbook.password.Password.MESSAGE_ENTER_PASSWORD;
+import static seedu.addressbook.password.Password.UPDATE_PASSWORD_COMMAND_WORD;
+
+import static seedu.addressbook.password.Password.invalidPoResult;
+import static seedu.addressbook.password.Password.isHqpUser;
+import static seedu.addressbook.password.Password.isShutDown;
+import static seedu.addressbook.password.Password.isUnauthorizedAccess;
+import static seedu.addressbook.password.Password.isUpdatePasswordConfirmNow;
+import static seedu.addressbook.password.Password.isUpdatingPasswordNow;
+import static seedu.addressbook.password.Password.lockDevice;
+import static seedu.addressbook.password.Password.prepareUpdatePassword;
+import static seedu.addressbook.password.Password.unlockDevice;
+import static seedu.addressbook.password.Password.updatePassword;
+import static seedu.addressbook.password.Password.updatePasswordFinal;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -75,32 +90,32 @@ public class MainWindow {
     private void decipherUserCommandText(String userCommandText) throws Exception {
         Password.setupLogger();
         if (toCloseApp(userCommandText)) {
-            Password.lockDevice();
+            lockDevice();
             mainApp.stop();
         } else if (isLogoutCommand(userCommandText)) {
             CommandResult result = logic.execute(userCommandText);
             clearScreen();
             displayResult(result);
         } else if (Password.isLocked()) {
-            String unlockDeviceResult = Password.unlockDevice(userCommandText, Password.getWrongPasswordCounter());
+            String unlockDeviceResult = unlockDevice(userCommandText, Password.getWrongPasswordCounter());
             clearScreen();
             display(unlockDeviceResult);
         } else if (canUpdatePassword(userCommandText)) {
-            String prepareUpdatePasswordResult = Password.prepareUpdatePassword();
+            String prepareUpdatePasswordResult = prepareUpdatePassword();
             clearScreen();
             display(prepareUpdatePasswordResult);
-        } else if (Password.isUpdatingPasswordNow()) {
+        } else if (isUpdatingPasswordNow()) {
             String updatePasswordResult;
-            if (Password.isUpdatePasswordConfirmNow()) {
-                updatePasswordResult = Password.updatePasswordFinal(userCommandText);
+            if (isUpdatePasswordConfirmNow()) {
+                updatePasswordResult = updatePasswordFinal(userCommandText);
             } else {
-                updatePasswordResult = Password.updatePassword(userCommandText, Password.getWrongPasswordCounter());
+                updatePasswordResult = updatePassword(userCommandText, Password.getWrongPasswordCounter());
             }
             clearScreen();
             display(updatePasswordResult);
-        } else if (Password.isUnauthorizedAccess(userCommandText)) {
+        } else if (isUnauthorizedAccess(userCommandText)) {
             clearScreen();
-            String unauthorizedCommandResult = Password.invalidPoResult(userCommandText);
+            String unauthorizedCommandResult = invalidPoResult(userCommandText);
             display(unauthorizedCommandResult);
         } else {
             //@@author ShreyasKp
@@ -129,7 +144,7 @@ public class MainWindow {
     /** Returns true when user is HQP and given input is update password command*/
     //@@author iamputradanish
     private boolean canUpdatePassword(String userCommandText) {
-        return Password.isHqpUser() && isUpdatePasswordCommand(userCommandText);
+        return isHqpUser() && isUpdatePasswordCommand(userCommandText);
     }
 
     //@@author
@@ -141,12 +156,12 @@ public class MainWindow {
     /** Returns true if the input given is the update password command */
     //@@author iamputradanish
     private boolean isUpdatePasswordCommand(String userCommandText) {
-        return userCommandText.equals(Password.UPDATE_PASSWORD_COMMAND_WORD);
+        return userCommandText.equals(UPDATE_PASSWORD_COMMAND_WORD);
     }
 
     /** Returns true when shutting down system*/
     private boolean toCloseApp(String userCommandText) {
-        return isExitCommand(userCommandText) || Password.isShutDown();
+        return isExitCommand(userCommandText) || isShutDown();
     }
 
     /** Returns true if the input given is a logout command */
@@ -184,7 +199,7 @@ public class MainWindow {
     void displayWelcomeMessage(String version, String storageFilePath) {
         String storageFileInfo = String.format(MESSAGE_USING_STORAGE_FILE, storageFilePath);
         display(MESSAGE_WELCOME_INITIAL, version, storageFileInfo, tad.outputDatMainHrs() + "\n" ,
-                Password.MESSAGE_ENTER_PASSWORD);
+                MESSAGE_ENTER_PASSWORD);
     }
 
     /**
