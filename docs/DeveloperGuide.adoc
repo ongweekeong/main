@@ -74,7 +74,7 @@ This section describes some of the more important details of certain features im
 
 // tag::password[]
 [[password]]
-=== 1. Password feature
+=== 1a. Password feature
 
 *Current Implementation*
 
@@ -84,48 +84,69 @@ This feature provides different access levels of commands to the user, depending
 
 The following is an example usage scenario of the password feature.
 
-Step 1: User enters password for Headquarter Personnel.
+Step 1: User enters password for HQP.
 
-Step 2: decipherText() in MainWindow class identifies command as a password input, through the use of .
+Step 2: decipherUserCommandText() in MainWindow class identifies command as a password input, through the use of isLocked() method in the Password class.
 
-Step 3: Boolean flags for isHQP, isPO1, isPO2, isPO3, isPO4, isPO5 in the Password class is set to false. This is done using the lockIsHqp() and lockIsPo() methods in the Password class.
+Step 3: unlockDevice() in Password class is called.
 
-Step 4: isUpdatePasswordConfirm and isUpdatingPassword flags are also set to false through lockUpdatePasswordConfirm() and lockUpdatingPassword() in the Password class is also set to false.
+Step 4: The user input, userCommandText, is then hashcoded using userCommandText.hashCode().
 
-Step 5: A CommandResult object is created and displays a message that the user is logged out of the System and prompts for a password.
+Step 5: Using a Buffered reader from the readAndWrite class, a loop through passwordStorage.txt tries to match the hashcoded input with an existing password.
+
+Step 6: The user and password are stored in passwordStorage.txt in this format : "userID (hashcoded)password".
+
+Step 7: When matched, the userID is returned and a welcome message is displayed for the particular user.
 
 
 ==== Design Considerations
 
-===== Aspect: How logout executes
+===== Aspect: How password feature is implemented
 
-* **Alternative 1 (current choice):** Logout extends command.
-** Pros: Easy to implement.
-** Cons: Using MainWindow instead of parser to detect that it is the logout command.
-* **Alternative 2:** Logout as a method in password class.
-** Pros: Can access boolean flags privately in the same class.
-** Cons: Not using abstract class of command.
-
-// end::logout[]
+* **Alternative 1 (current choice):** Using a password with no need for username
+** Pros: Reduce user's keyboard input
+** Cons: Slow buffered reader has to loop through all passwords in the text file
+* **Alternative 2:** Using username and password
+** Pros: Can use a hashmap for quick look up, with the userID as key and hashcoded password as the value
+** Cons: More input from user, and difficult to store in an external text file.
 
 === 1b. Update Password Feature
 
 *Current Implementation*
 
-Headquarters Personnel can update any existing password with the update password command.
-The buffered reader reads the passwordStorage.txt file for the specific password to update. This is stage 1
-Once the user has entered a new password , the user is prompted to enter the same password again. This is stage 2.
-This is to ensure that the new password typed is accurate.
-However, the new password must be alphanumeric and at least 5 characters long.
-This is to ensure a strong password.
-The print writer then loops over the passwordStorage.txt file and places all existing passwords into a new temporary file, while placing the new password over the existing password that was requested to change.
-The temporary file is renamed to passwordStorage.txt and the original file containing the old password is deleted.
+This feature enables only HQP to update any existing password.
 
-Alternatives considered:
+. updatePassword() - user enters existing password to update.
+. updatePasswordFinal() - user enters new alphanumeric password to replace existing password.
 
-* Update password one time, without secondary prompt to enter password. This will make the changes permanent even if a mistake is made.
-* Updating using any password, without validity. Password may be weak.
-* Overwriting passwordStorage.txt . This will cause errors in replacing password.
+The following is an example usage scenario of the update password feature.
+
+Step 1: User enters password for HQP.
+
+Step 2: User enters "update password" command.
+
+Step 3: unlockDevice() in Password class is called.
+
+Step 4: The user input, userCommandText, is then hashcoded using userCommandText.hashCode().
+
+Step 5: Using a Buffered reader from the readAndWrite class, a loop through passwordStorage.txt tries to match the hashcoded input with an existing password.
+
+Step 6: The user and password are stored in passwordStorage.txt in this format : "userID (hashcoded)password".
+
+Step 7: When matched, the userID is returned and a welcome message is displayed for the particular user.
+
+
+==== Design Considerations
+
+===== Aspect: How password feature is implemented
+
+* **Alternative 1 (current choice):** Using a password with no need for username
+** Pros: Reduce user's keyboard input
+** Cons: Slow buffered reader has to loop through all passwords in the text file
+* **Alternative 2:** Using username and password
+** Pros: Can use a hashmap for quick look up, with the userID as key and hashcoded password as the value
+** Cons: More input from user, and difficult to store in an external text file.
+
 // end::password[]
 
 === 2a. "find" command (edited)

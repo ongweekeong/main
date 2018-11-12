@@ -8,12 +8,14 @@ import static seedu.addressbook.password.Password.UPDATE_PASSWORD_COMMAND_WORD;
 
 import static seedu.addressbook.password.Password.invalidPoResult;
 import static seedu.addressbook.password.Password.isHqpUser;
+import static seedu.addressbook.password.Password.isLocked;
 import static seedu.addressbook.password.Password.isShutDown;
 import static seedu.addressbook.password.Password.isUnauthorizedAccess;
 import static seedu.addressbook.password.Password.isUpdatePasswordConfirmNow;
 import static seedu.addressbook.password.Password.isUpdatingPasswordNow;
 import static seedu.addressbook.password.Password.lockDevice;
 import static seedu.addressbook.password.Password.prepareUpdatePassword;
+import static seedu.addressbook.password.Password.setupLogger;
 import static seedu.addressbook.password.Password.unlockDevice;
 import static seedu.addressbook.password.Password.updatePassword;
 import static seedu.addressbook.password.Password.updatePasswordFinal;
@@ -88,7 +90,7 @@ public class MainWindow {
      * @throws Exception
      */
     private void decipherUserCommandText(String userCommandText) throws Exception {
-        Password.setupLogger();
+        setupLogger();
         if (toCloseApp(userCommandText)) {
             lockDevice();
             mainApp.stop();
@@ -96,7 +98,7 @@ public class MainWindow {
             CommandResult result = logic.execute(userCommandText);
             clearScreen();
             displayResult(result);
-        } else if (Password.isLocked()) {
+        } else if (isLocked()) {
             String unlockDeviceResult = unlockDevice(userCommandText, Password.getWrongPasswordCounter());
             clearScreen();
             display(unlockDeviceResult);
