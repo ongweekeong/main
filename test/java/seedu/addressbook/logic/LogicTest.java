@@ -1,43 +1,104 @@
 package seedu.addressbook.logic;
 
+import static java.lang.Math.abs;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static seedu.addressbook.common.Messages.MESSAGE_FILE_NOT_FOUND;
+import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
+import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.addressbook.common.Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
+import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
+import static seedu.addressbook.password.Password.MESSAGE_ENTER_COMMAND;
+import static seedu.addressbook.password.Password.MESSAGE_ENTER_PASSWORD;
+import static seedu.addressbook.password.Password.MESSAGE_HQP;
+import static seedu.addressbook.password.Password.MESSAGE_PASSWORD_LENGTH;
+import static seedu.addressbook.password.Password.MESSAGE_PASSWORD_MINIMUM_LENGTH;
+import static seedu.addressbook.password.Password.MESSAGE_TRY_AGAIN;
+import static seedu.addressbook.password.Password.MESSAGE_VALID;
+import static seedu.addressbook.password.Password.correctHqp;
+import static seedu.addressbook.password.Password.correctPO1;
+import static seedu.addressbook.password.Password.correctPO2;
+import static seedu.addressbook.password.Password.correctPO3;
+import static seedu.addressbook.password.Password.correctPO4;
+import static seedu.addressbook.password.Password.correctPO5;
+import static seedu.addressbook.password.Password.getFullId;
+import static seedu.addressbook.password.Password.getId;
+import static seedu.addressbook.password.Password.getIsUpdatingPassword;
+import static seedu.addressbook.password.Password.isUpdatePasswordConfirmNow;
+
+import static seedu.addressbook.password.Password.unlockHqp;
+import static seedu.addressbook.password.Password.unlockPo;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+
 import seedu.addressbook.PatrolResourceStatus;
 import seedu.addressbook.autocorrect.AutoCorrect;
 import seedu.addressbook.autocorrect.CheckDistance;
-import seedu.addressbook.commands.*;
+import seedu.addressbook.commands.AddCommand;
+import seedu.addressbook.commands.CheckCommand;
+import seedu.addressbook.commands.CheckPoStatusCommand;
+import seedu.addressbook.commands.ClearCommand;
+import seedu.addressbook.commands.ClearInboxCommand;
+import seedu.addressbook.commands.Command;
+import seedu.addressbook.commands.CommandResult;
+import seedu.addressbook.commands.DateTimeCommand;
+import seedu.addressbook.commands.DeleteCommand;
 import seedu.addressbook.commands.Dictionary;
+import seedu.addressbook.commands.DispatchCommand;
+import seedu.addressbook.commands.EditCommand;
+import seedu.addressbook.commands.FindCommand;
+import seedu.addressbook.commands.HelpCommand;
+import seedu.addressbook.commands.InboxCommand;
+import seedu.addressbook.commands.IncorrectCommand;
+import seedu.addressbook.commands.ListCommand;
+import seedu.addressbook.commands.LogoutCommand;
+import seedu.addressbook.commands.ReadCommand;
+import seedu.addressbook.commands.RequestHelpCommand;
+import seedu.addressbook.commands.ShowUnreadCommand;
+import seedu.addressbook.commands.ShutdownCommand;
+import seedu.addressbook.commands.UpdateStatusCommand;
+import seedu.addressbook.commands.ViewAllCommand;
 import seedu.addressbook.common.HttpRestClient;
 import seedu.addressbook.common.Location;
 import seedu.addressbook.common.Messages;
 import seedu.addressbook.data.AddressBook;
 import seedu.addressbook.data.exception.PatrolResourceUnavailableException;
-import seedu.addressbook.data.person.*;
-import seedu.addressbook.inbox.*;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.ReadOnlyPerson;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.inbox.Inbox;
+import seedu.addressbook.inbox.MessageFilePaths;
+import seedu.addressbook.inbox.Msg;
+import seedu.addressbook.inbox.NotificationReader;
+import seedu.addressbook.inbox.NotificationWriter;
 import seedu.addressbook.password.Password;
 import seedu.addressbook.storage.StorageFile;
 import seedu.addressbook.timeanddate.TimeAndDate;
 import seedu.addressbook.ui.UiFormatter;
-
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
-import static java.lang.Math.abs;
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static seedu.addressbook.common.Messages.*;
-import static seedu.addressbook.password.Password.*;
-import static seedu.addressbook.password.Password.MESSAGE_WELCOME;
-
 
 public class LogicTest {
 
@@ -83,7 +144,7 @@ public class LogicTest {
      * @see #assertCommandBehavior(String, String, AddressBook, boolean, List)
      */
     private void assertCommandBehavior(String inputCommand, String expectedMessage) throws Exception {
-        assertCommandBehavior(inputCommand, expectedMessage, AddressBook.empty(),false, Collections.emptyList());
+        assertCommandBehavior(inputCommand, expectedMessage, AddressBook.empty(), false, Collections.emptyList());
     }
 
     /**
@@ -105,7 +166,7 @@ public class LogicTest {
         //Confirm the result contains the right data
         assertEquals(expectedMessage, r.feedbackToUser);
         assertEquals(r.getRelevantPersons().isPresent(), isRelevantPersonsExpected);
-        if(isRelevantPersonsExpected){
+        if (isRelevantPersonsExpected) {
             assertEquals(lastShownList, r.getRelevantPersons().get());
         }
 
@@ -116,42 +177,18 @@ public class LogicTest {
     }
 
     //@@author ongweekeong
-
     /**
-     * Executes the command and confirms that the result message (Timestamp) is correct (within the given tolerance threshold)
+     * Checks that message generated is the message that is read.
+     * First checks that timestamp is the same. If it is, then check the rest of the message.
      * @param inputCommand
-     * @param expectedMessage
+     * @param expectedResult
+     * @param testMsg
+     * @param msgIndex
+     * @return
      * @throws Exception
      */
-    private void assertTimeCommandBehavior(String inputCommand, String expectedMessage) throws Exception {
-        CommandResult r = logic.execute(inputCommand);
-        String[] parts = r.feedbackToUser.split(" ", 2);
-        parts[1] = parts[1].substring(0,4);
-        String[] expected = expectedMessage.split("-", 2);
-        String[] expectedTime = expected[1].split(":", 3);
-        String expectedTimeFormatted = expectedTime[0] + expectedTime[1];
-
-        assertEquals(parts[0], expected[0]);
-        assertEquals(parts[1], expectedTimeFormatted);
-        expectedMessage = r.feedbackToUser;
-
-        assertEquals(expectedMessage, r.feedbackToUser);
-    }
-
-    private void assertEqualsTimestamp(String time1, String time2, int tolerance){
-        String[] inputTime = time1.split(":", 4);
-        String[] expectedTime = time2.split(":", 4);
-        inputTime[3] = inputTime[2] + inputTime[3].substring(0, 3);
-        expectedTime[3] = expectedTime[2] + expectedTime[3].substring(0, 3);
-        int difference = abs(Integer.parseInt(inputTime[3]) - Integer.parseInt(expectedTime[3]));
-        if(inputTime[0].equals(expectedTime[0]) && inputTime[1].equals(expectedTime[1]) && inputTime[2].equals(expectedTime[2]) &&
-                (difference <= tolerance)){
-            time2 = time1;
-        }
-        assertEquals(time1, time2);
-    }
-
-    private String assertCommandBehavior(String inputCommand, String expectedResult, Msg testMsg, int msgIndex) throws Exception {
+    private String assertCommandBehavior(String inputCommand, String expectedResult,
+                                         Msg testMsg, int msgIndex) throws Exception {
         CommandResult r = logic.execute(inputCommand);
         String inputTime = parseMsgForTimestamp(r.feedbackToUser);
         String expectedTime = parseMsgForTimestamp(testMsg.getTimeString());
@@ -176,8 +213,50 @@ public class LogicTest {
         assertEquals(r.feedbackToUser, expectedResult);
     }
 
-    //@@author ShreyasKp
+    /**
+     * Executes the command and confirms that the result message (Timestamp)
+     * is correct (within the given tolerance threshold).
+     * @param inputCommand
+     * @param expectedMessage
+     * @throws Exception
+     */
+    private void assertTimeCommandBehavior(String inputCommand, String expectedMessage) throws Exception {
+        CommandResult r = logic.execute(inputCommand);
+        String[] parts = r.feedbackToUser.split(" ", 2);
+        parts[1] = parts[1].substring(0, 4);
+        String[] expected = expectedMessage.split("-", 2);
+        String[] expectedTime = expected[1].split(":", 3);
+        String expectedTimeFormatted = expectedTime[0] + expectedTime[1];
 
+        assertEquals(parts[0], expected[0]);
+        assertEquals(parts[1], expectedTimeFormatted);
+        expectedMessage = r.feedbackToUser;
+
+        assertEquals(expectedMessage, r.feedbackToUser);
+    }
+
+    /**
+     * Checks that expected timestamp and actual timestamp are within a tolerance boundary.
+     * If it is, they are considered equal.
+     * @param time1
+     * @param time2
+     * @param tolerance
+     */
+    private void assertEqualsTimestamp(String time1, String time2, int tolerance) {
+        String[] inputTime = time1.split(":", 4);
+        String[] expectedTime = time2.split(":", 4);
+        inputTime[3] = inputTime[2] + inputTime[3].substring(0, 3);
+        expectedTime[3] = expectedTime[2] + expectedTime[3].substring(0, 3);
+        int difference = abs(Integer.parseInt(inputTime[3]) - Integer.parseInt(expectedTime[3]));
+        if (inputTime[0].equals(expectedTime[0]) && inputTime[1].equals(expectedTime[1])
+                && inputTime[2].equals(expectedTime[2]) && (
+                difference <= tolerance)) {
+            time2 = time1;
+        }
+        assertEquals(time1, time2);
+    }
+
+    //@@author ShreyasKp
     /**
      * Executes the autocorrection algorithm and confirms that the invalid input has a prediction
      * @param expected The expected output
@@ -223,7 +302,7 @@ public class LogicTest {
 
     //@@author iamputradanish
     @Test
-    public void execute_unknownCommandWord_forHQP() throws Exception {
+    public void execute_unknownCommandWord_forHqp() throws Exception {
         String unknownCommand = "uicfhmowqewca";
         Password.unlockHqp();
         assertCommandBehavior(unknownCommand, HelpCommand.MESSAGE_ALL_USAGES);
@@ -231,16 +310,14 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_help_forHQP() throws Exception {
+    public void execute_help_forHqp() throws Exception {
         Password.unlockHqp();
         assertCommandBehavior("help", HelpCommand.MESSAGE_ALL_USAGES);
         Password.lockIsHqp();
     }
 
-    //@@author iamputradanish
-
     @Test
-    public void execute_unknownCommandWord_forPO() throws Exception {
+    public void execute_unknownCommandWord_forPo() throws Exception {
         String unknownCommand = "uicfhmowqewca";
         unlockPo();
         assertCommandBehavior(unknownCommand, HelpCommand.MESSAGE_PO_USAGES);
@@ -248,7 +325,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_help_forPO() throws Exception {
+    public void execute_help_forPo() throws Exception {
         unlockPo();
         assertCommandBehavior("help", HelpCommand.MESSAGE_PO_USAGES);
         Password.lockIsPo();
@@ -273,9 +350,11 @@ public class LogicTest {
         addressBook.addPerson(helper.generatePerson(2));
         addressBook.addPerson(helper.generatePerson(3));
 
-        assertCommandBehavior(ClearCommand.COMMAND_WORD, ClearCommand.MESSAGE_SUCCESS, AddressBook.empty(), false, Collections.emptyList());
+        assertCommandBehavior(ClearCommand.COMMAND_WORD, ClearCommand.MESSAGE_SUCCESS, AddressBook.empty(),
+                false, Collections.emptyList());
     }
-//@@author muhdharun -reused
+
+    //@@author muhdharun -reused
     @Test
     public void execute_add_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
@@ -300,26 +379,30 @@ public class LogicTest {
         assertCommandBehavior(
                 "add Valid Name n/s123457a d/1980 p/123456 s/clear w/none", Nric.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/188 p/123456 s/clear w/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
+                "add Valid Name n/s1234567a d/188 p/123456 s/clear w/none",
+                DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/13456 s/clear w/none", PostalCode.MESSAGE_NAME_CONSTRAINTS);
+                "add Valid Name n/s1234567a d/1980 p/13456 s/clear w/none",
+                PostalCode.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rob"));
+                "add Valid Name n/s1234567a d/1980 p/123456 s/xc w/none o/rob",
+                String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rob"));
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.getWantedForWarning());
         assertCommandBehavior(
                 "add Valid Name n/s1234567a d/1980 p/123456 s/wanted w/none o/none", Person.getWantedForWarning());
         assertCommandBehavior(
-                "add Valid Name n/s1234567a d/2099 p/123456 s/wanted w/none o/none", DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
+                "add Valid Name n/s1234567a d/2099 p/123456 s/wanted w/none o/none",
+                DateOfBirth.MESSAGE_DATE_OF_BIRTH_CONSTRAINTS);
     }
-    //@@author muhdharun
 
+    //@@author muhdharun
     @Test
-    public void execute_CopyConstructorPerson() throws Exception {
+    public void execute_copyConstructorPerson() throws Exception {
         TestDataHelper helper = new TestDataHelper();
         ReadOnlyPerson test = helper.adam();
         Person duplicateAdam = new Person(test);
-        assertEquals(test,duplicateAdam);
+        assertEquals(test, duplicateAdam);
     }
 
     @Test
@@ -327,16 +410,16 @@ public class LogicTest {
         // setup expectations
         TestDataHelper helper = new TestDataHelper();
         Person toBeAdded = helper.adam();
-        AddressBook expectedAB = new AddressBook();
-        expectedAB.addPerson(toBeAdded);
+        AddressBook expectedAb = new AddressBook();
+        expectedAb.addPerson(toBeAdded);
 
         AddCommand toAdd = new AddCommand(toBeAdded);
-        assertEquals(toBeAdded,toAdd.getPerson());
+        assertEquals(toBeAdded, toAdd.getPerson());
 
         // execute command and verify result
         assertCommandBehavior(helper.generateAddCommand(toBeAdded),
                 String.format(AddCommand.MESSAGE_SUCCESS, toBeAdded),
-                expectedAB,
+                expectedAb,
                 false,
                 Collections.emptyList());
 
@@ -348,8 +431,8 @@ public class LogicTest {
         // setup expectations
         TestDataHelper helper = new TestDataHelper();
         Person toBeAdded = helper.adam();
-        AddressBook expectedAB = new AddressBook();
-        expectedAB.addPerson(toBeAdded);
+        AddressBook expectedAb = new AddressBook();
+        expectedAb.addPerson(toBeAdded);
 
         // setup starting state
         addressBook.addPerson(toBeAdded); // person already in internal address book
@@ -358,7 +441,7 @@ public class LogicTest {
         assertCommandBehavior(
                 helper.generateAddCommand(toBeAdded),
                 AddCommand.MESSAGE_DUPLICATE_PERSON,
-                expectedAB,
+                expectedAb,
                 false,
                 Collections.emptyList());
 
@@ -368,15 +451,15 @@ public class LogicTest {
     public void execute_list_showsAllPersons() throws Exception {
         // prepare expectations
         TestDataHelper helper = new TestDataHelper();
-        AddressBook expectedAB = helper.generateAddressBook(false, false);
-        List<? extends ReadOnlyPerson> expectedList = expectedAB.getAllPersons().immutableListView();
+        AddressBook expectedAb = helper.generateAddressBook(false, false);
+        List<? extends ReadOnlyPerson> expectedList = expectedAb.getAllPersons().immutableListView();
 
         // prepare address book state
 
         helper.addToAddressBook(addressBook, false, false);
         assertCommandBehavior("list",
                               Command.getMessageForPersonListShownSummary(expectedList),
-                              expectedAB,
+                              expectedAb,
                               true,
                               expectedList);
     }
@@ -400,6 +483,12 @@ public class LogicTest {
 
     }
 
+
+    /**
+     * TODO: Add JavaDoc Comment
+     * @param commandWord
+     * @throws Exception
+     */
     private void assertInvalidCommandFormatBehaviorForCommand(String commandWord) throws Exception {
         String expectedMessage = Nric.MESSAGE_NAME_CONSTRAINTS;
         TestDataHelper helper = new TestDataHelper();
@@ -415,7 +504,7 @@ public class LogicTest {
 
     //@@author andyrobert3
     @Test
-    public void execute_location_setters()  {
+    public void execute_location_setters() {
         Location location = new Location(1.2345, 2.4567);
         double newLatitude = 4.5679;
         double newLongitude = 9.6533;
@@ -423,8 +512,8 @@ public class LogicTest {
         location.setLatitude(newLatitude);
         location.setLongitude(newLongitude);
 
-        assertEquals(location.getLatitude(), newLatitude, 0.0);
-        assertEquals(location.getLongitude(), newLongitude, 0.0);
+        assertTrue(location.getLatitude() == newLatitude);
+        assertTrue(location.getLongitude() == newLongitude);
     }
 
     @Test
@@ -453,15 +542,15 @@ public class LogicTest {
         assertCommandBehavior(RequestHelpCommand.COMMAND_WORD + " riot", expectedMessage);
     }
 
-
     @Test
-    public void execute_request_successful_checkMsg() throws Exception {
+    public void execute_requestSuccessful_checkMsg() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_HQP_INBOX);
-        Password.unlockHqp(); Password.lockIsPo();
-
+        Password.unlockHqp();
+        Password.lockIsPo();
         logic.execute(RequestHelpCommand.COMMAND_WORD + " gun");
         String expectedUnreadMessagesResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION, 1) + "\n";
-        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult, RequestHelpCommand.getRecentMsg());
+        assertCommandBehavior(ShowUnreadCommand.COMMAND_WORD, expectedUnreadMessagesResult,
+                RequestHelpCommand.getRecentMsg());
         Password.lockIsHqp();
     }
 
@@ -480,9 +569,9 @@ public class LogicTest {
 
     @Test
     public void execute_dispatch_invalidOffense() throws Exception {
-        assertCommandBehavior("dispatch po1 help po2",  String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
+        assertCommandBehavior("dispatch po1 help po2", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
                 + Offense.getListOfValidOffences(), "help"));
-        assertCommandBehavior("dispatch po4 backup po1",  String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
+        assertCommandBehavior("dispatch po4 backup po1", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n"
                 + Offense.getListOfValidOffences(), "backup"));
     }
 
@@ -510,8 +599,10 @@ public class LogicTest {
 
     @Test
     public void execute_dispatch_backupRequesterSameOfficer() throws Exception {
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1", String.format(DispatchCommand.getMessageBackupDispatchSame(), "po1"));
-        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5", String.format(DispatchCommand.getMessageBackupDispatchSame(), "po5"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po1 gun po1",
+                String.format(DispatchCommand.getMessageBackupDispatchSame(), "po1"));
+        assertCommandBehavior(DispatchCommand.COMMAND_WORD + " po5 gun po5",
+                String.format(DispatchCommand.getMessageBackupDispatchSame(), "po5"));
     }
 
     @Test
@@ -563,20 +654,20 @@ public class LogicTest {
         Person p1 = helper.generatePerson(1);
         Person p2 = helper.generatePerson(2);
         List<Person> lastShownList = helper.generatePersonList(p1, p2);
-        AddressBook expectedAB = helper.generateAddressBook(lastShownList);
+        AddressBook expectedAb = helper.generateAddressBook(lastShownList);
         helper.addToAddressBook(addressBook, lastShownList);
 
         logic.setLastShownList(lastShownList);
 
         assertCommandBehavior("viewall 1",
                             String.format(ViewAllCommand.MESSAGE_VIEW_PERSON_DETAILS, p1.getAsTextShowAll()),
-                            expectedAB,
+                            expectedAb,
                             false,
                             lastShownList);
 
         assertCommandBehavior("viewall 2",
                             String.format(ViewAllCommand.MESSAGE_VIEW_PERSON_DETAILS, p2.getAsTextShowAll()),
-                            expectedAB,
+                            expectedAb,
                             false,
                             lastShownList);
     }
@@ -588,15 +679,15 @@ public class LogicTest {
         Person p2 = helper.generatePerson(2);
         List<Person> lastShownList = helper.generatePersonList(p1, p2);
 
-        AddressBook expectedAB = new AddressBook();
-        expectedAB.addPerson(p1);
+        AddressBook expectedAb = new AddressBook();
+        expectedAb.addPerson(p1);
 
         addressBook.addPerson(p1);
         logic.setLastShownList(lastShownList);
 
         assertCommandBehavior("viewall 2",
                                 Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK,
-                                expectedAB,
+                                expectedAb,
                                 false,
                                 lastShownList);
     }
@@ -613,7 +704,8 @@ public class LogicTest {
     public void execute_delete_invalidCommandFormat() throws Exception {
         assertInvalidCommandFormatBehaviorForCommand("delete");
     }
-//@@author muhdharun -reused
+
+    //@@author muhdharun -reused
     @Test
     public void execute_delete_removesCorrectPerson() throws Exception {
         TestDataHelper helper = new TestDataHelper();
@@ -623,8 +715,8 @@ public class LogicTest {
 
         List<Person> threePersons = helper.generatePersonList(p1, p2, p3);
 
-        AddressBook expectedAB = helper.generateAddressBook(threePersons);
-        expectedAB.removePerson(p2);
+        AddressBook expectedAb = helper.generateAddressBook(threePersons);
+        expectedAb.removePerson(p2);
 
 
         helper.addToAddressBook(addressBook, threePersons);
@@ -632,7 +724,7 @@ public class LogicTest {
 
         assertCommandBehavior("delete g9999992t",
                                 String.format(DeleteCommand.MESSAGE_DELETE_PERSON_SUCCESS, p2),
-                                expectedAB,
+                                expectedAb,
                                 false,
                                 threePersons);
     }
@@ -647,8 +739,8 @@ public class LogicTest {
 
         List<Person> threePersons = helper.generatePersonList(p1, p2, p3);
 
-        AddressBook expectedAB = helper.generateAddressBook(threePersons);
-        expectedAB.removePerson(p2);
+        AddressBook expectedAb = helper.generateAddressBook(threePersons);
+        expectedAb.removePerson(p2);
 
         helper.addToAddressBook(addressBook, threePersons);
         addressBook.removePerson(p2);
@@ -656,7 +748,7 @@ public class LogicTest {
 
         assertCommandBehavior("delete g9999992t",
                                 Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK,
-                                expectedAB,
+                                expectedAb,
                                 false,
                                 threePersons);
     }
@@ -677,7 +769,8 @@ public class LogicTest {
         AddressBook addressBook = new AddressBook();
         addressBook.addPerson(adam);
 
-        assertCommandBehavior("edit n/s1234567a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        assertCommandBehavior("edit n/s1234567a",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         assertCommandBehavior(
                 "edit n/s123456a p/510247", Nric.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
@@ -685,9 +778,11 @@ public class LogicTest {
         assertCommandBehavior(
                 "edit n/s1234567a p/123456 s/c w/none", Status.MESSAGE_NAME_CONSTRAINTS);
         assertCommandBehavior(
-                "edit n/s1234567a p/133456 s/wanted w/ne", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "ne"));
+                "edit n/s1234567a p/133456 s/wanted w/ne", String.format(Offense.MESSAGE_OFFENSE_INVALID
+                        + "\n" + Offense.getListOfValidOffences(), "ne"));
         assertCommandBehavior(
-                "edit n/s1234567a p/134546 s/xc w/none o/rr", String.format(Offense.MESSAGE_OFFENSE_INVALID + "\n" + Offense.getListOfValidOffences(), "rr"));
+                "edit n/s1234567a p/134546 s/xc w/none o/rr", String.format(Offense.MESSAGE_OFFENSE_INVALID
+                        + "\n" + Offense.getListOfValidOffences(), "rr"));
     }
 
     @Test
@@ -768,9 +863,9 @@ public class LogicTest {
         Person pTarget2 = helper.generatePersonWithNric("f1234567b");
         String testFile = "testScreen.txt";
 
-        List<Person> Persons = helper.generatePersonList(pTarget1,pTarget2);
+        List<Person> persons = helper.generatePersonList(pTarget1, pTarget2);
         String nric = pTarget1.getNric().getIdentificationNumber();
-        helper.addToAddressBook(addressBook, Persons);
+        helper.addToAddressBook(addressBook, persons);
 
         FindCommand findCommand = new FindCommand(nric);
         findCommand.setFile(testFile);
@@ -778,7 +873,7 @@ public class LogicTest {
 
         CommandResult r = findCommand.execute();
 
-        assertEquals(testFile,findCommand.getDbName());
+        assertEquals(testFile, findCommand.getDbName());
         assertEquals(Command.getMessageForPersonShownSummary(pTarget1), r.feedbackToUser);
     }
 
@@ -789,9 +884,9 @@ public class LogicTest {
         Person pTarget1 = helper.generatePersonWithNric("s1234567a");
         String testFile = "invalidfile.txt";
 
-        List<Person> Persons = helper.generatePersonList(pTarget1);
+        List<Person> persons = helper.generatePersonList(pTarget1);
         String nric = pTarget1.getNric().getIdentificationNumber();
-        helper.addToAddressBook(addressBook, Persons);
+        helper.addToAddressBook(addressBook, persons);
 
         FindCommand findCommand = new FindCommand(nric);
         findCommand.setFile(testFile);
@@ -801,7 +896,7 @@ public class LogicTest {
         ExpectedException thrown = ExpectedException.none();
         thrown.expect(IOException.class);
 
-        assertEquals(testFile,findCommand.getDbName());
+        assertEquals(testFile, findCommand.getDbName());
         assertEquals(MESSAGE_FILE_NOT_FOUND, r.feedbackToUser);
     }
 
@@ -830,7 +925,7 @@ public class LogicTest {
 
     }
 
-//@@author muhdharun
+    //@@author muhdharun
     @Test
     public void execute_check_invalidArgsFormat() throws Exception {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE);
@@ -858,8 +953,9 @@ public class LogicTest {
         List<String> emptyTimestamps = new ArrayList<>();
         UiFormatter formatter = new UiFormatter();
         String result = formatter.formatForStrings(emptyTimestamps);
-        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,nric,emptyTimestamps.size());
-        assertEquals(expectedMessage,r.feedbackToUser);
+        String expectedMessage = result + String.format(MESSAGE_TIMESTAMPS_LISTED_OVERVIEW,
+                nric, emptyTimestamps.size());
+        assertEquals(expectedMessage, r.feedbackToUser);
     }
 
     @Test
@@ -878,15 +974,16 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_Messages_Constructor() throws Exception {
+    public void execute_messages_constructor() throws Exception {
         Messages test = new Messages();
         String testMessage = test.MESSAGE_WELCOME_INITIAL;
-        assertEquals(testMessage,"Welcome to the Police Records and Intelligent System.");
+        assertEquals(testMessage, "Welcome to the Police Records and Intelligent System.");
     }
 
     @Test
-    public void execute_checkPOStatus_CorrectOutput() throws Exception {
-        List<String> allPos = CheckPoStatusCommand.extractEngagementInformation(PatrolResourceStatus.getPatrolResourceStatus());
+    public void execute_checkPoStatus_correctOutput() throws Exception {
+        List<String> allPos = CheckPoStatusCommand.extractEngagementInformation(
+                PatrolResourceStatus.getPatrolResourceStatus());
         assertCommandBehavior("checkstatus",
                                 Command.getMessage(allPos));
     }
@@ -907,25 +1004,26 @@ public class LogicTest {
 
     @Test
     public void execute_updateStatus_validPo() throws Exception {
-        assertCommandBehavior("updatestatus po1",String.format(UpdateStatusCommand.MESSAGE_UPDATE_PO_SUCCESS,"po1"));
+        assertCommandBehavior("updatestatus po1",
+                String.format(UpdateStatusCommand.MESSAGE_UPDATE_PO_SUCCESS, "po1"));
     }
 
     @Test
-    public void execute_getMessageForPersonShownSummary_NullInput() throws Exception {
+    public void execute_getMessageForPersonShownSummary_nullInput() throws Exception {
         String expectedMessage = Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
         String actualMessage = Command.getMessageForPersonShownSummary(null);
-        assertEquals(expectedMessage,actualMessage);
+        assertEquals(expectedMessage, actualMessage);
     }
 
     @Test
-    public void execute_PatrolResourceUnavailableException_message() throws Exception {
+    public void execute_patrolResourceUnavailableException_message() throws Exception {
         String po = "po2";
         String expected = String.format("Patrol resource po2 is engaged.");
         assertEquals(expected, new PatrolResourceUnavailableException(po).getMessage());
     }
 
     @Test
-    public void execute_PersonParametersEquals_equalObjects() throws Exception {
+    public void execute_personParametersEquals_equalObjects() throws Exception {
         TestDataHelper helper = new TestDataHelper();
         Person test = helper.adam();
         Name name = test.getName();
@@ -934,432 +1032,443 @@ public class LogicTest {
         Status status = test.getStatus();
         Offense offense = test.getWantedFor();
 
-        assertEquals(test.getName(), name);
-        assertEquals(test.getNric(), nric);
-        assertEquals(test.getPostalCode(), postalCode);
-        assertEquals(test.getStatus(), status);
-        assertEquals(test.getWantedFor(), offense);
+        assertTrue(test.getName().equals(name));
+        assertTrue(test.getNric().equals(nric));
+        assertTrue(test.getPostalCode().equals(postalCode));
+        assertTrue(test.getStatus().equals(status));
+        assertTrue(test.getWantedFor().equals(offense));
 
     }
-
 
     //@@author iamputradanish
     @Test
-    public void execute_unlockHQP() throws Exception {
-        String result = unlockDevice("papa123",5);
-        assertEquals(String.format(MESSAGE_WELCOME , MESSAGE_HQP)
-                + "\n" + MESSAGE_ENTER_COMMAND , result);
-        lockIsHqp();
+    public void execute_unlockHqp() throws Exception {
+        String result = Password.unlockDevice("papa123", 5);
+        assertEquals(String.format(Password.MESSAGE_WELCOME , Password.MESSAGE_HQP)
+                + "\n" + Password.MESSAGE_ENTER_COMMAND , result);
+        Password.lockIsHqp();
     }
 
     @Test
-    public void execute_unlockPO() throws Exception {
-        String result = unlockDevice("popo1",5);
-        assertEquals(String.format(MESSAGE_WELCOME , MESSAGE_PO + MESSAGE_ONE)
-                + "\n" + MESSAGE_UNAUTHORIZED
-                + "\n" + MESSAGE_ENTER_COMMAND , result);
-        lockIsPo();
+    public void execute_unlockPo() throws Exception {
+        String result = Password.unlockDevice("popo1", 5);
+        assertEquals(String.format(Password.MESSAGE_WELCOME , Password.MESSAGE_PO + Password.MESSAGE_ONE)
+                + "\n" + Password.MESSAGE_UNAUTHORIZED
+                + "\n" + Password.MESSAGE_ENTER_COMMAND , result);
+        Password.lockIsPo();
     }
 
     @Test
-    public void execute_wrongPassword_firstTime() throws Exception{
-        lockIsPo();
-        lockIsHqp();
+    public void execute_wrongPassword_firstTime() throws Exception {
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 5;
-        setWrongPasswordCounter(numberOfAttemptsLeft);
-        String result = unlockDevice(wrongPassword, numberOfAttemptsLeft);
-        assertEquals(MESSAGE_INCORRECT_PASSWORD
-                + "\n" + String.format(MESSAGE_ATTEMPTS_LEFT, numberOfAttemptsLeft)
-                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-        setWrongPasswordCounter(5);
+        Password.setWrongPasswordCounter(numberOfAttemptsLeft);
+        String result = Password.unlockDevice(wrongPassword, numberOfAttemptsLeft);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, numberOfAttemptsLeft)
+                + "\n" + MESSAGE_ENTER_PASSWORD, result);
+        Password.setWrongPasswordCounter(5);
     }
     @Test
-    public void execute_wrongPassword_fourthTime() throws Exception{
-        lockIsPo();
-        lockIsHqp();
+    public void execute_wrongPassword_fourthTime() throws Exception {
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 1;
-        setWrongPasswordCounter(numberOfAttemptsLeft);
-        String result = unlockDevice(wrongPassword, numberOfAttemptsLeft);
-        assertEquals(MESSAGE_INCORRECT_PASSWORD
-                + "\n" + String.format(MESSAGE_ATTEMPT_LEFT, numberOfAttemptsLeft)
-                + "\n" + MESSAGE_SHUTDOWN_WARNING,result);
+        Password.setWrongPasswordCounter(numberOfAttemptsLeft);
+        String result = Password.unlockDevice(wrongPassword, numberOfAttemptsLeft);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPT_LEFT, numberOfAttemptsLeft)
+                + "\n" + Password.MESSAGE_SHUTDOWN_WARNING, result);
 
     }
 
     @Test
-    public void execute_wrongPassword_lastTime() throws Exception{
-        lockIsPo();
-        lockIsHqp();
+    public void execute_wrongPassword_lastTime() throws Exception {
+        Password.lockIsPo();
+        Password.lockIsHqp();
         String wrongPassword = "thisiswrong";
         int numberOfAttemptsLeft = 0;
-        setWrongPasswordCounter(numberOfAttemptsLeft);
-        String result = unlockDevice(wrongPassword, numberOfAttemptsLeft);
-        assertEquals(MESSAGE_SHUTDOWN, result);
+        Password.setWrongPasswordCounter(numberOfAttemptsLeft);
+        String result = Password.unlockDevice(wrongPassword, numberOfAttemptsLeft);
+        assertEquals(Password.MESSAGE_SHUTDOWN, result);
     }
 
     @Test
     public void execute_setWrongPasswordCounter_toPositiveNumber() {
         int randomNumber = ThreadLocalRandom.current().nextInt(0, 6);
-        setWrongPasswordCounter(randomNumber);
-        assertEquals(randomNumber, getWrongPasswordCounter());
+        Password.setWrongPasswordCounter(randomNumber);
+        assertEquals(randomNumber, Password.getWrongPasswordCounter());
     }
 
     @Test
     public void execute_setWrongPasswordCounter_toNegativeNumber() {
         int randomNumber = ThreadLocalRandom.current().nextInt(-6, 0);
-        setWrongPasswordCounter(randomNumber);
-        int result = getWrongPasswordCounter();
+        Password.setWrongPasswordCounter(randomNumber);
+        int result = Password.getWrongPasswordCounter();
         assertEquals(0, result);
     }
 
     @Test
-    public void execute_unlockHQPUser(){
+    public void execute_unlockHqpUser() {
         unlockHqp();
-        boolean result = isHqpUser();
+        boolean result = Password.isHqpUser();
         assertTrue(result);
     }
 
     @Test
-    public void execute_unlockPOUser(){
+    public void execute_unlockPoUser() {
         unlockPo();
-        boolean result = isPo();
+        boolean result = Password.isPo();
         assertTrue(result);
     }
 
     @Test
-    public void execute_lockHQPUser(){
-        lockIsHqp();
-        boolean result = isHqpUser();
+    public void execute_lockHqpUser() {
+        Password.lockIsHqp();
+        boolean result = Password.isHqpUser();
         assertFalse(result);
     }
 
     @Test
-    public void execute_lockPOUser(){
-        lockIsPo();
-        boolean result = isPo();
+    public void execute_lockPoUser() {
+        Password.lockIsPo();
+        boolean result = Password.isPo();
         assertFalse(result);
     }
 
     @Test
-    public void execute_matchPassword_wrongPassword(){
-        boolean result = correctPassword("-795402416" , 1092381);
+    public void execute_matchPassword_wrongPassword() {
+        boolean result = Password.correctPassword("-795402416" , 1092381);
         assertFalse(result);
     }
 
     @Test
-    public void execute_matchPassword_correctPassword(){
-        boolean result = correctPassword("-795402416" , -795402416);
+    public void execute_matchPassword_correctPassword() {
+        boolean result = Password.correctPassword("-795402416" , -795402416);
         assertTrue(result);
     }
 
 
     @Test
-    public void execute_wrongHQP(){
-        boolean result = correctHqp("hqp","-795402416" , 123);
+    public void execute_wrongHqp() {
+        boolean result = correctHqp("hqp", "-795402416" , 123);
         assertFalse(result);
     }
 
     @Test
-    public void execute_wrongPO1(){
-        boolean result = correctPO1("po1","-795402416" , 123);
+    public void execute_wrongPo1() {
+        boolean result = correctPO1("po1", "-795402416" , 123);
         assertFalse(result);
     }
     @Test
-    public void execute_wrongPO2(){
-        boolean result = correctPO2("po2","-795402416" , 123);
-        assertFalse(result);
-    }
-
-    @Test
-    public void execute_wrongPO3(){
-        boolean result = correctPO3("po3","-795402416" , 123);
-        assertFalse(result);
-    }
-    @Test
-    public void execute_wrongPO4(){
-        boolean result = correctPO4("po4","-795402416" , 123);
+    public void execute_wrongPo2() {
+        boolean result = correctPO2("po2", "-795402416" , 123);
         assertFalse(result);
     }
 
     @Test
-    public void execute_wrongPO5(){
-        boolean result = correctPO5("po5","-795402416" , 123);
+    public void execute_wrongPo3() {
+        boolean result = correctPO3("po3", "-795402416" , 123);
+        assertFalse(result);
+    }
+    @Test
+    public void execute_wrongPo4() {
+        boolean result = correctPO4("po4", "-795402416" , 123);
         assertFalse(result);
     }
 
     @Test
-    public void execute_correctHQP(){
-        boolean result = correctHqp("hqp","-795402416" , -795402416);
+    public void execute_wrongPo5() {
+        boolean result = correctPO5("po5", "-795402416" , 123);
+        assertFalse(result);
+    }
+
+    @Test
+    public void execute_correctHqp() {
+        boolean result = correctHqp("hqp", "-795402416" , -795402416);
         assertTrue(result);
     }
 
     @Test
-    public void execute_correctPO1(){
-        boolean result = correctPO1("po1","-795402416" , -795402416);
+    public void execute_correctPo1() {
+        boolean result = correctPO1("po1", "-795402416" , -795402416);
         assertTrue(result);
     }
     @Test
-    public void execute_correctPO2(){
-        boolean result = correctPO2("po2","-795402416" , -795402416);
-        assertTrue(result);
-    }
-
-    @Test
-    public void execute_correctPO3(){
-        boolean result = correctPO3("po3","-795402416" , -795402416);
-        assertTrue(result);
-    }
-    @Test
-    public void execute_correctPO4(){
-        boolean result = correctPO4("po4","-795402416" , -795402416);
+    public void execute_correctPo2() {
+        boolean result = correctPO2("po2", "-795402416" , -795402416);
         assertTrue(result);
     }
 
     @Test
-    public void execute_correctPO5(){
-        boolean result = correctPO5("po5","-795402416" , -795402416);
+    public void execute_correctPo3() {
+        boolean result = correctPO3("po3", "-795402416" , -795402416);
+        assertTrue(result);
+    }
+    @Test
+    public void execute_correctPo4() {
+        boolean result = correctPO4("po4", "-795402416" , -795402416);
         assertTrue(result);
     }
 
     @Test
-    public void execute_prepareUpdatePassword(){
-        String result = prepareUpdatePassword();
-        assertEquals(MESSAGE_ENTER_PASSWORD_TO_CHANGE, result);
-        assertTrue(getIsUpdatingPassword());
-        assertEquals(5, getWrongPasswordCounter());
-        unprepareUpdatePassword();
+    public void execute_correctPo5() {
+        boolean result = correctPO5("po5", "-795402416" , -795402416);
+        assertTrue(result);
     }
 
     @Test
-    public void execute_updatePassword_wrongPassword() throws Exception{
+    public void execute_prepareUpdatePassword() {
+        String result = Password.prepareUpdatePassword();
+        assertEquals(Password.MESSAGE_ENTER_PASSWORD_TO_CHANGE, result);
+        assertTrue(Password.getIsUpdatingPassword());
+        assertEquals(5, Password.getWrongPasswordCounter());
+        Password.unprepareUpdatePassword();
+    }
+
+    @Test
+    public void execute_updatePassword_wrongPassword() throws Exception {
         unlockHqp();
-        prepareUpdatePassword();
-        logoutUser();
-        String result = updatePassword("thisiswrong", 5);
-        assertEquals(MESSAGE_INCORRECT_PASSWORD
-                + "\n" + String.format(MESSAGE_ATTEMPTS_LEFT, 5)
-                + "\n" + MESSAGE_ENTER_PASSWORD,result);
-        lockIsHqp();
+        Password.prepareUpdatePassword();
+        Password.logoutUser();
+        String result = Password.updatePassword("thisiswrong", 5);
+        assertEquals(Password.MESSAGE_INCORRECT_PASSWORD
+                + "\n" + String.format(Password.MESSAGE_ATTEMPTS_LEFT, 5)
+                + "\n" + MESSAGE_ENTER_PASSWORD, result);
+        Password.lockIsHqp();
     }
 
     @Test
-    public void execute_updatePassword_correctHQPPassword() throws Exception{
-        unlockHqp();
-        prepareUpdatePassword();
-        String result = updatePassword("papa123", 5);
-        assertEquals(MESSAGE_ENTER_NEW_PASSWORD + MESSAGE_HQP + ":" ,result);
-        lockIsHqp();
-        unprepareUpdatePassword();
+    public void execute_updatePassword_correctHqpPassword() throws Exception {
+        Password password = new Password();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        String result = password.updatePassword("papa123", 5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD + Password.MESSAGE_HQP + ":", result);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_tooShort() throws IOException {
-        unlockHqp();
-        prepareUpdatePassword();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
         String userInput = "po1";
         int minNumPassword = 5;
-        String result = passwordValidityChecker(userInput);
-        assertEquals(String.format(MESSAGE_PASSWORD_LENGTH, userInput.length())
-                + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
-                + "\n" + MESSAGE_TRY_AGAIN
-        ,result);
-        lockIsHqp();
-        unprepareUpdatePassword();
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_PASSWORD_LENGTH, userInput.length())
+                + "\n" + String.format(Password.MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
+                + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingAlphabet() throws IOException {
-        unlockHqp();
-        prepareUpdatePassword();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
         String userInput = "123456";
-        String result = passwordValidityChecker(userInput);
-        assertEquals(String.format(MESSAGE_AT_LEAST_ONE, "alphabet")
-                        + "\n" + MESSAGE_TRY_AGAIN ,result);
-        lockIsHqp();
-        unprepareUpdatePassword();
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet")
+                        + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingNumber() throws IOException {
-        unlockHqp();
-        prepareUpdatePassword();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
         String userInput = "popopo";
-        String result = passwordValidityChecker(userInput);
-        assertEquals(String.format(MESSAGE_AT_LEAST_ONE, "number")
-                        + "\n" + MESSAGE_TRY_AGAIN
-                ,result);
-        lockIsHqp();
-        unprepareUpdatePassword();
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number")
+                        + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_missingNumberAndAlphabet() throws IOException {
-        unlockHqp();
-        prepareUpdatePassword();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
         String userInput = "*********";
-        String result = passwordValidityChecker(userInput);
-        assertEquals(String.format(MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
-                        + "\n" + MESSAGE_TRY_AGAIN
-                ,result);
-        lockIsHqp();
-        unprepareUpdatePassword();
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number")
+                        + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_passwordValidityChecker_alreadyExists() throws IOException {
-        unlockHqp();
-        prepareUpdatePassword();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
         String userInput = "papa123";
-        String result = passwordValidityChecker(userInput);
-        assertEquals(MESSAGE_PASSWORD_EXISTS
-                        + "\n" + MESSAGE_TRY_AGAIN
-                ,result);
-        lockIsHqp();
-        unprepareUpdatePassword();
+        String result = password.passwordValidityChecker(userInput);
+        assertEquals(Password.MESSAGE_PASSWORD_EXISTS + "\n" + Password.MESSAGE_TRY_AGAIN, result);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
     }
 
     @Test
     public void execute_reenterPassword() throws Exception {
-        unlockHqp();
-        prepareUpdatePassword();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
         String userInput = "mama123";
-        updatePassword("papa123",5);
-        String result = updatePassword(userInput,5);
-        assertEquals(MESSAGE_ENTER_NEW_PASSWORD_AGAIN,result);
-        assertTrue(isUpdatePasswordConfirmNow());
-        lockIsHqp();
-        unprepareUpdatePassword();
-        notUpdatingFinal();
+        password.updatePassword("papa123", 5);
+        String result = password.updatePassword(userInput, 5);
+        assertEquals(Password.MESSAGE_ENTER_NEW_PASSWORD_AGAIN, result);
+        assertTrue(Password.isUpdatePasswordConfirmNow());
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
     }
 
     @Test
     public void execute_updatePasswordFinal_notSame() throws Exception {
-        unlockHqp();
-        prepareUpdatePassword();
-        setOtp("mama123");
-        String result = updatePasswordFinal("thisiswrong");
-        assertEquals(MESSAGE_NOT_SAME
-                + "\n" + MESSAGE_TRY_AGAIN, result);
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        Password password = new Password();
+        Password.setOtp("mama123");
+        String result = password.updatePasswordFinal("thisiswrong");
+        assertEquals(Password.MESSAGE_NOT_SAME
+                + "\n" + Password.MESSAGE_TRY_AGAIN, result);
         assertFalse(isUpdatePasswordConfirmNow());
-        lockIsHqp();
-        unprepareUpdatePassword();
-        notUpdatingFinal();
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
     }
 
     @Test
     public void execute_updatePasswordFinal_success() throws Exception {
-        unlockHqp();
-        prepareUpdatePassword();
-        updatePassword("papa123", 5);
+        Password password = new Password();
+        Password.unlockHqp();
+        Password.prepareUpdatePassword();
+        password.updatePassword("papa123", 5);
         String userInput = "mama123";
-        setOtp(userInput);
-        String result = updatePasswordFinal(userInput);
+        Password.setOtp(userInput);
+        String result = password.updatePasswordFinal(userInput);
         assertFalse(isUpdatePasswordConfirmNow());
         assertFalse(getIsUpdatingPassword());
-        assertEquals(String.format(MESSAGE_UPDATED_PASSWORD,MESSAGE_HQP)
+        assertEquals(String.format(Password.MESSAGE_UPDATED_PASSWORD, MESSAGE_HQP)
                 + "\n" + MESSAGE_ENTER_COMMAND, result);
-        updatePassword("mama123", 5);
+        password.updatePassword("mama123", 5);
         userInput = "papa123";
-        setOtp(userInput);
-        updatePasswordFinal(userInput);
-        lockIsHqp();
-        unprepareUpdatePassword();
-        notUpdatingFinal();
+        Password.setOtp(userInput);
+        password.updatePasswordFinal(userInput);
+        Password.lockIsHqp();
+        Password.unprepareUpdatePassword();
+        Password.notUpdatingFinal();
     }
 
     @Test
-    public void execute_getFullID(){
+    public void execute_getFullId() {
         String result = getFullId(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID);
-        assertEquals(MESSAGE_HQP,result);
+        assertEquals(Password.MESSAGE_HQP, result);
         result = getFullId(PatrolResourceStatus.POLICE_OFFICER_1_ID);
-        assertEquals(MESSAGE_PO + MESSAGE_ONE,result);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_ONE, result);
         result = getFullId(PatrolResourceStatus.POLICE_OFFICER_2_ID);
-        assertEquals(MESSAGE_PO + MESSAGE_TWO,result);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_TWO, result);
         result = getFullId(PatrolResourceStatus.POLICE_OFFICER_3_ID);
-        assertEquals(MESSAGE_PO + MESSAGE_THREE,result);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_THREE, result);
         result = getFullId(PatrolResourceStatus.POLICE_OFFICER_4_ID);
-        assertEquals(MESSAGE_PO + MESSAGE_FOUR,result);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FOUR, result);
         result = getFullId(PatrolResourceStatus.POLICE_OFFICER_5_ID);
-        assertEquals(MESSAGE_PO + MESSAGE_FIVE,result);
+        assertEquals(Password.MESSAGE_PO + Password.MESSAGE_FIVE, result);
     }
 
     @Test
-    public void execute_getFullID_ghost(){
+    public void execute_getFullID_ghost() {
         String result = getFullId("nonsense");
-        assertEquals("Ghost",result);
+        assertEquals("Ghost", result);
     }
 
     @Test
     public void execute_passwordExistsChecker_exists() throws IOException {
-        String result = passwordExistsChecker("papa123");
-        assertEquals(MESSAGE_PASSWORD_EXISTS,result);
+        Password password = new Password();
+        String result = password.passwordExistsChecker("papa123");
+        assertEquals(Password.MESSAGE_PASSWORD_EXISTS, result);
     }
 
     @Test
     public void execute_passwordExistsChecker_valid() throws IOException {
-        String result = passwordExistsChecker("police123");
-        assertEquals(MESSAGE_VALID,result);
+        Password password = new Password();
+        String result = password.passwordExistsChecker("police123");
+        assertEquals(Password.MESSAGE_VALID, result);
     }
 
     @Test
     public void execute_alphanumericChecker_missingAlphabet() {
-        String result = passwordAlphanumericChecker("123132442");
-        assertEquals(String.format(MESSAGE_AT_LEAST_ONE, "alphabet"), result);
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("123132442");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet"), result);
     }
 
     @Test
     public void execute_alphanumericChecker_missingNumber() {
-        String result = passwordAlphanumericChecker("papapaapap");
-        assertEquals(String.format(MESSAGE_AT_LEAST_ONE, "number"), result);
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("papapaapap");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "number"), result);
     }
 
     @Test
     public void execute_alphanumericChecker_notAlphanumeric() {
-        String result = passwordAlphanumericChecker("*******");
-        assertEquals(String.format(MESSAGE_AT_LEAST_ONE, "alphabet and at least one number"), result);
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("*******");
+        assertEquals(String.format(Password.MESSAGE_AT_LEAST_ONE, "alphabet and at least one number"), result);
     }
 
     @Test
     public void execute_alphanumericChecker_valid() {
-        String result = passwordAlphanumericChecker("papa123");
+        Password password = new Password();
+        String result = password.passwordAlphanumericChecker("papa123");
         assertEquals(MESSAGE_VALID, result);
     }
 
     @Test
-    public void execute_LengthChecker_tooShort(){
+    public void execute_lengthChecker_tooShort() {
+        Password password = new Password();
         String newEnteredPassword = "";
         int lengthPassword = newEnteredPassword.length();
         int minNumPassword = 5;
-        String result = passwordLengthChecker(newEnteredPassword);
+        String result = password.passwordLengthChecker(newEnteredPassword);
         assertEquals(String.format(MESSAGE_PASSWORD_LENGTH, lengthPassword)
-                + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword)
-                , result);
+                + "\n" + String.format(MESSAGE_PASSWORD_MINIMUM_LENGTH, minNumPassword), result);
     }
 
     @Test
-    public void execute_LengthChecker_valid(){
+    public void execute_lengthChecker_valid() {
+        Password password = new Password();
         String newEnteredPassword = "papa123";
-        String result = passwordLengthChecker(newEnteredPassword);
+        String result = password.passwordLengthChecker(newEnteredPassword);
         assertEquals(MESSAGE_VALID, result);
     }
 
     @Test
     public void execute_passwordValidityChecker_tooShortAndMissingAlphabet() throws IOException {
+        Password password = new Password();
         String newEnteredPassword = "p";
-        String result = passwordValidityChecker(newEnteredPassword);
-        assertEquals(passwordLengthChecker(newEnteredPassword)
-                + "\n" + passwordAlphanumericChecker(newEnteredPassword)
+        String result = password.passwordValidityChecker(newEnteredPassword);
+        assertEquals(password.passwordLengthChecker(newEnteredPassword)
+                + "\n" + password.passwordAlphanumericChecker(newEnteredPassword)
                 + "\n" + MESSAGE_TRY_AGAIN, result);
     }
 
     @Test
-    public void execute_getID_HQP(){
-        unlockHqp();
+    public void execute_getId_hqp() {
+        Password.unlockHqp();
         String result = getId();
-        assertEquals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID,result);
-        lockIsHqp();
+        assertEquals(PatrolResourceStatus.HEADQUARTER_PERSONNEL_ID, result);
+        Password.lockIsHqp();
     }
 
     //@@author ongweekeong
@@ -1373,11 +1482,10 @@ public class LogicTest {
     @Test
     public void execute_missingInboxFile() {
         String result = "";
-        try{
+        try {
             NotificationReader testReader = new NotificationReader("Nonsense");
             testReader.readFromFile();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
         }
         assertEquals(MESSAGE_INBOX_FILE_NOT_FOUND, result);
@@ -1385,7 +1493,8 @@ public class LogicTest {
 
     @Test
     public void execute_inbox_noUnreadMessages() throws Exception {
-        Password.lockIsPo(); Password.lockIsPo();
+        Password.lockIsPo();
+        Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         String inputCommand = InboxCommand.COMMAND_WORD;
         final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
@@ -1393,16 +1502,18 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_inbox_successful_readAndUnread() throws Exception {
-        Password.lockIsPo(); Password.lockIsPo();
+    public void execute_inboxSuccessful_readAndUnread() throws Exception {
+        Password.lockIsHqp();
+        Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final String test = "This is the unread test msg";
         Msg testMsg = generateMsgInInbox(test);
         Thread.sleep(50);
         Msg readMsg = generateReadMsgInInbox("This is the read test msg");
         final String inputCommand = InboxCommand.COMMAND_WORD;
-        String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION + InboxCommand.concatenateMsg(1, testMsg) +
-                InboxCommand.concatenateMsg(2, readMsg), 2, 1);
+        String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION
+                + InboxCommand.concatenateMsg(1, testMsg)
+                + InboxCommand.concatenateMsg(2, readMsg), 2, 1);
         assertCommandBehavior(inputCommand, expected, test);
     }
 
@@ -1416,7 +1527,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_checkEmptyInbox_successful() throws Exception{
+    public void execute_checkEmptyInbox_successful() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         CommandResult r = logic.execute(ShowUnreadCommand.COMMAND_WORD);
         assertEquals(Messages.MESSAGE_NO_UNREAD_MSGS, r.feedbackToUser);
@@ -1427,18 +1538,19 @@ public class LogicTest {
         CommandResult r = logic.execute(ClearInboxCommand.COMMAND_WORD);
         final String input = InboxCommand.COMMAND_WORD;
         final String input1 = ShowUnreadCommand.COMMAND_WORD;
-        final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION,0,0);
+        final String expected = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0);
         final String expected1 = Messages.MESSAGE_NO_UNREAD_MSGS; //TODO: Refactor all message strings
         assertCommandBehavior(input, expected);
         assertCommandBehavior(input1, expected1);
     }
 
     @Test
-    public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception{
-        Password.lockIsHqp(); Password.lockIsPo();
+    public void execute_checkInboxWithAnUnreadMessage_successful() throws Exception {
+        Password.lockIsHqp();
+        Password.lockIsPo();
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int messageNum = 1;
-        String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION+ '\n', messageNum);
+        String expectedResult = String.format(Messages.MESSAGE_UNREAD_MSG_NOTIFICATION + '\n', messageNum);
         final String testMessage = "This is a test message.";
         Msg testMsg = generateMsgInInbox(testMessage);
         final String expectedResult1 = String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 1, 1);
@@ -1450,22 +1562,24 @@ public class LogicTest {
     @Test
     public void execute_readMsgWithoutUnreadMsgs_successful() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Password.lockIsPo(); Password.lockIsHqp();
+        Password.lockIsPo();
+        Password.lockIsHqp();
         logic.execute(ShowUnreadCommand.COMMAND_WORD);
         String inputCommand = ReadCommand.COMMAND_WORD + " 3";
         final String expected = Inbox.INBOX_NO_UNREAD_MESSAGES;
         assertCommandBehavior(inputCommand, expected);
         logic.execute(InboxCommand.COMMAND_WORD);
-        final String expected1 = String.format(Inbox.INBOX_NO_UNREAD_MESSAGES,0,0);
+        final String expected1 = String.format(Inbox.INBOX_NO_UNREAD_MESSAGES, 0, 0);
         assertCommandBehavior(inputCommand, expected1);
     }
 
     @Test
     public void execute_readMsgWithOutOfBoundsIndex() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
-        Password.lockIsHqp(); Password.lockIsPo(); //Set static boolean flags from other test cases back to original state.
+        Password.lockIsHqp();
+        Password.lockIsPo(); //Set static boolean flags from other test cases back to original state.
         final int numOfMsgs = 3;
-        for (int i=0; i<numOfMsgs; i++){
+        for (int i = 0; i < numOfMsgs; i++) {
             generateMsgInInbox("This is a test message.");
             Thread.sleep(100);
         }
@@ -1482,12 +1596,12 @@ public class LogicTest {
     public void execute_readMsg_invalidIndex() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         final int numOfMsgs = 3;
-        for(int i=0; i<numOfMsgs; i++){
+        for (int i = 0; i < numOfMsgs; i++) {
             generateMsgInInbox("This is a test message.");
             Thread.sleep(100);
         }
         final String inputCommand = ReadCommand.COMMAND_WORD + " a";
-        final String expected = String.format(Messages.MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE);
+        final String expected = String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE);
         assertCommandBehavior(inputCommand, expected);
     }
 
@@ -1502,11 +1616,11 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_readMsg_ValidIndex() throws Exception {
+    public void execute_readMsg_validIndex() throws Exception {
         NotificationWriter.clearInbox(MessageFilePaths.FILEPATH_DEFAULT);
         int index = 1;
         final int numOfMsgs = 3;
-        for(int i=0; i<numOfMsgs; i++){
+        for (int i = 0; i < numOfMsgs; i++) {
             generateMsgInInbox("This is a test message. " + index++);
             Thread.sleep(100);
         }
@@ -1517,7 +1631,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_returnMessageFilePaths_successful(){
+    public void execute_returnMessageFilePaths_successful() {
         String result = MessageFilePaths.getFilePathFromUserId("hqp");
         String expected = MessageFilePaths.FILEPATH_HQP_INBOX;
         assertEquals(expected, result);
@@ -1559,10 +1673,12 @@ public class LogicTest {
         assertEquals(expectedHighToMed, msgHigh.compareTo(msgMed));
         final int expectedMedToLow = -1;
         assertEquals(expectedMedToLow, msgMed.compareTo(msgLow));
-        final int expectedUnreadLowToReadHigh = -1; //Unread messages should have higher urgency than even read high priority messages.
+        //Unread messages should have higher urgency than even read high priority messages.
+        final int expectedUnreadLowToReadHigh = -1;
         msgHigh.setMsgAsRead();
         assertEquals(expectedUnreadLowToReadHigh, msgLow.compareTo(msgHigh));
-        final int expectedEarlierToLater = -1; // Messages with same read status and priority will be compared by timestamp.
+        // Messages with same read status and priority will be compared by timestamp.
+        final int expectedEarlierToLater = -1;
         Thread.sleep(500);
         Msg msgMedLater = new Msg(Msg.Priority.MED, testMsg);
         assertEquals(expectedEarlierToLater, msgMed.compareTo(msgMedLater));
@@ -1575,7 +1691,7 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_ClearInboxCommand_unsuccessful() throws Exception {
+    public void execute_clearInboxCommand_unsuccessful() throws Exception {
         final String expected = ClearInboxCommand.MESSAGE_CLEARINBOX_UNSUCCESSFUL;
         Command input = new ClearInboxCommand("This file path does not exist");
         CommandResult r = input.execute();
@@ -1583,8 +1699,9 @@ public class LogicTest {
     }
 
     @Test
-    public void execute_clearRecordedMsgWhenLogout() throws Exception{
-        Password.lockIsPo(); Password.lockIsHqp();
+    public void execute_clearRecordedMsgWhenLogout() throws Exception {
+        Password.lockIsPo();
+        Password.lockIsHqp();
         generateMsgInInbox("populate the inbox!");
         logic.execute(ShowUnreadCommand.COMMAND_WORD);
         assertFalse(Inbox.isRecordMsgsEmpty());
@@ -1595,20 +1712,23 @@ public class LogicTest {
 
     @Test
     public void execute_clearInbox_thenCheckInbox() throws Exception {
-        Password.lockIsHqp(); Password.lockIsPo();
+        Password.lockIsHqp();
+        Password.lockIsPo();
         generateMsgInInbox("populate the inbox!");
         logic.execute(ClearInboxCommand.COMMAND_WORD);
         assertTrue(Inbox.isRecordMsgsEmpty());
-        assertCommandBehavior(InboxCommand.COMMAND_WORD, String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION,0,0));
+        assertCommandBehavior(InboxCommand.COMMAND_WORD,
+                String.format(InboxCommand.MESSAGE_TOTAL_MESSAGE_NOTIFICATION, 0, 0));
 
     }
     //@@author
 
-    /**
-     * A utility class to generate test data.
-     */
-    class TestDataHelper{
-//@@author muhdharun -reused
+
+    //@@author muhdharun -reused
+    class TestDataHelper {
+        /**
+         * A utility class to generate test data.
+         */
         Person adam() throws Exception {
             Name name = new Name("Adam Brown");
             Nric nric = new Nric("f1234567j");
@@ -1642,7 +1762,12 @@ public class LogicTest {
                     new HashSet<>(Arrays.asList(new Offense("theft" + abs(seed)), new Offense("theft" + abs(seed + 1))))
             );
         }
-//@@author muhdharun
+
+        /**
+         * TODO: More javadocs comments
+         * @return
+         * @throws Exception
+         */
         Person generateDummyPerson() throws Exception {
             return new Person(
                     new Name("Not a human"),
@@ -1654,7 +1779,6 @@ public class LogicTest {
                     new HashSet<>(Arrays.asList(new Offense("theft")))
             );
         }
-//@@author muhdharun -reused
         /** Generates the correct add command based on the person given */
         String generateAddCommand(Person p) {
             StringJoiner cmd = new StringJoiner(" ");
@@ -1669,19 +1793,19 @@ public class LogicTest {
             cmd.add("w/" + p.getWantedFor().getOffense());
 
             Set<Offense> tags = p.getPastOffenses();
-            for(Offense t: tags){
+            for (Offense t: tags) {
                 cmd.add("o/" + t.getOffense());
             }
 
             return cmd.toString();
         }
-//@@author
+        //@@author
         /**
          * Generates an AddressBook with auto-generated persons.
          * @param isPrivateStatuses flags to indicate if all contact details of respective persons should be set to
          *                          private.
          */
-        AddressBook generateAddressBook(Boolean... isPrivateStatuses) throws Exception{
+        AddressBook generateAddressBook(Boolean... isPrivateStatuses) throws Exception {
             AddressBook addressBook = new AddressBook();
             addToAddressBook(addressBook, isPrivateStatuses);
             return addressBook;
@@ -1690,7 +1814,7 @@ public class LogicTest {
         /**
          * Generates an AddressBook based on the list of Persons given.
          */
-        AddressBook generateAddressBook(List<Person> persons) throws Exception{
+        AddressBook generateAddressBook(List<Person> persons) throws Exception {
             AddressBook addressBook = new AddressBook();
             addToAddressBook(addressBook, persons);
             return addressBook;
@@ -1702,15 +1826,15 @@ public class LogicTest {
          * @param isPrivateStatuses flags to indicate if all contact details of generated persons should be set to
          *                          private.
          */
-        void addToAddressBook(AddressBook addressBook, Boolean... isPrivateStatuses) throws Exception{
+        void addToAddressBook(AddressBook addressBook, Boolean... isPrivateStatuses) throws Exception {
             addToAddressBook(addressBook, generatePersonList(isPrivateStatuses));
         }
 
         /**
          * Adds the given list of Persons to the given AddressBook
          */
-        void addToAddressBook(AddressBook addressBook, List<Person> personsToAdd) throws Exception{
-            for(Person p: personsToAdd){
+        void addToAddressBook(AddressBook addressBook, List<Person> personsToAdd) throws Exception {
+            for (Person p: personsToAdd) {
                 addressBook.addPerson(p);
             }
         }
@@ -1720,7 +1844,7 @@ public class LogicTest {
          */
         List<Person> generatePersonList(Person... persons) {
             List<Person> personList = new ArrayList<>();
-            for(Person p: persons){
+            for (Person p: persons) {
                 personList.add(p);
             }
             return personList;
@@ -1731,10 +1855,10 @@ public class LogicTest {
          * @param isPrivateStatuses flags to indicate if all contact details of respective persons should be set to
          *                          private.
          */
-        List<Person> generatePersonList(Boolean... isPrivateStatuses) throws Exception{
+        List<Person> generatePersonList(Boolean... isPrivateStatuses) throws Exception {
             List<Person> persons = new ArrayList<>();
             int i = 1;
-            for(Boolean p: isPrivateStatuses){
+            for (Boolean p: isPrivateStatuses) {
                 persons.add(generatePerson(i++));
             }
             return persons;
@@ -1748,7 +1872,7 @@ public class LogicTest {
             int min = 1111111;
             int max = 9999999;
             Random r = new Random();
-            return "s"+Integer.toString(r.nextInt((max - min) + 1) + min)+"a";
+            return "s" + Integer.toString(r.nextInt((max - min) + 1) + min) + "a";
         }
 
         /**
@@ -1768,42 +1892,51 @@ public class LogicTest {
         }
         //@@author muhdharun -reused
         /**
-         * Generates a Person object with given name. Other fields will have some dummy values.
+        * Generates a Person object with given name. Other fields will have some dummy values.
          */
-         Person generatePersonWithName(String name) throws Exception {
+        Person generatePersonWithName(String name) throws Exception {
             String randomNric = generateRandomNric();
             return new Person(
-                    new Name(name),
-                    new Nric(randomNric),
-                    new DateOfBirth("2005"),
-                    new PostalCode("123456"),
-                    new Status("xc"),
-                    new Offense(),
-                    Collections.singleton(new Offense("riot"))
-            );
+                 new Name(name),
+                 new Nric(randomNric),
+                 new DateOfBirth("2005"),
+                 new PostalCode("123456"),
+                 new Status("xc"),
+                 new Offense(),
+                 Collections.singleton(new Offense("riot"))
+             );
         }
-        //@@author ongweekeong
 
+        //@@author ongweekeong
         /**
          * Generates a Msg object with given message. Other fields will have some dummy values.
          * @param message
          * @return
          */
-        Msg generateUnreadMsgNoLocation(String message, Msg.Priority urgency){
-             return new Msg(urgency, message);
+        Msg generateUnreadMsgNoLocation(String message, Msg.Priority urgency) {
+            return new Msg(urgency, message);
         }
 
-        Msg generateUnreadMsgWithLocation(String message, Msg.Priority urgency, Location location){
+        Msg generateUnreadMsgWithLocation(String message, Msg.Priority urgency, Location location) {
             return new Msg(urgency, message, location);
         }
 
-        Location generateRandomLocation(){
+        Location generateRandomLocation() {
             return new Location(1.294166, 103.770730);
         }
 
     }
 
     //@@author ongweekeong
+
+    /**
+     * Used when 2 timestamps compared are within the threshold tolerance values.
+     * Sets expected timestmap to the value of the actual timestamp.
+     * @param message
+     * @param msgNum
+     * @return
+     * @throws Exception
+     */
     Timestamp adjustExpectedTimestamp(String message, int msgNum) throws Exception {
         SimpleDateFormat timeFormatted = new SimpleDateFormat("dd/MM/yyyy-HH:mm:ss:SSS");
         Date formattedTime = timeFormatted.parse(parseMsgForDateTimeStamp(message, msgNum));
@@ -1811,33 +1944,59 @@ public class LogicTest {
         return newTime;
     }
 
+    /**
+     * Generates a High priority message in the default inbox with read status set as unread
+     * for test purposes.
+     * @param testMessage
+     * @return
+     * @throws Exception
+     */
     Msg generateMsgInInbox(String testMessage) throws Exception {
-        TestDataHelper MessageGenerator = new TestDataHelper();
-        Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
+        TestDataHelper messageGenerator = new TestDataHelper();
+        Msg testMsg = messageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
         NotificationWriter testWriter = new NotificationWriter(MessageFilePaths.FILEPATH_DEFAULT, true);
         testWriter.writeToFile(testMsg);
         return testMsg;
     }
 
+    /**
+     * Generates a high priority message in the default inbox with read status set to read
+     * for testing purposes.
+     * @param testMessage
+     * @return
+     * @throws Exception
+     */
     Msg generateReadMsgInInbox(String testMessage) throws Exception {
-        TestDataHelper MessageGenerator = new TestDataHelper();
-        Msg testMsg = MessageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
+        TestDataHelper messageGenerator = new TestDataHelper();
+        Msg testMsg = messageGenerator.generateUnreadMsgNoLocation(testMessage, Msg.Priority.HIGH);
         testMsg.setMsgAsRead();
         NotificationWriter testWriter = new NotificationWriter(MessageFilePaths.FILEPATH_DEFAULT, true);
         testWriter.writeToFile(testMsg);
         return testMsg;
     }
 
-    String parseMsgForTimestamp(String message){
+    /**
+     * Parses a Msg converted into a string for the timestamp.
+     * @param message
+     * @return
+     */
+    String parseMsgForTimestamp(String message) {
         //int limit = 1 + msgNum;
         String[] timestamp = message.split("-", 2);
-        String time = timestamp[1].substring(0,12);
+        String time = timestamp[1].substring(0, 12);
         return time;
     }
-    String parseMsgForDateTimeStamp (String message, int msgNum){
+
+    /**
+     * Parses a Msg converted into a string for the date-timestamp.
+     * @param message
+     * @param msgNum
+     * @return
+     */
+    String parseMsgForDateTimeStamp (String message, int msgNum) {
         int limit = msgNum + 1;
-        String[] timestamp = message.split("Sent: ",limit);
-        String date = timestamp[msgNum].substring(0,23);
+        String[] timestamp = message.split("Sent: ", limit);
+        String date = timestamp[msgNum].substring(0, 23);
         return date;
     }
 
@@ -1846,70 +2005,76 @@ public class LogicTest {
     @Test
     public void execute_addCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "ad",
-                "ade John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs",
-                "ade",
-                "adds"
+            "ad",
+            "ade John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs",
+            "ade",
+            "adds"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                AddCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_checkCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "chek",
-                "chek s1234567a",
-                "chick",
-                "checks"
+            "chek",
+            "chek s1234567a",
+            "chick",
+            "checks"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                CheckCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
-    public void execute_checkPOStatusCommand_wrongSpellingOfCommandWord() throws Exception {
+    public void execute_checkPoStatusCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "checkstats",
-                "chickstatus",
-                "checkstatuts"
+            "checkstats",
+            "chickstatus",
+            "checkstatuts"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CheckPoStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                CheckPoStatusCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_clearCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "cler",
-                "cleer",
-                "clears"
+            "cler",
+            "cleer",
+            "clears"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ClearCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_clearInboxCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "clerinbox",
-                "cleerinbox",
-                "clearinbux",
-                "clearsinbox",
-                "clearinboox"
+            "clerinbox",
+            "cleerinbox",
+            "clearinbux",
+            "clearsinbox",
+            "clearinboox"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ClearInboxCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_datetimeCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "tim",
-                "rime",
-                "times"
+            "tim",
+            "rime",
+            "times"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                DateTimeCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
@@ -1917,24 +2082,26 @@ public class LogicTest {
     @Test
     public void execute_deleteCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "delet",
-                "delite",
-                "deletes",
-                "deletes s1234567a"
+            "delet",
+            "delite",
+            "deletes",
+            "deletes s1234567a"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                DeleteCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_dispatchCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "dispach",
-                "dispetch",
-                "dispetch PO1 gun PO3",
-                "disphatch"
+            "dispach",
+            "dispetch",
+            "dispetch PO1 gun PO3",
+            "disphatch"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                DispatchCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
@@ -1942,150 +2109,162 @@ public class LogicTest {
     @Test
     public void execute_editCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "edt",
-                "exit",
-                "exit n/s1234567a p/510247 s/wanted w/murder o/gun",
-                "edits"
+            "edt",
+            "exit",
+            "exit n/s1234567a p/510247 s/wanted w/murder o/gun",
+            "edits"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                EditCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_findCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "fid",
-                "bind",
-                "bind s1234567a",
-                "fhind"
+            "fid",
+            "bind",
+            "bind s1234567a",
+            "fhind"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                FindCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_helpCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "hel",
-                "gelp",
-                "helpp"
+            "hel",
+            "gelp",
+            "helpp"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, HelpCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                HelpCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_inboxCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "ibox",
-                "inbux",
-                "binbox"
+            "ibox",
+            "inbux",
+            "binbox"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, InboxCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                InboxCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_listCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "lit",
-                "kist",
-                "lists"
+            "lit",
+            "kist",
+            "lists"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ListCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_logoutCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "logot",
-                "logour",
-                "logoute"
+            "logot",
+            "logour",
+            "logoute"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                LogoutCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_readCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "red",
-                "red 1",
-                "reed",
-                "bread"
+            "red",
+            "red 1",
+            "reed",
+            "bread"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ReadCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ReadCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_requestHelpCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "r",
-                "rh",
-                "rbp",
-                "rbp gun"
+            "r",
+            "rh",
+            "rbp",
+            "rbp gun"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                RequestHelpCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_showUnreadCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "shounread",
-                "showunreed",
-                "shiwunread",
-                "showsunread",
-                "showunbread"
+            "shounread",
+            "showunreed",
+            "shiwunread",
+            "showsunread",
+            "showunbread"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ShowUnreadCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_shutdownCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "shutdon",
-                "shutdoen",
-                "shutdowns"
+            "shutdon",
+            "shutdoen",
+            "shutdowns"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ShutdownCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_updateStatusCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "updatstatus",
-                "updatestats",
-                "updateststus",
-                "updatestattus",
-                "updatesstatus"
+            "updatstatus",
+            "updatestats",
+            "updateststus",
+            "updatestattus",
+            "updatesstatus"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                UpdateStatusCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_viewAllCommand_wrongSpellingOfCommandWord() throws Exception {
         final String[] inputs = {
-                "vieall",
-                "veewall",
-                "veewall 1",
-                "viewalll"
+            "vieall",
+            "veewall",
+            "veewall 1",
+            "viewalll"
         };
-        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
+        String expected = new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                ViewAllCommand.MESSAGE_USAGE)).feedbackToUser;
         assertCommandBehaviourAutocorrect(expected, inputs);
     }
 
     @Test
     public void execute_addCommand_wrongSpellingOfCommandWordInvalidHqp() throws Exception {
         final String[] inputs = {
-                "af",
-                "adee John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs",
-                "adsdd"
+            "af",
+            "adee John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs",
+            "adsdd"
         };
         Password.unlockHqp();
         boolean isHqp = true;
@@ -2096,9 +2275,9 @@ public class LogicTest {
     @Test
     public void execute_addCommand_wrongSpellingOfCommandWordInvalidPo() throws Exception {
         final String[] inputs = {
-                "af",
-                "adee",
-                "adsdd John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs"
+            "af",
+            "adee",
+            "adsdd John Doe n/s1234567a d/1996 p/510246 s/xc w/none o/theft o/drugs"
         };
         boolean isHqp = false;
         String expected = AutoCorrect.getInvalidCommandMessage(isHqp);
@@ -2108,9 +2287,9 @@ public class LogicTest {
     @Test
     public void execute_clearCommand_wrongSpellingOfCommandWordInvalidHqp() throws Exception {
         final String[] inputs = {
-                "celer",
-                "vleer",
-                "cclears"
+            "celer",
+            "vleer",
+            "cclears"
         };
         Password.unlockHqp();
         boolean isHqp = true;
@@ -2121,9 +2300,9 @@ public class LogicTest {
     @Test
     public void execute_clearCommand_wrongSpellingOfCommandWordInvalidPo() throws Exception {
         final String[] inputs = {
-                "celer",
-                "vleer",
-                "cclears"
+            "celer",
+            "vleer",
+            "cclears"
         };
         boolean isHqp = false;
         String expected = AutoCorrect.getInvalidCommandMessage(isHqp);
