@@ -9,26 +9,7 @@ import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
 import static seedu.addressbook.common.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.addressbook.common.Messages.MESSAGE_PERSON_NOT_IN_ADDRESSBOOK;
 import static seedu.addressbook.common.Messages.MESSAGE_TIMESTAMPS_LISTED_OVERVIEW;
-import static seedu.addressbook.password.Password.MESSAGE_ENTER_COMMAND;
-import static seedu.addressbook.password.Password.MESSAGE_ENTER_PASSWORD;
-import static seedu.addressbook.password.Password.MESSAGE_HQP;
-import static seedu.addressbook.password.Password.MESSAGE_PASSWORD_LENGTH;
-import static seedu.addressbook.password.Password.MESSAGE_PASSWORD_MINIMUM_LENGTH;
-import static seedu.addressbook.password.Password.MESSAGE_TRY_AGAIN;
-import static seedu.addressbook.password.Password.MESSAGE_VALID;
-import static seedu.addressbook.password.Password.correctHqp;
-import static seedu.addressbook.password.Password.correctPO1;
-import static seedu.addressbook.password.Password.correctPO2;
-import static seedu.addressbook.password.Password.correctPO3;
-import static seedu.addressbook.password.Password.correctPO4;
-import static seedu.addressbook.password.Password.correctPO5;
-import static seedu.addressbook.password.Password.getFullId;
-import static seedu.addressbook.password.Password.getId;
-import static seedu.addressbook.password.Password.getIsUpdatingPassword;
-import static seedu.addressbook.password.Password.isUpdatePasswordConfirmNow;
-
-import static seedu.addressbook.password.Password.unlockHqp;
-import static seedu.addressbook.password.Password.unlockPo;
+import static seedu.addressbook.password.Password.*;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -836,6 +817,8 @@ public class LogicTest {
     //@@author muhdharun
     @Test
     public void execute_find_onlyMatchesFullNric() throws Exception {
+        lockDevice();
+        unlockHqp();
         TestDataHelper helper = new TestDataHelper();
 
         Person pTarget1 = helper.generatePersonWithNric("s1234567a");

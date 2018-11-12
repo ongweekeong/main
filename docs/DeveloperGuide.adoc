@@ -129,9 +129,11 @@ Step 3: decipherUserCommandText() in MainWindow class identifies the command as 
 
 Step 4: User enters password for HQP.
 
-Step 5: Using a Buffered reader from the readAndWrite class, a loop through passwordStorage.txt tries to match the hashcoded input with an existing password.
+Step 5: Similar to the password feature, the process of the user input to match the existing HQP password maintains.
 
-Step 6: The user and password are stored in passwordStorage.txt in this format : "userID (hashcoded)password".
+Step 6: User enters new 5-character long alphanumeric password.
+
+Step 7: The new entered password runs through passwordValidityChecker() to check
 
 Step 7: When matched, the userID is returned and a welcome message is displayed for the particular user.
 
