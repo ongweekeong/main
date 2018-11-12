@@ -243,16 +243,16 @@ Format: 'dispatch BACKUP OFFICER OFFENSE REQUESTER OFFICER'
 // end::dispatch[]
 
 
-=== Lock System : `lock` (HQP & PO)
+=== Logout : `logout` (HQP & PO)
 
-Locks the system and unlocks with password input
+Logs the user out from the system.
 
-Format: 'lock'
+Format: 'logout'
 
 Examples:
 
-*	lock
-*	Any user must enter their respective password to unlock
+*	logout
+*	Any user must enter their respective password to log in
 
 === Update Password : `update password` (HQP)
 

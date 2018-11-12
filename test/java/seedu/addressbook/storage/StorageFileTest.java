@@ -1,27 +1,36 @@
 package seedu.addressbook.storage;
 
-import junit.framework.TestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
-import seedu.addressbook.data.AddressBook;
-import seedu.addressbook.data.exception.IllegalValueException;
-import seedu.addressbook.data.person.*;
-import seedu.addressbook.inbox.Msg;
-import seedu.addressbook.inbox.NotificationReader;
-import seedu.addressbook.storage.StorageFile.StorageOperationException;
+import static org.junit.Assert.assertEquals;
+import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
+import static seedu.addressbook.util.TestUtil.assertTextFilesEqual;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-import static org.junit.Assert.assertEquals;
-import static seedu.addressbook.common.Messages.MESSAGE_INBOX_FILE_NOT_FOUND;
-import static seedu.addressbook.util.TestUtil.assertTextFilesEqual;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
+
+import junit.framework.TestCase;
+
+import seedu.addressbook.data.AddressBook;
+import seedu.addressbook.data.exception.IllegalValueException;
+import seedu.addressbook.data.person.DateOfBirth;
+import seedu.addressbook.data.person.Name;
+import seedu.addressbook.data.person.Nric;
+import seedu.addressbook.data.person.Offense;
+import seedu.addressbook.data.person.Person;
+import seedu.addressbook.data.person.PostalCode;
+import seedu.addressbook.data.person.Status;
+import seedu.addressbook.inbox.Msg;
+import seedu.addressbook.inbox.NotificationReader;
+import seedu.addressbook.storage.StorageFile.StorageOperationException;
 
 public class StorageFileTest {
     private static final String TEST_DATA_FOLDER = "test/data/StorageFileTest";
@@ -54,12 +63,12 @@ public class StorageFileTest {
 
     @Test
     public void load_validFormat() throws Exception {
-        AddressBook actualAB = getStorage("ValidData.txt").load();
-        AddressBook expectedAB = getTestAddressBook();
+        AddressBook actualAb = getStorage("ValidData.txt").load();
+        AddressBook expectedAb = getTestAddressBook();
 
         // ensure loaded AddressBook is properly constructed with test data
         // TODO: overwrite equals method in AddressBook class and replace with equals method below
-        assertEquals(actualAB.getAllPersons(), expectedAB.getAllPersons());
+        assertEquals(actualAb.getAllPersons(), expectedAb.getAllPersons());
     }
 
     @Test
@@ -118,11 +127,10 @@ public class StorageFileTest {
     @Test
     public void load_missingInboxFile() {
         String result = "";
-        try{
+        try {
             NotificationReader testReader = new NotificationReader("Nonsense");
             TreeSet<Msg> testSet = testReader.readFromFile();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             result = MESSAGE_INBOX_FILE_NOT_FOUND;
         }
         TestCase.assertEquals(MESSAGE_INBOX_FILE_NOT_FOUND, result);
