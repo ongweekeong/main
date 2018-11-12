@@ -1,10 +1,10 @@
 package seedu.addressbook.commands;
 
+import static seedu.addressbook.password.Password.lockDevice;
+
 import seedu.addressbook.inbox.Inbox;
-import seedu.addressbook.password.Password;
 import seedu.addressbook.timeanddate.TimeAndDate;
 
-import static seedu.addressbook.password.Password.lockDevice;
 
 //@@author iamputradanish
 
