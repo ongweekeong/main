@@ -24,7 +24,7 @@ public class Dictionary extends Command {
             StorageFile storage = new StorageFile();
             this.addressBook = storage.load();
         } catch (Exception e) {
-            //TODO: Fix empty catch block
+            //This constructor is only used to access the addressbook, and thus will never throw an exception
         } finally {
             COMMANDS.add(AddCommand.COMMAND_WORD);
             COMMANDS.add(CheckCommand.COMMAND_WORD);
@@ -45,12 +45,11 @@ public class Dictionary extends Command {
             COMMANDS.add(ReadCommand.COMMAND_WORD);
             COMMANDS.add(RequestHelpCommand.COMMAND_WORD);
             COMMANDS.add(UpdateStatusCommand.COMMAND_WORD);
-            //COMMANDS.add(UpdatePasswordCommand.COMMAND_WORD);
             COMMANDS.add(ViewAllCommand.COMMAND_WORD);
         }
     }
 
-    public String getErrorMessage() {
+    String getErrorMessage() {
         return "Did you mean to use %s?"
                     + "\n" + "Please try using the correct implementation of the input as shown below-";
     }
