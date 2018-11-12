@@ -27,6 +27,7 @@ public class RequestHelpCommand extends Command {
     private static String messageRequestSuccess = "Request for backup case from %s has been sent to HQP.";
 
     private static Msg requestHelpMessage;
+    private String caseName;
     private NotificationWriter notificationWriter;
 
     /**
@@ -35,9 +36,14 @@ public class RequestHelpCommand extends Command {
      * @throws IllegalValueException if any of the raw values are invalid
      */
     public RequestHelpCommand(String caseName, String messageString) throws IllegalValueException {
+        this.caseName = caseName;
         notificationWriter = new NotificationWriter(MessageFilePaths.FILEPATH_HQP_INBOX, true);
         requestHelpMessage = new Msg(Offense.getPriority(caseName), messageString,
                 PatrolResourceStatus.getLocation(Password.getId()));
+    }
+
+    public String getCaseName() {
+        return this.caseName;
     }
 
     public static String getMessageRequestSuccess() {

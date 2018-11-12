@@ -321,7 +321,6 @@ public class LogicTest {
         assertEquals(test,duplicateAdam);
     }
 
-//@@author
     @Test
     public void execute_add_successful() throws Exception {
         // setup expectations
@@ -330,15 +329,19 @@ public class LogicTest {
         AddressBook expectedAB = new AddressBook();
         expectedAB.addPerson(toBeAdded);
 
+        AddCommand toAdd = new AddCommand(toBeAdded);
+        assertEquals(toBeAdded,toAdd.getPerson());
+
         // execute command and verify result
         assertCommandBehavior(helper.generateAddCommand(toBeAdded),
-                              String.format(AddCommand.MESSAGE_SUCCESS, toBeAdded),
-                              expectedAB,
-                              false,
-                              Collections.emptyList());
+                String.format(AddCommand.MESSAGE_SUCCESS, toBeAdded),
+                expectedAB,
+                false,
+                Collections.emptyList());
 
     }
 
+    //@@author
     @Test
     public void execute_addDuplicate_notAllowed() throws Exception {
         // setup expectations
@@ -408,7 +411,6 @@ public class LogicTest {
         assertCommandBehavior(commandWord + " 3", expectedMessage, AddressBook.empty(), false, lastShownList);
 
     }
-
 
     //@@author andyrobert3
     @Test
@@ -528,22 +530,17 @@ public class LogicTest {
         assertTrue(statusCode == 200 || statusCode == 201 || statusCode == 204);
     }
 
-//    @Test
-//    public void execute_request_failSaveFailure() throws Exception {
-//        File file = new File(MessageFilePaths.FILEPATH_HQP_INBOX);
-//        if (file.renameTo(new File("inboxMessages/test"))) {
-//
-//        }
-//
-//        assertCommandBehavior("");
-//
-//    }
-
     @Test
     public void execute_request_recentMessageFail() {
         RequestHelpCommand.resetRecentMessage();
         thrown.expect(NullPointerException.class);
         RequestHelpCommand.getRecentMsg();
+    }
+
+    @Test
+    public void execute_request_invalidPatrolResourceId() throws Exception {
+        assertCommandBehavior("rb cheating", Messages.MESSAGE_PO_NOT_FOUND);
+        assertCommandBehavior("rb gun", Messages.MESSAGE_PO_NOT_FOUND);
     }
 
     //@@author
