@@ -1156,10 +1156,10 @@ Use case resumes at step 4.
 
 //end:nfr[]
 
+[appendix]
 // tag::glossary[]
 [[glossary]]
 
-[appendix]
 == Glossary
 
 [[HeadquartersPersonnel]] Headquarters Personnel (HQP)::
