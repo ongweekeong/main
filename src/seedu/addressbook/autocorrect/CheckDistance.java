@@ -55,17 +55,17 @@ public class CheckDistance {
     }
 
     /**
-     * Checks the distance for invalid commands
+     * Checks if prediction exists for invalid commands
      * @param commandInput The invalid input command
      * @return True if the command is valid
      */
-    public Integer checkCommandDistance(String commandInput) {
+    public Boolean predictionChecker(String commandInput) {
         int distance;
-        int check = 0;
+        boolean check = false;
         for (String command : commandsList) {
             distance = EditDistance.computeDistance(commandInput, command);
             if (distance == 0) {
-                check = 1;
+                check = true;
                 break;
             }
         }
