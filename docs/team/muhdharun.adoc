@@ -1,0 +1,173 @@
+= Muhammad Harun - Project Portfolio
+:site-section: AboutUs
+:stylesDir: ../stylesheets
+
+== PROJECT: Police Records and Intelligence System (PRISM)
+
+---
+
+== Overview
+
+The PRISM is an adaptation of the already existing Address-Book 3 (AB3) program by SE EDU. It is a program targeted for Police Officers (PO) and Headquarters Personnel (HQP) of the Police Force. Both groups will have varying access and authorization levels to the different features of this system. POs would be able to read from the database after screening a civilian (known as a subject) and decide his next course of action based on the criminal status of the subject. HQPs would have the authority to conduct more thorough checks and remove people from the system if needed. This project was developed to enhance the crime handling capabilities of the Police Force
+
+== Summary of contributions
+
+* *Role*: Developer
+* *Responsibility* : Documentation
+* *Major enhancements*: Morphed parts of the original code base to suit context of PRS. Further details below (Note: Database in the following points refers to text files, as the use of actual databases is prohibited according to CS2113T project requirements):
+**  Removed and added new parameters to the ‘Person’ class such as: ‘NRIC’, ‘Postal Code’, ‘Date of Birth’, ‘Criminal Status’, ‘Past Offences’, etc
+**  Morphed existing commands such as ‘Add’ to handle the updated ‘Person’ class
+**  ‘Find’ and ‘Delete’ commands now search the database using the ‘NRIC’ parameter instead of the ‘Name’ parameter
+*** In addition, ‘Find’ command also stores a timestamp with the corresponding NRIC, and which PO screened the subject, in a separate database
+**  Modified the parser and test cases for the abovementioned commands accordingly
+** Justification:
+*** ‘Person’ class in AB3 had parameters such as email and phone number, which is irrelevant for PRISM, hence new parameters such as NRIC and Date of Birth were added
+***  Finding and Deleting uses NRIC parameter as it is unique, some people may have the same name
+** Highlights: NIL
+** Credits: NIL
+
+* *Minor enhancement*: Added some new commands:
+** *Check (only for HQP)*: Lists down the timestamps during which a subject with the specified NRIC was screened using the ‘Find’ command
+** *Check status of all POs (only for HQP)*: Lists down all POs and their engagement status (whether they are currently attending a case or not)
+** *Update status to free*: Updates the status of the POs to free after finishing the current case
+** *Justifications*:
+*** Important to store timestamps for when person was screened for investigative purposes, in which only HQP would have such authority
+*** HQPs needs to know engagement status for all POs so that they can dispatch a free PO
+*** PO’s status should be manually updated as there is no fixed duration for a case
+
+* *Code contributed*: [https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/collated/functional/muhdharun.md[Functional code]] [https://github.com/CS2113-AY1819S1-F10-3/main/blob/master/collated/test/muhdharun.md[Test code]]
+
+* *Other contributions*:
+
+** Documentation:
+*** Reformatted the User Guide (UG) to make it look neat and organized, like the one used in Address Book 4(AB4)
+*** Updated the UG to include new commands and update existing ones
+*** Added the implementations of the new commands added (such as Find and Check) to the Developer Guide
+** Community:
+*** PRs reviewed : https://github.com/CS2113-AY1819S1-F10-3/main/pull/153[#153], https://github.com/CS2113-AY1819S1-F10-3/main/pull/152[#152], https://github.com/CS2113-AY1819S1-F10-3/main/pull/148[#148], https://github.com/CS2113-AY1819S1-F10-3/main/pull/139[#139]
+
+== Contributions to the User Guide
+
+|===
+|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
+|===
+
+=== Adding a person: `add` (HQP only)
+
+Adds a criminal to the database.
+
+Format: 'add NAME n/NRIC d/YEAROFBIRTH p/POSTALCODE s/STATUS w/WANTEDFOR [o/PASTOFFENSES]'
+
+Examples:
+
+
+*	add John Doe n/f1234567p d/1996 p/510246 s/xc w/none o/theft o/drugs"
+*   Displays a message stating the new person being added
+
+
+[NOTE]
+====
+*   If a person's STATUS is "wanted", the WANTEDFOR parameter has to be filled
+*   No two persons can have the same NRICs, the other parameters such as NAME, POSTALCODE, etc, can be the same
+*   Date of birth here only refers to the year
+====
+
+[TIP]
+A person can have 0 or more past offenses
+
+=== Find a person by NRIC : `find` (HQP & PO)
+
+Finds a person in the Police Records by the specified NRIC
+
+Format: 'find NRIC'
+
+Examples:
+
+*	find s1234567a
+*	Returns person with 's1234567a'
+
+
+[NOTE]
+====
+*   A timestamp and current ID is stored whenever this command is used
+====
+
+=== Get screening history of a person: `check` (HQP)
+
+Displays all the times a person was screened in the form of timestamps (using 'find' command) - Only by HQP
+
+Format: 'check s1234567a'
+
+*	Returns an indexed list of timestamps for specified person, as well as corresponding PO ID nuber
+
+
+Examples:
+
+*	check s1234567a
+*	Shows an indexed list of timestamps for when person with s1234567a was screened by any POs
+
+
+=== Get status of POs: `checkstatus` (HQP & PO)
+
+Shows all POs and their current engagement statuses
+
+Format: 'checkstatus'
+
+=== Update status of PO: `updatestatus` (HQP only)
+
+Updates the PO so that it is not engaged anymore
+
+Format: 'updatestatus PO(ID)'
+
+Examples:
+
+*  updatestatus po2
+*  po2 is now free for dispatch
+
+== Contributions to the Developer Guide
+
+|===
+|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|===
+
+=== 2a. "find" command (edited)
+
+*Current Implementation*
+
+The new "find" command is revised from the existing "find" command in AB3. Instead of finding a person by name, it finds a person using his NRIC.
+It also implements the following operations:
+
+. execute() - executes the "find" command itself and displays the result to the user.
+. getPersonWithNric() - Searches the addressbook to retrieve the person with the specified NRIC.
+
+The following is an example usage scenario of the "find" command:
+
+Step 1: The user input his password and unlocks the system.
+
+Step 2: The user executes "find s1234567a" command where the first argument is the command word "find" and the second argument is the NRIC to be
+searched, which in this case is "s1234567a" (all letter are lower cased). The "find" command calls execute() which also calls getPersonWithNric() method.
+
+Step 3: The getPersonWithNric() method searches the addressbook for the person with "s1234567a" if he exists and person is stored in a list.
+
+Step 4: The person is found and is stored in a matchedPerson list variable. execute() returns a CommandResult using the matchedPerson list as its argument.
+
+Step 5: The CommandResult object displays to the user the searched person and his details, all of which in string form.
+
+=== 2b. "check" command
+
+*Current Implementation*
+
+Only a HQP may use this command. This command displays the timestamps of which a person with the specified NRIC was screened using the "find" command.
+The "check" command makes some use of the "find" command. Every time the "find" command successfully finds a person, a line in the format of:
+"NRIC timestamp" is printed in a text file called "screeningHistory.txt". The "check" command will read this file and retrieve the timestamps
+corresponding to the specified NRIC. Below is an example of its usage:
+
+Step 1: The user(a HQP) input his password and unlocks the system.
+
+Step 2: The user executes "check s1234567a" where the first argument is the command word "check" and the second is the NRIC to be checked which in is "s1234567a".
+
+Step 3: The "check" command calls execute() which calls the getPersonWithNric() method. This method will read the screeningHistory.txt line by line, where each line
+is in the format of "NRIC timestamp", for example "s1234567a 18/10/2018-20:38:42". Each line is split into the NRIC and timestamp. If line[0] is the NRIC specified,
+the corresponding timestamp is stored in a list.
+
+Step 4: The list from step 3 gets returned by execute() to create a CommandResult object which displays all the timestamps to the user.

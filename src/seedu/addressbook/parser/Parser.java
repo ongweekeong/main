@@ -86,6 +86,8 @@ public class Parser {
 
     private static final Pattern PERSON_INDEX_ARGS_FORMAT = Pattern.compile("(?<targetIndex>.+)");
 
+    private static final int INDEX_EDIT_OFFENSE_TAG = 4;
+
     private static final Logger logger = Logger.getLogger(Parser.class.getName());
 
     private static void setupLogger() {
@@ -273,12 +275,63 @@ public class Parser {
     //@@author andyrobert3
 
     /**
+     * Parses user input for Edit command into string of offenses
+     * @param argParts
+     * @param editCommandIdentifiers
+     * @return String of offenses separated by space
+     * @throws IllegalValueException
+     */
+    private String addOffensesToString(String[] argParts, String[] editCommandIdentifiers)
+            throws IllegalValueException {
+        StringBuilder offenseString = new StringBuilder();
+
+        for (String argument : argParts) {
+            if (argument.length() <= 2 || !Arrays.asList(editCommandIdentifiers).contains(argument.substring(0, 2))) {
+                logger.warning("User input is invalid for Edit Command");
+                throw new IllegalValueException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
+                        EditCommand.MESSAGE_USAGE));
+            }
+
+            for (int i = 0; i < editCommandIdentifiers.length; i++) {
+                if (argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
+                    if (editCommandIdentifiers[i].equals(editCommandIdentifiers[INDEX_EDIT_OFFENSE_TAG])) {
+                        offenseString.append(" ").append(argument);
+                    }
+                }
+            }
+        }
+
+        return offenseString.toString();
+    }
+
+    /**
+     * Helper method to parse user input to Edit Command Formats
+     * @param argParts
+     * @param editCommandIdentifiers
+     * @return Array of Strings with relevant parameters
+     */
+    private String[] parseEditInputParameters(String[] argParts, String[] editCommandIdentifiers) {
+        String[] userInputParameters = new String[editCommandIdentifiers.length];
+        for (String argument : argParts) {
+            for (int i = 0; i < editCommandIdentifiers.length; i++) {
+                if (argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
+                    userInputParameters[i] = argument.substring(2);
+                    break;
+                }
+            }
+        }
+
+        return userInputParameters;
+    }
+
+    /**
      * Parses arguments in the context of the edit person command.
      *
      * @param args full command args string
      * @return the prepared command
      */
     private Command prepareEdit(String args) {
+        final int indexNricTag = 0;
         args = args.trim();
 
         String[] argParts = args.split("\\s");
@@ -286,34 +339,23 @@ public class Parser {
             "n/", "p/", "s/", "w/", "o/"
         };
 
-        String[] userInputParameters = new String[editCommandIdentifiers.length];
-        StringBuilder offenseString = new StringBuilder();
-
-        for (int i = 0; i < editCommandIdentifiers.length; i++) {
-            for (String argument : argParts) {
-                if (argument.length() > 2 && argument.substring(0, 2).equals(editCommandIdentifiers[i])) {
-                    if (editCommandIdentifiers[i].equals(editCommandIdentifiers[4])) {
-                        offenseString.append(" ").append(argument);
-                    } else {
-                        userInputParameters[i] = argument.substring(2);
-                        break;
-                    }
-                }
-            }
-        }
-
-        userInputParameters[4] = (!offenseString.toString().equals("")) ? offenseString.toString() : null;
-
-        Set<String> offenses = null;
-
         try {
-            if (userInputParameters[0] == null) {
+            String offenseString = addOffensesToString(argParts, editCommandIdentifiers);
+            String[] userInputParameters = parseEditInputParameters(argParts, editCommandIdentifiers);
+
+            userInputParameters[INDEX_EDIT_OFFENSE_TAG] = (!offenseString.equals(""))
+                    ? offenseString : null;
+
+            Set<String> offenses = null;
+
+            if (userInputParameters[indexNricTag] == null) {
+                logger.warning("User did not enter NRIC for Edit Command");
                 throw new IllegalValueException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                         EditCommand.MESSAGE_USAGE));
             }
 
-            if (userInputParameters[4] != null) {
-                offenses = getTagsFromArgs(userInputParameters[4]);
+            if (userInputParameters[INDEX_EDIT_OFFENSE_TAG] != null) {
+                offenses = getTagsFromArgs(userInputParameters[INDEX_EDIT_OFFENSE_TAG]);
             }
 
             return new EditCommand(
