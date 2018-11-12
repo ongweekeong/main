@@ -49,7 +49,7 @@ The purpose of this section is to allow readers to get a clearer idea of how the
 *	This enhancement allows users to respond to the messages that are sent to them and updating the read status of those messages once action has been taken, depending on the nature of the message sent to them.
 
 === Code Contributed:
-*	Functional & test code: https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=ong...ong&sort=displayName&since=2018-09-12&until=2018-10-30&timeframe=day&reverse=false&repoSort=true
+*	https://nuscs2113-ay1819s1.github.io/dashboard/#=undefined&search=keong&sort=displayName&since=2018-09-12&until=2018-10-30&timeframe=day&reverse=false&repoSort=true[Functional & Test code]
 
 === Other Contributions:
 *	Enhancements to existing features:
