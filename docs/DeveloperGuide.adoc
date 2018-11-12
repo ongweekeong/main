@@ -133,9 +133,11 @@ Step 5: Similar to the password feature, the process of the user input to match 
 
 Step 6: User enters new 5-character long alphanumeric password.
 
-Step 7: The new entered password runs through passwordValidityChecker() to check
+Step 7: The new entered password runs through passwordValidityChecker() to check if the password is at least 5 characters long and at least alphanumeric. This password is stored as oneTimePassword String.
 
-Step 7: When matched, the userID is returned and a welcome message is displayed for the particular user.
+Step 8: The user enters the same new password. It matches with the oneTimePassword.
+
+Step 9: The Buffered reader then reads reads through passwordStorage.txt, and a Print writer from the ReadAndWrite class writes existing passwords to a temporary file, while writing the new password in place of the old password to change.
 
 
 ==== Design Considerations

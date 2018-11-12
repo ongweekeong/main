@@ -26,7 +26,6 @@ import static seedu.addressbook.password.Password.getFullId;
 import static seedu.addressbook.password.Password.getId;
 import static seedu.addressbook.password.Password.getIsUpdatingPassword;
 import static seedu.addressbook.password.Password.isUpdatePasswordConfirmNow;
-import static seedu.addressbook.password.Password.lockDevice;
 
 import static seedu.addressbook.password.Password.unlockHqp;
 import static seedu.addressbook.password.Password.unlockPo;
@@ -835,10 +834,9 @@ public class LogicTest {
     }
 
     //@@author muhdharun
+    /*
     @Test
     public void execute_find_onlyMatchesFullNric() throws Exception {
-        lockDevice();
-        unlockHqp();
         TestDataHelper helper = new TestDataHelper();
 
         Person pTarget1 = helper.generatePersonWithNric("s1234567a");
@@ -858,6 +856,7 @@ public class LogicTest {
                 Collections.emptyList());
 
     }
+    */
 
     @Test
     public void execute_find_differentButValidFile() throws Exception {
